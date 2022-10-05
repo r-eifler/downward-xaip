@@ -92,6 +92,22 @@ int DelegatingTask::get_num_goals() const {
     return parent->get_num_goals();
 }
 
+int DelegatingTask::get_num_hard_goals() const {
+    return parent->get_num_hard_goals();
+}
+
+FactPair DelegatingTask::get_hard_goal_fact(int index) const {
+    return parent->get_hard_goal_fact(index);
+}
+
+int DelegatingTask::get_num_soft_goals() const {
+    return parent->get_num_soft_goals();
+}
+
+FactPair DelegatingTask::get_soft_goal_fact(int index) const {
+    return parent->get_soft_goal_fact(index);
+}
+
 FactPair DelegatingTask::get_goal_fact(int index) const {
     return parent->get_goal_fact(index);
 }

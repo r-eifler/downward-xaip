@@ -61,6 +61,8 @@ class RootTask : public AbstractTask {
     vector<ExplicitOperator> axioms;
     vector<int> initial_state_values;
     vector<FactPair> goals;
+    vector<FactPair> hard_goals;
+    vector<FactPair> soft_goals;
 
     const ExplicitVariable &get_variable(int var) const;
     const ExplicitEffect &get_effect(int op_id, int effect_id, bool is_axiom) const;
@@ -101,6 +103,12 @@ public:
 
     virtual int get_num_goals() const override;
     virtual FactPair get_goal_fact(int index) const override;
+
+    virtual int get_num_hard_goals() const override;
+    virtual FactPair get_hard_goal_fact(int index) const override;
+
+    virtual int get_num_soft_goals() const override;
+    virtual FactPair get_soft_goal_fact(int index) const override;
 
     virtual vector<int> get_initial_state_values() const override;
     virtual void convert_ancestor_state_values(
@@ -311,6 +319,20 @@ vector<FactPair> read_goal(istream &in) {
     return goals;
 }
 
+vector<FactPair> read_hard_goal(istream &in) {
+    check_magic(in, "begin_hard_goal");
+    vector<FactPair> goals = read_facts(in);
+    check_magic(in, "end_hard_goal");
+    return goals;
+}
+
+vector<FactPair> read_soft_goal(istream &in) {
+    check_magic(in, "begin_soft_goal");
+    vector<FactPair> goals = read_facts(in);
+    check_magic(in, "end_soft_goal");
+    return goals;
+}
+
 vector<ExplicitOperator> read_actions(
     istream &in, bool is_axiom, bool use_metric,
     const vector<ExplicitVariable> &variables) {
@@ -345,6 +367,9 @@ RootTask::RootTask(istream &in) {
     }
 
     goals = read_goal(in);
+    hard_goals = read_hard_goal(in);
+    soft_goals = read_soft_goal(in);
+
     check_facts(goals, variables);
     operators = read_actions(in, false, use_metric, variables);
     axioms = read_actions(in, true, use_metric, variables);
@@ -478,8 +503,24 @@ int RootTask::get_num_goals() const {
 }
 
 FactPair RootTask::get_goal_fact(int index) const {
-    assert(utils::in_bounds(index, goals));
     return goals[index];
+}
+
+int RootTask::get_num_hard_goals() const {
+    return hard_goals.size();
+}
+
+FactPair RootTask::get_hard_goal_fact(int index) const {
+    return hard_goals[index];
+}
+
+
+int RootTask::get_num_soft_goals() const {
+    return soft_goals.size();
+}
+
+FactPair RootTask::get_soft_goal_fact(int index) const {
+    return soft_goals[index];
 }
 
 vector<int> RootTask::get_initial_state_values() const {

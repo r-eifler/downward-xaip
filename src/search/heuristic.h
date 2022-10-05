@@ -55,7 +55,7 @@ protected:
     bool cache_evaluator_values;
 
     // Hold a reference to the task implementation and pass it to objects that need it.
-    const std::shared_ptr<AbstractTask> task;
+    std::shared_ptr<AbstractTask> task;
     // Use task_proxy to access task information.
     TaskProxy task_proxy;
 
@@ -88,6 +88,9 @@ public:
     virtual bool does_cache_estimates() const override;
     virtual bool is_estimate_cached(const State &state) const override;
     virtual int get_cached_estimate(const State &state) const override;
+
+    virtual void set_abstract_task(std::shared_ptr<AbstractTask> task);
+    std::shared_ptr<AbstractTask> get_abstract_task() const;
 };
 
 #endif

@@ -28,7 +28,7 @@ namespace successor_generator {
 class SuccessorGenerator;
 }
 
-enum SearchStatus {IN_PROGRESS, TIMEOUT, FAILED, SOLVED};
+enum SearchStatus {IN_PROGRESS, TIMEOUT, FAILED, SOLVED, FINISHED};
 
 class SearchEngine {
     SearchStatus status;

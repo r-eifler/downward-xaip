@@ -467,6 +467,32 @@ fast_downward_plugin(
 )
 
 fast_downward_plugin(
+    NAME GOAL_SUBSET_SEARCH
+    HELP "goal subset search arlgorithm"
+    SOURCES
+        xaip/goal_space_search/goal_subset_search
+        xaip/goal_space_search/goal_subset_space
+        xaip/goal_subsets/goal_subset
+    DEPENDENCY_ONLY
+)
+
+fast_downward_plugin(
+    NAME WEAKENING_GOAL_SUBSET_SEARCH
+    HELP "goal subset search arlgorithm from largest to smallest goal subset"
+    SOURCES
+    xaip/goal_space_search/plugin_wgss
+    DEPENDS GOAL_SUBSET_SEARCH
+)
+
+fast_downward_plugin(
+    NAME strengthening_GOAL_SUBSET_SEARCH
+    HELP "goal subset search arlgorithm from smallest to largest goal subset"
+    SOURCES
+    xaip/goal_space_search/plugin_sgss
+    DEPENDS GOAL_SUBSET_SEARCH
+)
+
+fast_downward_plugin(
     NAME LP_SOLVER
     HELP "Interface to an LP solver"
     SOURCES

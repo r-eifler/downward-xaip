@@ -26,6 +26,8 @@ class EffectsProxy;
 class FactProxy;
 class FactsProxy;
 class GoalsProxy;
+class HardGoalsProxy;
+class SoftGoalsProxy;
 class OperatorProxy;
 class OperatorsProxy;
 class PreconditionsProxy;
@@ -549,6 +551,39 @@ public:
     }
 };
 
+class HardGoalsProxy : public ConditionsProxy {
+public:
+    explicit HardGoalsProxy(const AbstractTask &task)
+            : ConditionsProxy(task) {}
+    ~HardGoalsProxy() = default;
+
+    std::size_t size() const override {
+        return task->get_num_hard_goals();
+    }
+
+    FactProxy operator[](std::size_t index) const override {
+        assert(index < size());
+        return FactProxy(*task, task->get_hard_goal_fact(index));
+    }
+};
+
+
+class SoftGoalsProxy : public ConditionsProxy {
+public:
+    explicit SoftGoalsProxy(const AbstractTask &task)
+            : ConditionsProxy(task) {}
+    ~SoftGoalsProxy() = default;
+
+    std::size_t size() const override {
+        return task->get_num_soft_goals();
+    }
+
+    FactProxy operator[](std::size_t index) const override {
+        assert(index < size());
+        return FactProxy(*task, task->get_soft_goal_fact(index));
+    }
+};
+
 
 bool does_fire(const EffectProxy &effect, const State &state);
 
@@ -679,6 +714,14 @@ public:
 
     GoalsProxy get_goals() const {
         return GoalsProxy(*task);
+    }
+
+    HardGoalsProxy get_hard_goals() const {
+        return HardGoalsProxy(*task);
+    }
+
+    SoftGoalsProxy get_soft_goals() const {
+        return SoftGoalsProxy(*task);
     }
 
     State create_state(std::vector<int> &&state_values) const {

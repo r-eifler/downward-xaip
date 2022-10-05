@@ -54,6 +54,12 @@ public:
     virtual int get_num_goals() const override;
     virtual FactPair get_goal_fact(int index) const override;
 
+    virtual int get_num_hard_goals() const override;
+    virtual FactPair get_hard_goal_fact(int index) const override;
+
+    virtual int get_num_soft_goals() const override;
+    virtual FactPair get_soft_goal_fact(int index) const override;
+
     virtual std::vector<int> get_initial_state_values() const override;
 
     virtual void convert_ancestor_state_values(
