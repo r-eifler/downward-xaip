@@ -4,6 +4,7 @@
 
 #include <bitset>
 #include <vector>
+#include <iostream>
 
 namespace goalsubset {
 
@@ -38,8 +39,13 @@ class GoalSubset {
         return goals.to_ulong();
     }
 
+    bool is_empty() const{
+        return goals.to_ulong() == 0;
+    }
+
     std::vector<GoalSubset> weaken() const;
     std::vector<GoalSubset> strengthen() const;
+    void print() const;
 };
 }
 

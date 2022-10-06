@@ -39,4 +39,8 @@ vector<GoalSubset> GoalSubset::weaken() const{
     return new_subsets;
 }
 
+void GoalSubset::print() const {
+    cout << goals << endl;
+}
+
 }

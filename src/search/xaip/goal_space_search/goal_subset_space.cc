@@ -40,7 +40,8 @@ vector<GoalSpaceNode*> GoalSpaceNode::weaken() const {
     vector<GoalSubset> new_subsets = goals.weaken();
     vector<GoalSpaceNode*> new_nodes;
     for(GoalSubset subset : new_subsets){
-        new_nodes.push_back(new GoalSpaceNode(subset));
+        if(!subset.is_empty())
+            new_nodes.push_back(new GoalSpaceNode(subset));
     }
     return new_nodes;
 }
@@ -87,7 +88,7 @@ GoalSubsetSpace::GoalSubsetSpace(GoalsProxy goals, bool all_soft_goals, bool wea
         }
     }
     
-    //TODO why do we need this?
+    //sort goal facts according to theri variable id
     std::sort(soft_goal_list.begin(), soft_goal_list.end());
 
     std::bitset<64> init_goals = weaken ? (1U << soft_goal_list.size()) - 1 : 0;
@@ -96,29 +97,48 @@ GoalSubsetSpace::GoalSubsetSpace(GoalsProxy goals, bool all_soft_goals, bool wea
     open_list.push_back(root); 
 }
 
- void GoalSubsetSpace::current_goals_solved(bool solved){
+ void GoalSubsetSpace::current_goals_solved(bool solved, bool propagate){
         if (solved)
-            current_node->solved();
+            current_node->solved(propagate);
         else
-            current_node->not_solved();
+            current_node->not_solved(propagate);
     }
 
 
 void GoalSubsetSpace::expand(){
+    cout << "------------ EXPAND ------------" << endl;
+    if ((weaken && current_node->isSolvable()) || (!weaken && current_node->isUnSolvable())){
+        cout << "No expansion necessary" << endl;
+        cout << "------------ EXPAND ------------" << endl;
+        return;
+    } 
+
     vector<GoalSpaceNode*> new_nodes = weaken ? current_node->weaken() : current_node->strengthen();
 
+    
+    cout << "generated:"  << endl;
+    for (GoalSpaceNode* node : generated){
+        node->get_goals().print();
+    }
+    cout << "children:"  << endl;
     //TODO implement a more efficient version
+    //TODO Check whether do dublicate nodes are generated
     for (GoalSpaceNode* node : new_nodes){
-        auto old_node_it = visisted.find(node);
-        if(old_node_it != visisted.end()){
+        node->get_goals().print();
+        auto old_node_it = generated.find(node);
+        if(old_node_it != generated.end()){
+            cout << "--> already exists"  << endl;
             current_node->addChild(*old_node_it);
             delete node;
         }
         else{
+            cout << "--> new node"  << endl;
             current_node->addChild(node);
+            generated.insert(node);
             open_list.push_front(node);
         }
     }
+    cout << "------------ EXPAND ------------" << endl;
 }
 
 int GoalSubsetSpace::print_relation(){
@@ -137,8 +157,20 @@ vector<FactPair> GoalSubsetSpace::get_goals(const GoalSpaceNode* node) const
     return current_goals;
 }
 
-void  GoalSubsetSpace::next_node(){
-      current_node = get_next_node();
+ GoalSpaceNode*  GoalSubsetSpace::get_next_node(){
+    while(!open_list.empty()){
+        cout << "size openlist: " << open_list.size() << endl;
+        GoalSpaceNode* next_node = open_list.front();
+        open_list.pop_front();
+        if(!next_node->statusDefined())
+            return next_node;
+    }
+    return NULL;
+}
+
+bool  GoalSubsetSpace::next_node(){
+    current_node = get_next_node();
+    return current_node != NULL;
 }
 
 vector<FactPair> GoalSubsetSpace::get_next_goals()

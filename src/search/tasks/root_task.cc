@@ -367,8 +367,8 @@ RootTask::RootTask(istream &in) {
     }
 
     goals = read_goal(in);
-    hard_goals = read_hard_goal(in);
-    soft_goals = read_soft_goal(in);
+    // hard_goals = read_hard_goal(in);
+    // soft_goals = read_soft_goal(in);
 
     check_facts(goals, variables);
     operators = read_actions(in, false, use_metric, variables);
