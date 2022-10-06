@@ -137,9 +137,6 @@ protected:
     std::vector<FactPair> soft_goal_list;
     std::vector<FactPair> hard_goal_list;
 
-    // all nodes of the goal subset space
-    std::vector<GoalSpaceNode*> nodes;
-
     /**
      * removes nodes from the openlist until one with an undefined status is found
      * @return the first node with undefined status

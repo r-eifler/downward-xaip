@@ -40,8 +40,8 @@ vector<GoalSpaceNode*> GoalSpaceNode::weaken() const {
     vector<GoalSubset> new_subsets = goals.weaken();
     vector<GoalSpaceNode*> new_nodes;
     for(GoalSubset subset : new_subsets){
-        if(!subset.is_empty())
-            new_nodes.push_back(new GoalSpaceNode(subset));
+        // if(!subset.is_empty())
+        new_nodes.push_back(new GoalSpaceNode(subset));
     }
     return new_nodes;
 }
@@ -92,7 +92,7 @@ GoalSubsetSpace::GoalSubsetSpace(GoalsProxy goals, bool all_soft_goals, bool wea
     std::sort(soft_goal_list.begin(), soft_goal_list.end());
 
     std::bitset<64> init_goals = weaken ? (1U << soft_goal_list.size()) - 1 : 0;
-    root = new GoalSpaceNode(GoalSubset(init_goals));
+    root = new GoalSpaceNode(GoalSubset(init_goals, soft_goal_list.size()));
     current_node = root;
     open_list.push_back(root); 
 }
@@ -181,7 +181,7 @@ vector<FactPair> GoalSubsetSpace::get_next_goals()
 
 void GoalSubsetSpace::print(){
     cout << "*********************************"  << endl;
-    cout << "Size of tree: " << nodes.size() << endl;
+    cout << "Number of generated goal subsets: " << generated.size() << endl;
     cout << "Hard goals: " << endl;
     TaskProxy taskproxy = TaskProxy(*tasks::g_root_task.get());
     for(FactPair g : hard_goal_list){

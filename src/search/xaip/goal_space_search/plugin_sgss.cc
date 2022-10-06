@@ -17,6 +17,7 @@ static shared_ptr<SearchEngine> _parse(OptionParser &parser) {
     parser.add_option<bool>("all_soft_goals",
                             "treat all goals as soft goals",
                             "false");
+    parser.add_list_option<shared_ptr<Evaluator>>("heu", "reference to heuristic to update abstract task");
 
     SearchEngine::add_options_to_parser(parser);
     Options opts = parser.parse();

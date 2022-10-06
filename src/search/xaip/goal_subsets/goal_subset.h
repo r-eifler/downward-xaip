@@ -13,11 +13,12 @@ class GoalSubset {
     private:
 
         std::bitset<64> goals;
+        int max_num_goals;
 
     public:
 
     GoalSubset();
-    GoalSubset(std::bitset<64> goals);
+    GoalSubset(std::bitset<64> goals, int max_num_goals);
 
     bool contains(int goal_id) const{
         return goals[goal_id];
