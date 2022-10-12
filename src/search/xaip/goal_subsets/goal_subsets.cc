@@ -16,6 +16,10 @@ void GoalSubsets::add(GoalSubset subset) {
     this->subsets.insert(subset);
 }
 
+bool GoalSubsets::contains(goalsubset::GoalSubset subset){
+    return subsets.find(subset) != subsets.end();
+}
+
 void GoalSubsets::add(GoalSubsetHashSet subsets) {
     for(GoalSubset set : subsets){
         this->subsets.insert(set);
@@ -23,7 +27,7 @@ void GoalSubsets::add(GoalSubsetHashSet subsets) {
 }
 
 
-vector<vector<string>> GoalSubsets::generate_string(vector<string> goal_facts_names) {
+vector<vector<string>> GoalSubsets::generate_string(vector<string> goal_facts_names) const{
     vector<vector<string>> facts_names;
     int num_goal_facts = goal_facts_names.size();
 
@@ -71,13 +75,13 @@ string GoalSubsets::to_json(vector<vector<string>> facts_names){
     return res;
 }
 
-void GoalSubsets::print_subsets(){
+void GoalSubsets::print_subsets() const{
     for(GoalSubset set : subsets){
         set.print();
     }
 }
 
-void GoalSubsets::print_subsets(vector<vector<string>> facts_names){
+void GoalSubsets::print_subsets(vector<vector<string>> facts_names) const{
     auto it = facts_names.begin();
     while(it != facts_names.end()){
         vector<string> fact_names = *it;
@@ -110,7 +114,7 @@ void GoalSubsets::to_file(vector<string> goal_facts_names, string filename){
     outfile.close();
 }
 
-void GoalSubsets::print(vector<string> goal_facts_names){
+void GoalSubsets::print(vector<string> goal_facts_names) const{
 
     vector<vector<string>> mugs_facts_names = this->generate_string(goal_facts_names);
 
@@ -154,6 +158,17 @@ GoalSubsets GoalSubsets::complement() const{
     }
 
     return GoalSubsets(complements);
+}
+
+GoalSubsets GoalSubsets::minus(GoalSubsets sets) const{
+    GoalSubsets res_set = GoalSubsets();
+
+    for(GoalSubset s1 : subsets){
+        if(!sets.contains(s1))
+            res_set.add(s1);
+    }
+
+    return res_set;
 }
 
 GoalSubsets GoalSubsets::cross_product(GoalSubsets sets) const{

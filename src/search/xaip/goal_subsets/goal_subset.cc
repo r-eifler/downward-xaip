@@ -10,6 +10,15 @@ GoalSubset::GoalSubset(){
     goals = {};
 }
 
+GoalSubset::GoalSubset(int max_num_goals): max_num_goals(max_num_goals) {
+    goals = 0;
+}
+
+GoalSubset::GoalSubset(int goal_id, int max_num_goals): max_num_goals(max_num_goals) {
+    goals = 0;
+    goals[goal_id] = 1;
+}
+
 GoalSubset::GoalSubset(std::bitset<64> goals, int max_num_goals): 
     goals(goals), max_num_goals(max_num_goals) {}
 

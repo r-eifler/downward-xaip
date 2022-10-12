@@ -240,9 +240,9 @@ void GoalSubsetSpace::print(){
 
     cout << "*********************************"  << endl;
     cout << "Number of generated goal subsets: " << generated.size() << endl;
-    for(GoalSpaceNode* node : generated){
-        node->get_goals().print();
-    }
+    // for(GoalSpaceNode* node : generated){
+    //     node->get_goals().print();
+    // }
     cout << "*********************************"  << endl;
     cout << "#hard goals: " << hard_goal_list.size() << endl;
     TaskProxy taskproxy = TaskProxy(*tasks::g_root_task.get());
@@ -255,6 +255,8 @@ void GoalSubsetSpace::print(){
     }
     cout << "*********************************"  << endl;
     cout << "#MUGS: " << mugs.size() << endl;
+    cout << "*********************************"  << endl;
+    mugs.print_subsets();
     cout << "*********************************"  << endl;
     mugs.print(soft_goal_fact_names);
     cout << "*********************************"  << endl;

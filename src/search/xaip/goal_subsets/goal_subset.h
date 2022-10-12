@@ -18,7 +18,13 @@ class GoalSubset {
     public:
 
     GoalSubset();
+    GoalSubset(int max_num_goals);
     GoalSubset(std::bitset<64> goals, int max_num_goals);
+    GoalSubset(int goal_id, int max_num_goals);
+
+    int max_elements(){
+        return max_num_goals;
+    }
 
     bool contains(int goal_id) const{
         return goals[goal_id];
@@ -75,6 +81,7 @@ class GoalSubset {
     GoalSubset complement() const;
     GoalSubset set_union(GoalSubset set) const;
     GoalSubset set_intersection(GoalSubset set) const;
+    
 
     void print() const;
 };
