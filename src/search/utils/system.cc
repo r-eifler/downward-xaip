@@ -23,6 +23,8 @@ const char *get_exit_code_message_reentrant(ExitCode exitcode) {
         return "Memory limit has been reached.";
     case ExitCode::SEARCH_OUT_OF_TIME:
         return "Time limit has been reached.";
+    case ExitCode::SEARCH_FINISHED:
+        return "Search finished their might be no plan.";
     default:
         return nullptr;
     }
@@ -35,6 +37,7 @@ bool is_exit_code_error_reentrant(ExitCode exitcode) {
     case ExitCode::SEARCH_UNSOLVED_INCOMPLETE:
     case ExitCode::SEARCH_OUT_OF_MEMORY:
     case ExitCode::SEARCH_OUT_OF_TIME:
+    case ExitCode::SEARCH_FINISHED:
         return false;
     case ExitCode::SEARCH_CRITICAL_ERROR:
     case ExitCode::SEARCH_INPUT_ERROR:

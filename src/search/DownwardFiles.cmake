@@ -473,6 +473,7 @@ fast_downward_plugin(
         xaip/goal_space_search/goal_subset_search
         xaip/goal_space_search/goal_subset_space
         xaip/goal_subsets/goal_subset
+        xaip/goal_subsets/goal_subsets
     DEPENDENCY_ONLY
 )
 

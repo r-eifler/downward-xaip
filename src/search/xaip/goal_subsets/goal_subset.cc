@@ -1,5 +1,7 @@
 #include "goal_subset.h"
 
+#include <cassert>
+
 using namespace std;
 
 namespace goalsubset {
@@ -37,6 +39,52 @@ vector<GoalSubset> GoalSubset::weaken() const{
     }
 
     return new_subsets;
+}
+
+vector<GoalSubset> GoalSubset::singelten_subsets() const{
+     vector<GoalSubset> singeltons;
+
+    for (int i = 0; i < max_num_goals; i++){
+        if(goals[i]){
+            std::bitset<64> single_goal = 0;
+            single_goal[i] = 1;
+            singeltons.push_back(GoalSubset(single_goal, max_num_goals));
+        }
+    }
+
+    return singeltons;
+}
+
+GoalSubset GoalSubset::complement() const{
+    std::bitset<64> comple = 0;
+     for (int i = 0; i < max_num_goals; i++){
+        comple[i] = !goals[i];
+    }
+    return GoalSubset(comple, max_num_goals);
+}
+
+GoalSubset GoalSubset::set_union(GoalSubset set) const{
+    assert(this->max_num_goals == set.max_num_goals);
+
+    std::bitset<64> union_set = 0;
+
+    for (int i = 0; i < max_num_goals; i++){
+        union_set[i] = this->goals[i] || set.goals[i];
+    }
+
+    return GoalSubset(union_set, max_num_goals);
+}
+
+GoalSubset GoalSubset::set_intersection(GoalSubset set) const{
+    assert(this->max_num_goals == set.max_num_goals);
+
+    std::bitset<64> union_set = 0;
+
+    for (int i = 0; i < max_num_goals; i++){
+        union_set[i] = this->goals[i] && set.goals[i];
+    }
+
+    return GoalSubset(union_set, max_num_goals);
 }
 
 void GoalSubset::print() const {

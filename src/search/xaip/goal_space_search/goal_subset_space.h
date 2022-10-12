@@ -8,6 +8,7 @@
 #include <iostream>
 #include <unordered_set>
 #include "../goal_subsets/goal_subset.h"
+#include "../goal_subsets/goal_subsets.h"
 #include "../task_proxy.h"
 #include "../abstract_task.h"
 
@@ -97,6 +98,7 @@ public:
 
     std::vector<FactPair>  get_goals(const std::vector<FactPair>& all_goals) const;
     void print(const std::vector<FactPair>& all_goals);
+    void print();
     std::vector<GoalSpaceNode*> weaken() const;
     std::vector<GoalSpaceNode*> strengthen() const;
 
@@ -137,11 +139,16 @@ protected:
     std::vector<FactPair> soft_goal_list;
     std::vector<FactPair> hard_goal_list;
 
+    std::vector<std::string> soft_goal_fact_names;
+
     /**
      * removes nodes from the openlist until one with an undefined status is found
      * @return the first node with undefined status
      */
     GoalSpaceNode* get_next_node();
+
+    GoalSubsets generate_MUGS();
+    GoalSubsets generate_MSGS();
 
 public:
 
@@ -189,7 +196,6 @@ public:
     void current_goals_solved(bool solved, bool propagate = false);
     void expand();
 
-    int print_relation();
     void print();
      
 };

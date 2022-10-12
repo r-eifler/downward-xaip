@@ -63,10 +63,10 @@ shared_ptr<SearchEngine> GoalSubsetSearch::get_next_search_engine() {
 SearchStatus GoalSubsetSearch::step() {
     shared_ptr<SearchEngine> search_engine = get_next_search_engine();
 
-    cout << "-------------- NEXT STEP -----------------------" << endl;
-    cout << meta_search_space->get_next_goals() << endl;
-    meta_search_space->get_current_node()->get_goals().print();
-    cout << "-------------------------------------" << endl;
+    // cout << "-------------- NEXT STEP -----------------------" << endl;
+    // cout << meta_search_space->get_next_goals() << endl;
+    // meta_search_space->get_current_node()->get_goals().print();
+    // cout << "-------------------------------------" << endl;
 
     if (!search_engine) {
         return FINISHED;
@@ -87,6 +87,8 @@ SearchStatus GoalSubsetSearch::step() {
 void GoalSubsetSearch::print_statistics() const {
     log << "Cumulative statistics:" << endl;
     statistics.print_detailed_statistics();
+
+    meta_search_space->print();
 }
 
 void GoalSubsetSearch::save_plan_if_necessary() {

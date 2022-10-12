@@ -65,6 +65,9 @@ int main(int argc, const char **argv) {
     ExitCode exitcode = engine->found_solution()
         ? ExitCode::SUCCESS
         : ExitCode::SEARCH_UNSOLVED_INCOMPLETE;
+    if(engine->get_status() == FINISHED){
+        exitcode = ExitCode::SEARCH_FINISHED;
+    }
     utils::report_exit_code_reentrant(exitcode);
     return static_cast<int>(exitcode);
 }

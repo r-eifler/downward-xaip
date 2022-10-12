@@ -24,6 +24,30 @@ class GoalSubset {
         return goals[goal_id];
     };
 
+    bool isSubsetOf(GoalSubset set) const{
+        if(max_num_goals != set.max_num_goals){
+            return false;
+        }
+        for(int i = 0; i < max_num_goals; i++){
+            if(!set.contains(i)  && this->contains(i)){
+                return false;
+            }
+        }
+        return true;
+    };
+
+    bool isSupersetOf(GoalSubset set) const{
+        if(max_num_goals != set.max_num_goals){
+            return false;
+        }
+        for(int i = 0; i < max_num_goals; i++){
+            if(set.contains(i)  && !this->contains(i)){
+                return false;
+            }
+        }
+        return true;
+    };
+
     size_t size() const {
         return goals.size();
     }
@@ -46,7 +70,29 @@ class GoalSubset {
 
     std::vector<GoalSubset> weaken() const;
     std::vector<GoalSubset> strengthen() const;
+
+    std::vector<GoalSubset> singelten_subsets() const;
+    GoalSubset complement() const;
+    GoalSubset set_union(GoalSubset set) const;
+    GoalSubset set_intersection(GoalSubset set) const;
+
     void print() const;
+};
+
+class GoalSubsetHashFunction {
+    public:
+
+    std::size_t operator()(GoalSubset const n) const{
+        return n.get_id();
+    }
+};
+
+class GoalSubsetEqualFunction {
+    public:
+
+    std::size_t operator()(GoalSubset const s1, GoalSubset const s2) const{
+        return s1.get_id() == s2.get_id();
+    }
 };
 }
 

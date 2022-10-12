@@ -42,6 +42,7 @@ enum class ExitCode {
     // 10-19: exit codes denoting no plan was found (without any error)
     SEARCH_UNSOLVABLE = 11,  // Task is provably unsolvable with given bound.
     SEARCH_UNSOLVED_INCOMPLETE = 12,  // Search ended without finding a solution.
+    SEARCH_FINISHED = 13, // The search incentive was not to find a plan e.g. MUGS, but it terminated.
 
     // 20-29: "expected" failures
     SEARCH_OUT_OF_MEMORY = 22,
