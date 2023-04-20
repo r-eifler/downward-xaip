@@ -42,7 +42,7 @@ shared_ptr<SearchEngine> GoalSubsetSearch::get_next_search_engine() {
     
     bool has_next = meta_search_space->next_node();
     if (has_next){
-        tasks::g_root_task = make_shared<extra_tasks::ModifiedGoalsTask>(task, meta_search_space->get_next_goals()); 
+        tasks::g_root_task = make_shared<extra_tasks::ModifiedGoalsTask>(task, meta_search_space->get_current_goals()); 
 
         for (Heuristic* h : heuristic) {
             h->set_abstract_task(tasks::g_root_task);
@@ -63,11 +63,6 @@ shared_ptr<SearchEngine> GoalSubsetSearch::get_next_search_engine() {
 SearchStatus GoalSubsetSearch::step() {
     shared_ptr<SearchEngine> search_engine = get_next_search_engine();
 
-    // cout << "-------------- NEXT STEP -----------------------" << endl;
-    // cout << meta_search_space->get_next_goals() << endl;
-    // meta_search_space->get_current_node()->get_goals().print();
-    // cout << "-------------------------------------" << endl;
-
     if (!search_engine) {
         return FINISHED;
     }
@@ -78,6 +73,12 @@ SearchStatus GoalSubsetSearch::step() {
 
     meta_search_space->current_goals_solved(search_engine->found_solution(), true);
 
+    num_solved_nodes++;
+
+    cout << "-------------- NEXT GOAL SUBSET -----------------------" << endl;
+    meta_search_space->get_current_node()->print();
+    cout << "-------------------------------------" << endl;
+
     meta_search_space->expand();
 
     return meta_search_space->continue_search() ? IN_PROGRESS : FINISHED;
@@ -87,6 +88,9 @@ SearchStatus GoalSubsetSearch::step() {
 void GoalSubsetSearch::print_statistics() const {
     log << "Cumulative statistics:" << endl;
     statistics.print_detailed_statistics();
+
+    cout << "-------------------------------------" << endl;
+    cout << "#solved goal subsets: "  << num_solved_nodes << endl;;
 
     meta_search_space->print();
 }

@@ -114,9 +114,9 @@ bool DualizationSearch::call_search_engine(goalsubset::GoalSubset set) {
 goalsubset::GoalSubset DualizationSearch::grow(goalsubset::GoalSubset set){
     // cout << "---- grow -----" << endl;
     GoalSubset grow_set = set;
-    for(int i = 0; i < grow_set.max_elements(); i++){
+    for(long unsigned int i = 0; i < grow_set.size(); i++){
         if(!grow_set.contains(i)){
-            GoalSubset test = grow_set.set_union(GoalSubset(i, grow_set.max_elements()));
+            GoalSubset test = grow_set.set_union(GoalSubset(i, grow_set.size()));
             // test.print();
             if(call_search_engine(test)){
                 // cout << "solvable" << endl;

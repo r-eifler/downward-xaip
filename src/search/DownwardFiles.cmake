@@ -496,8 +496,7 @@ fast_downward_plugin(
     NAME strengthening_GOAL_SUBSET_SEARCH
     HELP "goal subset search arlgorithm from smallest to largest goal subset"
     SOURCES
-    xaip/goal_subsets/goal_subset
-    xaip/goal_subsets/goal_subsets
+    xaip/goal_space_search/plugin_sgss
     DEPENDS GOAL_SUBSET_SEARCH
 )
 

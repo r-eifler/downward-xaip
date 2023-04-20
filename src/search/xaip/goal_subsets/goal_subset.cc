@@ -7,29 +7,28 @@ using namespace std;
 namespace goalsubset {
 
 GoalSubset::GoalSubset(){
-    goals = {};
+    goals = boost::dynamic_bitset<>(0,0);
 }
 
-GoalSubset::GoalSubset(int max_num_goals): max_num_goals(max_num_goals) {
-    goals = 0;
+GoalSubset::GoalSubset(int max_num_goals){
+    goals = boost::dynamic_bitset<>(max_num_goals,0);
 }
 
-GoalSubset::GoalSubset(int goal_id, int max_num_goals): max_num_goals(max_num_goals) {
-    goals = 0;
-    goals[goal_id] = 1;
+GoalSubset::GoalSubset(int goal_id, int max_num_goals){
+    goals = boost::dynamic_bitset<>(max_num_goals, goal_id);
 }
 
-GoalSubset::GoalSubset(std::bitset<64> goals, int max_num_goals): 
-    goals(goals), max_num_goals(max_num_goals) {}
+GoalSubset::GoalSubset(boost::dynamic_bitset<> goals): 
+    goals(goals) {}
 
 vector<GoalSubset> GoalSubset::strengthen() const{
     vector<GoalSubset> new_subsets;
 
-    for (int i = 0; i < max_num_goals; i++){
+    for (long unsigned int i = 0; i < goals.size(); i++){
         if(!goals[i]){
-            std::bitset<64> stronger_subset = goals;
+            boost::dynamic_bitset<> stronger_subset = goals;
             stronger_subset[i] = 1;
-            new_subsets.push_back(GoalSubset(stronger_subset, max_num_goals));
+            new_subsets.push_back(GoalSubset(stronger_subset));
         }
     }
 
@@ -39,11 +38,11 @@ vector<GoalSubset> GoalSubset::strengthen() const{
 vector<GoalSubset> GoalSubset::weaken() const{
     vector<GoalSubset> new_subsets;
 
-    for (int i = 0; i < max_num_goals; i++){
+    for (long unsigned int i = 0; i < goals.size(); i++){
         if(goals[i]){
-            std::bitset<64> weaker_subset = goals;
+            boost::dynamic_bitset<> weaker_subset = goals;
             weaker_subset[i] = 0;
-            new_subsets.push_back(GoalSubset(weaker_subset, max_num_goals));
+            new_subsets.push_back(GoalSubset(weaker_subset));
         }
     }
 
@@ -53,11 +52,11 @@ vector<GoalSubset> GoalSubset::weaken() const{
 vector<GoalSubset> GoalSubset::singelten_subsets() const{
      vector<GoalSubset> singeltons;
 
-    for (int i = 0; i < max_num_goals; i++){
+    for (long unsigned int i = 0; i < goals.size(); i++){
         if(goals[i]){
-            std::bitset<64> single_goal = 0;
+            boost::dynamic_bitset<> single_goal =  boost::dynamic_bitset<>(goals.size(), 0);
             single_goal[i] = 1;
-            singeltons.push_back(GoalSubset(single_goal, max_num_goals));
+            singeltons.push_back(GoalSubset(single_goal));
         }
     }
 
@@ -65,35 +64,35 @@ vector<GoalSubset> GoalSubset::singelten_subsets() const{
 }
 
 GoalSubset GoalSubset::complement() const{
-    std::bitset<64> comple = 0;
-     for (int i = 0; i < max_num_goals; i++){
+    boost::dynamic_bitset<> comple = boost::dynamic_bitset<>(goals.size(), 0);
+     for (long unsigned int i = 0; i < goals.size(); i++){
         comple[i] = !goals[i];
     }
-    return GoalSubset(comple, max_num_goals);
+    return GoalSubset(comple);
 }
 
 GoalSubset GoalSubset::set_union(GoalSubset set) const{
-    assert(this->max_num_goals == set.max_num_goals);
+    assert(this->size() == set.size());
 
-    std::bitset<64> union_set = 0;
+    boost::dynamic_bitset<> union_set = boost::dynamic_bitset<>(goals.size(), 0);
 
-    for (int i = 0; i < max_num_goals; i++){
+    for (long unsigned int i = 0; i < goals.size(); i++){
         union_set[i] = this->goals[i] || set.goals[i];
     }
 
-    return GoalSubset(union_set, max_num_goals);
+    return GoalSubset(union_set);
 }
 
 GoalSubset GoalSubset::set_intersection(GoalSubset set) const{
-    assert(this->max_num_goals == set.max_num_goals);
+    assert(this->size() == set.size());
 
-    std::bitset<64> union_set = 0;
+   boost::dynamic_bitset<> union_set =  boost::dynamic_bitset<>(goals.size(), 0);
 
-    for (int i = 0; i < max_num_goals; i++){
+    for (long unsigned int i = 0; i < goals.size(); i++){
         union_set[i] = this->goals[i] && set.goals[i];
     }
 
-    return GoalSubset(union_set, max_num_goals);
+    return GoalSubset(union_set);
 }
 
 void GoalSubset::print() const {

@@ -2,7 +2,7 @@
 #define GOAl_SUBSET_H
 
 
-#include <bitset>
+#include <boost/dynamic_bitset.hpp>
 #include <vector>
 #include <iostream>
 
@@ -12,29 +12,25 @@ class GoalSubset {
 
     private:
 
-        std::bitset<64> goals;
-        int max_num_goals;
+        boost::dynamic_bitset<> goals;
 
     public:
 
     GoalSubset();
     GoalSubset(int max_num_goals);
-    GoalSubset(std::bitset<64> goals, int max_num_goals);
+    GoalSubset(boost::dynamic_bitset<> goals);
     GoalSubset(int goal_id, int max_num_goals);
 
-    int max_elements(){
-        return max_num_goals;
-    }
 
     bool contains(int goal_id) const{
         return goals[goal_id];
     };
 
     bool isSubsetOf(GoalSubset set) const{
-        if(max_num_goals != set.max_num_goals){
+        if(goals.size() != set.size()){
             return false;
         }
-        for(int i = 0; i < max_num_goals; i++){
+        for(long unsigned int i = 0; i < goals.size(); i++){
             if(!set.contains(i)  && this->contains(i)){
                 return false;
             }
@@ -43,10 +39,10 @@ class GoalSubset {
     };
 
     bool isSupersetOf(GoalSubset set) const{
-        if(max_num_goals != set.max_num_goals){
+        if(goals.size() != set.size()){
             return false;
         }
-        for(int i = 0; i < max_num_goals; i++){
+        for(long unsigned int i = 0; i < goals.size(); i++){
             if(set.contains(i)  && !this->contains(i)){
                 return false;
             }
@@ -71,7 +67,7 @@ class GoalSubset {
     }
 
     bool is_empty() const{
-        return goals.to_ulong() == 0;
+        return goals.none();
     }
 
     std::vector<GoalSubset> weaken() const;

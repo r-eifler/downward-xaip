@@ -5,7 +5,7 @@
 
 #include "../utils/system.h"
 
-#include "bitset"
+#include <boost/dynamic_bitset.hpp>
 
 using namespace std;
 using namespace options;
@@ -95,8 +95,10 @@ GoalSubsetSpace::GoalSubsetSpace(GoalsProxy goals, bool all_soft_goals, bool wea
             hard_goal_list.push_back(task_proxy.get_hard_goals()[i].get_pair());
         }
     }
-    
-    //sort goal facts according to theri variable id
+
+    cout << "#soft goals:" << soft_goal_list.size() << endl;
+
+    //sort goal facts according to there variable id
     std::sort(soft_goal_list.begin(), soft_goal_list.end());
 
      for(uint i = 0; i < soft_goal_list.size(); i++){
@@ -104,11 +106,14 @@ GoalSubsetSpace::GoalSubsetSpace(GoalsProxy goals, bool all_soft_goals, bool wea
         soft_goal_fact_names.push_back(task_proxy.get_variables()[gp.var].get_fact(gp.value).get_name());
     }
 
-    std::bitset<64> init_goals = weaken ? (1U << soft_goal_list.size()) - 1 : 0;
-    root = new GoalSpaceNode(GoalSubset(init_goals, soft_goal_list.size()));
+    boost::dynamic_bitset<> init_goals = weaken ? boost::dynamic_bitset<>(soft_goal_list.size(), (1U << soft_goal_list.size()) - 1) : boost::dynamic_bitset<>(soft_goal_list.size(), 0);
+    root = new GoalSpaceNode(GoalSubset(init_goals));
     current_node = root;
     open_list.push_back(root); 
     generated.insert(root);
+
+    cout << "Initial goal subset: " << endl;
+    current_node->print();
 }
 
  void GoalSubsetSpace::current_goals_solved(bool solved, bool propagate){
@@ -121,14 +126,8 @@ GoalSubsetSpace::GoalSubsetSpace(GoalsProxy goals, bool all_soft_goals, bool wea
 
 void GoalSubsetSpace::expand(){
     // cout << "------------ EXPAND ------------" << endl;
-    if ((weaken && current_node->isSolvable()) || (!weaken && current_node->isUnSolvable())){
-        // cout << "No expansion necessary" << endl;
-        // cout << "------------ EXPAND ------------" << endl;
-        return;
-    } 
 
     vector<GoalSpaceNode*> new_nodes = weaken ? current_node->weaken() : current_node->strengthen();
-
     
     // cout << "generated:"  << endl;
     // for (GoalSpaceNode* node : generated){
@@ -142,6 +141,15 @@ void GoalSubsetSpace::expand(){
         auto old_node_it = generated.find(node);
         if(old_node_it != generated.end()){
             // cout << "--> already exists"  << endl;
+            // (*old_node_it)->print();
+            if(weaken && current_node->isSolvable()){
+                // cout << "is solvable" << endl;
+                (*old_node_it)->solved();
+            }
+            else if(!weaken && current_node->isUnSolvable()){
+                // cout << "is not solvable" << endl;
+                (*old_node_it)->not_solved();
+            }
             current_node->addChild(*old_node_it);
             delete node;
         }
@@ -149,7 +157,17 @@ void GoalSubsetSpace::expand(){
             // cout << "--> new node"  << endl;
             current_node->addChild(node);
             generated.insert(node);
-            open_list.push_front(node);
+            if(weaken && current_node->isSolvable()){
+                // cout << "is solvable" << endl;
+                node->solved();
+            }
+            else if(!weaken && current_node->isUnSolvable()){
+                // cout << "is not solvable" << endl;
+                node->not_solved();
+            }
+            else {
+                open_list.push_back(node);
+            }
         }
     }
     // cout << "------------ EXPAND ------------" << endl;
@@ -179,7 +197,7 @@ bool  GoalSubsetSpace::next_node(){
     return current_node != NULL;
 }
 
-vector<FactPair> GoalSubsetSpace::get_next_goals()
+vector<FactPair> GoalSubsetSpace::get_current_goals()
 {
     return get_goals(current_node);
 }

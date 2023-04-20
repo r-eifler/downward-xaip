@@ -191,7 +191,7 @@ public:
      * Converts the bit set representation to a variable value pair representation
      * @return list of contained goals as fact pairs
      */
-    std::vector<FactPair> get_next_goals();
+    std::vector<FactPair> get_current_goals();
 
     void current_goals_solved(bool solved, bool propagate = false);
     void expand();
