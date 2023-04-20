@@ -40,7 +40,7 @@ GoalSubsetSearch::GoalSubsetSearch(const Options &opts, options::Registry &regis
 shared_ptr<SearchEngine> GoalSubsetSearch::get_next_search_engine() {
 
     
-    bool has_next = meta_search_space->next_node();
+    bool has_next = meta_search_space->next_node_to_test();
     if (has_next){
         tasks::g_root_task = make_shared<extra_tasks::ModifiedGoalsTask>(task, meta_search_space->get_current_goals()); 
 

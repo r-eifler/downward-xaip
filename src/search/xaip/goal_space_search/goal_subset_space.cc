@@ -165,9 +165,9 @@ void GoalSubsetSpace::expand(){
                 // cout << "is not solvable" << endl;
                 node->not_solved();
             }
-            else {
-                open_list.push_back(node);
-            }
+
+            open_list.push_back(node);
+
         }
     }
     // cout << "------------ EXPAND ------------" << endl;
@@ -182,19 +182,19 @@ vector<FactPair> GoalSubsetSpace::get_goals(const GoalSpaceNode* node) const
     return current_goals;
 }
 
- GoalSpaceNode*  GoalSubsetSpace::get_next_node(){
+bool GoalSubsetSpace::next_node_to_test(){
     while(!open_list.empty()){
         GoalSpaceNode* next_node = open_list.front();
         open_list.pop_front();
-        if(!next_node->statusDefined())
-            return next_node;
+        current_node = next_node;
+        if(next_node->statusDefined()){
+           this->expand();
+        }
+        else{
+            return true;
+        }
     }
-    return NULL;
-}
-
-bool  GoalSubsetSpace::next_node(){
-    current_node = get_next_node();
-    return current_node != NULL;
+    return false;
 }
 
 vector<FactPair> GoalSubsetSpace::get_current_goals()

@@ -54,6 +54,10 @@ class GoalSubset {
         return goals.size();
     }
 
+    size_t count() const {
+        return goals.count();
+    }
+
     bool operator==(const GoalSubset &other) const{ 
         return goals == other.goals;
     }

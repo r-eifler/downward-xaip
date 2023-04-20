@@ -96,6 +96,14 @@ public:
         printed = false;
     }
 
+    size_t size(){
+        return goals.size();
+    }
+
+    size_t count(){
+        return goals.count();
+    }
+
     std::vector<FactPair>  get_goals(const std::vector<FactPair>& all_goals) const;
     void print(const std::vector<FactPair>& all_goals);
     void print();
@@ -141,12 +149,6 @@ protected:
 
     std::vector<std::string> soft_goal_fact_names;
 
-    /**
-     * removes nodes from the openlist until one with an undefined status is found
-     * @return the first node with undefined status
-     */
-    GoalSpaceNode* get_next_node();
-
     GoalSubsets generate_MUGS();
     GoalSubsets generate_MSGS();
 
@@ -182,10 +184,10 @@ public:
     std::vector<FactPair> get_goals(const GoalSpaceNode* node) const;
 
     /**
-     * updates the current_node with the node returned by get_next_node
-     * @return false if there is no next node true otherwise
+     * looks for the next node whose status can not be derived
+     * @return true if there is a node with undefined states false otherwise
      */
-    bool next_node();
+    bool next_node_to_test();
 
     /**
      * Converts the bit set representation to a variable value pair representation
