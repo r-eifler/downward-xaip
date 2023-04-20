@@ -86,8 +86,8 @@ SearchStatus GoalSubsetSearch::step() {
 
 
 void GoalSubsetSearch::print_statistics() const {
-    log << "Cumulative statistics:" << endl;
-    statistics.print_detailed_statistics();
+    // log << "Cumulative statistics:" << endl;
+    // statistics.print_detailed_statistics();
 
     cout << "-------------------------------------" << endl;
     cout << "#solved goal subsets: "  << num_solved_nodes << endl;;

@@ -176,8 +176,8 @@ SearchStatus DualizationSearch::step() {
 
 
 void DualizationSearch::print_statistics() const {
-    log << "Cumulative statistics:" << endl;
-    statistics.print_detailed_statistics();
+    // log << "Cumulative statistics:" << endl;
+    // statistics.print_detailed_statistics();
 
     cout << "*********************************"  << endl;
     cout << "#planner calls: " << num_planner_calls << endl;
