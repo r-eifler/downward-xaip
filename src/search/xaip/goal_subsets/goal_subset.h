@@ -26,7 +26,11 @@ class GoalSubset {
         return goals[goal_id];
     };
 
-    bool isSubsetOf(GoalSubset set) const{
+    void add(int goal_id) {
+        goals[goal_id] = true;
+    };
+
+    bool is_subset_of(GoalSubset set) const{
         if(goals.size() != set.size()){
             return false;
         }
@@ -38,7 +42,7 @@ class GoalSubset {
         return true;
     };
 
-    bool isSupersetOf(GoalSubset set) const{
+    bool is_superset_of(GoalSubset set) const{
         if(goals.size() != set.size()){
             return false;
         }
@@ -48,6 +52,18 @@ class GoalSubset {
             }
         }
         return true;
+    };
+
+    bool is_strict_superset_of(GoalSubset set) const{
+        if(goals.size() != set.size()){
+            return false;
+        }
+        for(long unsigned int i = 0; i < goals.size(); i++){
+            if(set.contains(i)  && !this->contains(i)){
+                return false;
+            }
+        }
+        return true && ! (set == *this);
     };
 
     size_t size() const {
@@ -72,6 +88,10 @@ class GoalSubset {
 
     bool is_empty() const{
         return goals.none();
+    }
+
+    bool all() const{
+        return goals.all();
     }
 
     std::vector<GoalSubset> weaken() const;

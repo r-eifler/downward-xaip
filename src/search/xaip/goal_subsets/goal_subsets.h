@@ -12,7 +12,7 @@ typedef std::unordered_set<goalsubset::GoalSubset, goalsubset::GoalSubsetHashFun
 
 class GoalSubsets {
 
-private: 
+protected: 
 
     GoalSubsetHashSet subsets;
 
@@ -42,6 +42,7 @@ public:
     void to_file(std::vector<std::string> goal_facts_names, std::string file_name = "mugs.json");
 
     void minimize_non_minimal_subsets();
+    void minimize_non_maximal_subsets();
     GoalSubsets cross_product(GoalSubsets sets) const;
     GoalSubsets complement() const;
     GoalSubsets minus(GoalSubsets sets) const;

@@ -100,6 +100,36 @@ int HSPMaxHeuristic::compute_heuristic(const State &ancestor_state) {
     return total_cost;
 }
 
+boost::dynamic_bitset<> HSPMaxHeuristic::compute_reachable_goal_facts(const State &state){
+
+    setup_exploration_queue();
+    setup_exploration_queue_state(state);
+    relaxed_exploration();
+
+    boost::dynamic_bitset<> reachable = boost::dynamic_bitset<>(0,0);
+    for (PropID goal_id : goal_propositions) {
+        const Proposition *goal = get_proposition(goal_id);
+        int prop_cost = goal->cost;
+        reachable.append(prop_cost != -1);
+    }
+
+    return reachable;
+}
+
+boost::dynamic_bitset<> HSPMaxHeuristic::compute_reachable_goal_facts(const State &state, int cost_bound) {
+    setup_exploration_queue();
+    setup_exploration_queue_state(state);
+    relaxed_exploration();
+
+    boost::dynamic_bitset<> reachable = boost::dynamic_bitset<>(goal_propositions.size(),0);
+    for(size_t i = 0; i < goal_propositions.size(); i++){
+        const Proposition *goal = get_proposition(goal_propositions[i]);
+        int prop_cost = goal->cost;
+        reachable[i] = ((prop_cost != -1) && (prop_cost < cost_bound));
+    }
+    return reachable;
+}
+
 static shared_ptr<Heuristic> _parse(OptionParser &parser) {
     parser.document_synopsis("Max heuristic", "");
     parser.document_language_support("action costs", "supported");

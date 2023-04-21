@@ -101,7 +101,7 @@ GoalSubsetSpace::GoalSubsetSpace(GoalsProxy goals, bool all_soft_goals, bool wea
     //sort goal facts according to there variable id
     std::sort(soft_goal_list.begin(), soft_goal_list.end());
 
-     for(uint i = 0; i < soft_goal_list.size(); i++){
+    for(uint i = 0; i < soft_goal_list.size(); i++){
         FactPair gp = soft_goal_list[i];
         soft_goal_fact_names.push_back(task_proxy.get_variables()[gp.var].get_fact(gp.value).get_name());
     }

@@ -8,7 +8,9 @@
 using namespace std;
 using namespace goalsubset;
 
-GoalSubsets::GoalSubsets() {}
+GoalSubsets::GoalSubsets() {
+    subsets = GoalSubsetHashSet();
+}
 
 GoalSubsets::GoalSubsets(GoalSubsetHashSet subsets): subsets(subsets) {}
 
@@ -130,12 +132,41 @@ void GoalSubsets::minimize_non_minimal_subsets(){
         auto it = minimized.begin();
 
         while(it != minimized.end()){
-            if(add_set.isSubsetOf(*it)){
+            if(add_set.is_subset_of(*it)){
                 it = minimized.erase(it);
                 continue;
             }
 
-            if(add_set.isSupersetOf(*it)){
+            if(add_set.is_superset_of(*it)){
+                add_to_minimized = false;
+            }
+
+            it++;
+        }
+
+        if(add_to_minimized){
+            minimized.insert(add_set);
+        }
+
+    }
+    this->subsets = minimized;
+}
+
+
+void GoalSubsets::minimize_non_maximal_subsets(){
+    GoalSubsetHashSet minimized;
+
+    for(GoalSubset add_set : subsets){
+        bool add_to_minimized = true;
+        auto it = minimized.begin();
+
+        while(it != minimized.end()){
+            if(add_set.is_superset_of(*it)){
+                it = minimized.erase(it);
+                continue;
+            }
+
+            if(add_set.is_subset_of(*it)){
                 add_to_minimized = false;
             }
 

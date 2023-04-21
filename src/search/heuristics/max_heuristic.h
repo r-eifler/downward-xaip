@@ -6,6 +6,7 @@
 #include "../algorithms/priority_queues.h"
 
 #include <cassert>
+#include <boost/dynamic_bitset.hpp>
 
 namespace max_heuristic {
 using relaxation_heuristic::PropID;
@@ -34,6 +35,8 @@ protected:
     virtual int compute_heuristic(const State &ancestor_state) override;
 public:
     explicit HSPMaxHeuristic(const options::Options &opts);
+    boost::dynamic_bitset<> compute_reachable_goal_facts(const State &state);
+    boost::dynamic_bitset<> compute_reachable_goal_facts(const State &state, int remaining_cost);
 };
 }
 

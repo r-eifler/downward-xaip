@@ -22,21 +22,27 @@ class Options;
 }
 
 class PruningMethod {
-    utils::Timer timer;
+    utils::Timer timer_ops;
+    utils::Timer timer_states;
     friend class limited_pruning::LimitedPruning;
 
     virtual void prune(
         const State &state, std::vector<OperatorID> &op_ids) = 0;
+    virtual bool prune(const State &state, int remaining_cost);
+
 protected:
     mutable utils::LogProxy log;
     std::shared_ptr<AbstractTask> task;
     long num_successors_before_pruning;
     long num_successors_after_pruning;
+    long num_tested_states;
+    long num_pruned_states;
 public:
     explicit PruningMethod(const options::Options &opts);
     virtual ~PruningMethod() = default;
     virtual void initialize(const std::shared_ptr<AbstractTask> &task);
     void prune_operators(const State &state, std::vector<OperatorID> &op_ids);
+    bool prune_state(const State &state, int remaining_cost);
     virtual void print_statistics() const;
 };
 

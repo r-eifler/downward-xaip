@@ -467,45 +467,20 @@ fast_downward_plugin(
 )
 
 fast_downward_plugin(
-    NAME GOAL_SUBSET
-    HELP "goal subsets"
+    NAME XAIP
+    HELP "MUGS computation"
     SOURCES
         xaip/goal_subsets/goal_subset
         xaip/goal_subsets/goal_subsets
-    DEPENDENCY_ONLY
-)
-
-fast_downward_plugin(
-    NAME GOAL_SUBSET_SEARCH
-    HELP "goal subset search arlgorithm"
-    SOURCES
         xaip/goal_space_search/goal_subset_search
         xaip/goal_space_search/goal_subset_space
-    DEPENDS GOAL_SUBSET
-)
-
-fast_downward_plugin(
-    NAME WEAKENING_GOAL_SUBSET_SEARCH
-    HELP "goal subset search arlgorithm from largest to smallest goal subset"
-    SOURCES
-    xaip/goal_space_search/plugin_wgss
-    DEPENDS GOAL_SUBSET_SEARCH
-)
-
-fast_downward_plugin(
-    NAME strengthening_GOAL_SUBSET_SEARCH
-    HELP "goal subset search arlgorithm from smallest to largest goal subset"
-    SOURCES
-    xaip/goal_space_search/plugin_sgss
-    DEPENDS GOAL_SUBSET_SEARCH
-)
-
-fast_downward_plugin(
-    NAME DUALIZATION_SEARCH
-    HELP "MUGS search approach based on dualization search from CSP"
-    SOURCES
-    xaip/goal_space_search/dualization
-    DEPENDS GOAL_SUBSET
+        xaip/goal_space_search/plugin_wgss
+        xaip/goal_space_search/plugin_sgss
+        xaip/goal_space_search/dualization
+        xaip/explicit_mugs_search/msgs_collection
+        xaip/explicit_mugs_search/reachable_goal_subsets_hmax_pruning
+        xaip/explicit_mugs_search/reachable_goal_subsets_max_heuristic
+    DEPENDS MAX_HEURISTIC
 )
 
 fast_downward_plugin(

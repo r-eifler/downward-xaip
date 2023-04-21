@@ -227,6 +227,11 @@ SearchStatus EagerSearch::step() {
                 statistics.inc_dead_ends();
                 continue;
             }
+            if (pruning_method->prune_state(s,bound - succ_g)){
+                node->mark_as_dead_end();
+                statistics.inc_dead_ends();
+                continue;
+            }
             succ_node.open(*node, op, get_adjusted_cost(op));
 
             open_list->insert(succ_eval_context, succ_state.get_id());
