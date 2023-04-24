@@ -52,7 +52,7 @@ public:
     bool can_reach_goal(unsigned conjid) const;
     const Formula& get_all_conjunctions_formula() const;
     Formula& get_all_conjunctions_formula();
-    bool evaluate_check_dead_end(const GlobalState& state);
+    bool evaluate_check_dead_end(const State& state);
 
     std::pair<unsigned, bool> insert_conjunction(const std::vector<unsigned>& conj);
     void set_transitions(unsigned conj_id, std::vector<ForwardHyperTransition>&& transitions);
@@ -66,7 +66,7 @@ public:
     static void add_options_to_parser(options::OptionParser& parser);
 protected:
     void initialize(unsigned k);
-    virtual int compute_heuristic(const GlobalState &state) override;
+    virtual int compute_heuristic(const State &state) override;
     int compute_heuristic(const std::vector<unsigned>& state);
 
     bool are_mutex(const std::vector<unsigned>& conj, unsigned op) const;

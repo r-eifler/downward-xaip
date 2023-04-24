@@ -7,7 +7,7 @@
 #include <utility>
 #include <string>
 
-class GlobalState;
+class State;
 
 namespace conflict_driven_learning
 {
@@ -86,7 +86,7 @@ unsigned get_fact_id(const std::pair<t_var, t_val> &assignment)
 }
 std::pair<int, int> get_variable_assignment(const unsigned& fact_id);
 std::size_t num_facts();
-void get_fact_ids(std::vector<unsigned>& fact_ids, const GlobalState& state);
+void get_fact_ids(std::vector<unsigned>& fact_ids, const State& state);
 void get_fact_ids(std::vector<unsigned>& fact_ids, const std::vector<std::pair<int, int> >& state);
 
 }

@@ -3,7 +3,6 @@
 #include "../algorithms/ordered_set.h"
 #include "../evaluation_context.h"
 #include "../evaluation_result.h"
-#include "../globals.h"
 #include "../operator_cost.h"
 #include "../option_parser.h"
 #include "../plugin.h"
@@ -45,7 +44,7 @@ _set_bound(int& status, int bound)
 }
 
 BoundedCostTarjanSearch::Locals::Locals(
-    const GlobalState& state,
+    const State& state,
     bool zero_layer,
     unsigned size)
     : state(state)
@@ -141,7 +140,7 @@ bool
 BoundedCostTarjanSearch::increment_bound_and_push_initial_state()
 {
     m_current_g = 0;
-    GlobalState istate = state_registry.get_initial_state();
+    State istate = state_registry.get_initial_state();
     while (true) {
         assert(bound <= _get_bound(m_state_information[istate]));
         bound = _get_bound(m_state_information[istate]);
@@ -161,7 +160,7 @@ BoundedCostTarjanSearch::increment_bound_and_push_initial_state()
 void
 BoundedCostTarjanSearch::initialize()
 {
-    GlobalState istate = state_registry.get_initial_state();
+    State istate = state_registry.get_initial_state();
     for (Evaluator* pde : m_path_dependent_evaluators) {
         pde->notify_initial_state(istate);
     }
@@ -182,7 +181,7 @@ BoundedCostTarjanSearch::initialize()
 
 bool
 BoundedCostTarjanSearch::evaluate(
-    const GlobalState& state,
+    const State& state,
     Evaluator* eval,
     int g)
 {
@@ -199,13 +198,13 @@ BoundedCostTarjanSearch::evaluate(
 }
 
 bool
-BoundedCostTarjanSearch::expand(const GlobalState& state)
+BoundedCostTarjanSearch::expand(const State& state)
 {
     return expand(state, NULL);
 }
 
 bool
-BoundedCostTarjanSearch::expand(const GlobalState& state, PerLayerData* layer)
+BoundedCostTarjanSearch::expand(const State& state, PerLayerData* layer)
 {
     static std::vector<OperatorID> aops;
     assert(aops.empty());
@@ -239,7 +238,7 @@ BoundedCostTarjanSearch::expand(const GlobalState& state, PerLayerData* layer)
     m_call_stack.emplace_back(state, has_zero_cost, m_neighbors.size());
     Locals& locals = m_call_stack.back();
 
-    g_successor_generator->generate_applicable_ops(state, aops);
+    successor_generator.generate_applicable_ops(state, aops);
     m_pruning_method->prune_operators(state, aops);
     statistics.inc_generated(aops.size());
     if (m_preferred) {
@@ -253,7 +252,7 @@ BoundedCostTarjanSearch::expand(const GlobalState& state, PerLayerData* layer)
     }
     for (unsigned i = 0; i < aops.size(); i++) {
         auto op = m_task_proxy.get_operators()[aops[i]];
-        GlobalState succ = state_registry.get_successor_state(state, op);
+        State succ = state_registry.get_successor_state(state, op);
         int& succ_info = m_state_information[succ];
         for (Evaluator* pde : m_path_dependent_evaluators) {
             pde->notify_state_transition(state, aops[i], succ);
@@ -294,7 +293,7 @@ BoundedCostTarjanSearch::expand(const GlobalState& state, PerLayerData* layer)
 SearchStatus
 BoundedCostTarjanSearch::step()
 {
-    static std::vector<std::pair<int, GlobalState>> component_neighbors;
+    static std::vector<std::pair<int, State>> component_neighbors;
     static std::unordered_map<StateID, int> hashed_neighbors;
 
     if (m_solved) {
@@ -358,7 +357,7 @@ BoundedCostTarjanSearch::step()
             locals.open.erase(it);
         }
         locals.successor_op = succ.first;
-        GlobalState succ_state = state_registry.lookup_state(succ.second);
+        State succ_state = state_registry.lookup_state(succ.second);
         int cost =
             m_task->get_operator_cost(locals.successor_op.get_index(), false);
         m_current_g += cost;
@@ -372,7 +371,8 @@ BoundedCostTarjanSearch::step()
                         succ_state, m_expansion_evaluator, m_current_g); // mugs
                     evaluate(
                         succ_state, m_pruning_evaluator, m_current_g); // mugs
-                    m_pruning_method->prune_state(succ_state);
+                    ///TODO do we need the prune state function ?
+                    // m_pruning_method->prune_state(succ_state);
                     m_solved = true;
                     m_current_g -= cost;
                     return SearchStatus::IN_PROGRESS;
@@ -458,13 +458,13 @@ BoundedCostTarjanSearch::step()
                     hashed_neighbors.clear();
                     neighbors = std::unique_ptr<SuccessorComponent>(
                         new SuccessorComponentIterator<
-                            std::vector<std::pair<int, GlobalState>>::iterator>(
+                            std::vector<std::pair<int, State>>::iterator>(
                             component_neighbors.begin(),
                             component_neighbors.end()));
                 } else {
                     neighbors = std::unique_ptr<SuccessorComponent>(
                         new SuccessorComponentIterator<
-                            std::deque<std::pair<int, GlobalState>>::iterator>(
+                            std::deque<std::pair<int, State>>::iterator>(
                             m_neighbors.begin() + locals.neighbors_size,
                             m_neighbors.end()));
                 }
@@ -474,8 +474,8 @@ BoundedCostTarjanSearch::step()
                     if (state_info != NULL) {
                         for (auto it = m_last_layer->stack.begin();; it++) {
                             component_state_ids.insert((*it).get_id());
-                            if ((*it).get_id().hash()
-                                == locals.state.get_id().hash()) {
+                            if ((*it).get_id()
+                                == locals.state.get_id()) {
                                 break;
                             }
                         }
@@ -491,14 +491,14 @@ BoundedCostTarjanSearch::step()
                     for (auto it = component_state_ids.begin();
                          it != component_state_ids.end();
                          it++) {
-                        GlobalState state = state_registry.lookup_state(*it);
+                        State state = state_registry.lookup_state(*it);
                         std::vector<OperatorID> aops;
-                        g_successor_generator->generate_applicable_ops(
+                        successor_generator.generate_applicable_ops(
                             state, aops);
                         for (int i = aops.size() - 1; i >= 0; i--) {
                             OperatorProxy op =
                                 m_task_proxy.get_operators()[aops[i]];
-                            GlobalState succ =
+                            State succ =
                                 state_registry.get_successor_state(state, op);
                             assert(
                                 component_state_ids.count(succ.get_id())
@@ -531,7 +531,7 @@ BoundedCostTarjanSearch::step()
                     m_state_information[locals.state], bound - m_current_g);
                 if (c_refinement_toggle) { // && c_learning_belt <= m_current_g)
                                            // {
-                    SingletonComponent<GlobalState> component(locals.state);
+                    SingletonComponent<State> component(locals.state);
                     c_refinement_toggle = m_refiner->notify(
                         bound - m_current_g, component, *neighbors);
                 }
@@ -543,14 +543,14 @@ BoundedCostTarjanSearch::step()
                         m_state_information[*component_end],
                         bound - m_current_g);
                     m_last_layer->state_infos.remove(component_end->get_id());
-                    if ((component_end++)->get_id().hash()
-                        == locals.state.get_id().hash()) {
+                    if ((component_end++)->get_id()
+                        == locals.state.get_id()) {
                         break;
                     }
                 }
                 if (c_refinement_toggle) { // && c_learning_belt <= m_current_g)
                                            // {
-                    StateComponentIterator<std::deque<GlobalState>::iterator>
+                    StateComponentIterator<std::deque<State>::iterator>
                         component(m_last_layer->stack.begin(), component_end);
                     c_refinement_toggle = m_refiner->notify(
                         bound - m_current_g, component, *neighbors);
@@ -602,12 +602,12 @@ BoundedCostTarjanSearch::print_statistics() const
     if (m_refiner != nullptr) {
         m_refiner->print_statistics();
     }
-    if (m_expansion_evaluator != nullptr) {
-        m_expansion_evaluator->print_evaluator_statistics();
-    }
-    if (m_pruning_evaluator != nullptr) {
-        m_pruning_evaluator->print_evaluator_statistics();
-    }
+    // if (m_expansion_evaluator != nullptr) {
+    //     m_expansion_evaluator->print_evaluator_statistics();
+    // }
+    // if (m_pruning_evaluator != nullptr) {
+    //     m_pruning_evaluator->print_evaluator_statistics();
+    // }
 #ifndef NDEBUG
     hc_heuristic::HCHeuristic* h =
         dynamic_cast<hc_heuristic::HCHeuristic*>(m_pruning_evaluator);
@@ -618,11 +618,11 @@ BoundedCostTarjanSearch::print_statistics() const
     m_pruning_method->print_statistics();
 }
 
-double
-BoundedCostTarjanSearch::get_heuristic_refinement_time() const
-{
-    return m_refiner != nullptr ? m_refiner->get_refinement_timer()() : 0;
-}
+// double
+// BoundedCostTarjanSearch::get_heuristic_refinement_time() const
+// {
+//     return m_refiner != nullptr ? m_refiner->get_refinement_timer()() : 0;
+// }
 
 void
 BoundedCostTarjanSearch::add_options_to_parser(options::OptionParser& parser)
@@ -666,5 +666,5 @@ _parse(options::OptionParser& p)
     return nullptr;
 }
 
-static PluginShared<SearchEngine> _plugin("bounded_cost_dfs", _parse);
+static Plugin<SearchEngine> _plugin("bounded_cost_dfs", _parse);
 

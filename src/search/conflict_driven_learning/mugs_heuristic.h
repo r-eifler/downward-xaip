@@ -15,7 +15,7 @@ namespace mugs {
 class MugsHeuristic : public Heuristic {
 public:
     MugsHeuristic(const options::Options& opts);
-    virtual void print_evaluator_statistics() const override;
+    // virtual void print_statistics() const override;
     virtual EvaluationResult
     compute_result(EvaluationContext& context) override;
     static void add_options_to_parser(options::OptionParser& parser);
@@ -53,7 +53,7 @@ public:
         std::vector<std::pair<int, int>>& sat) const;
 
 protected:
-    virtual int compute_heuristic(const GlobalState&) { return 0; }
+    virtual int compute_heuristic(const State&) { return 0; }
     virtual bool is_any_mug_reachable(const EvaluationContext& context) = 0;
     virtual void on_removed_subgoal(const subgoal_t&) {}
     virtual void on_added_subgoal(const subgoal_t&) {}

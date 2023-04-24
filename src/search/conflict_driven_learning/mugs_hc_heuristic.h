@@ -16,7 +16,7 @@ public:
 
     hc_heuristic::HCHeuristic* get_underlying_heuristic() const { return hc_; }
     void sync();
-    virtual void print_evaluator_statistics() const override;
+    // virtual void print_evaluator_statistics() const override;
 
 protected:
     virtual bool

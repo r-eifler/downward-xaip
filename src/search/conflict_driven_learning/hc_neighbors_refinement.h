@@ -111,7 +111,7 @@ protected:
     virtual void initialize() override;
 
     void set_goal(const std::vector<std::pair<int, int>>& goal_facts);
-    bool prepare_current_state_cost(int bound, const GlobalState& state);
+    bool prepare_current_state_cost(int bound, const State& state);
     void prepare_component_data(StateComponent& component);
     void prepare_successor_data(int bound, SuccessorComponent& successors);
     void update_successor_data(SuccessorComponent& successors);

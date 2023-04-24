@@ -3,7 +3,6 @@
 #include "strips_compilation.h"
 #include "set_utils.h"
 
-#include "../global_state.h"
 #include "../tasks/root_task.h"
 
 // #include "../../globals.h"
@@ -80,7 +79,7 @@ bool UCNeighborsRefinement::learn_from_dead_end_component(
     const std::vector<std::pair<int, int> >& goal = m_hc->get_auxiliary_goal();
     const std::vector<unsigned>& goal_conjs = m_hc->get_auxiliary_goal_conjunctions();
     while (!component.end()) {
-        const GlobalState &state = component.current();
+        const State &state = component.current();
         if (m_component_size == 0) {
             m_hc->evaluate(state, 0);
             for (int i = goal_conjs.size() - 1; i >= 0; i--) {
@@ -106,7 +105,7 @@ bool UCNeighborsRefinement::learn_from_dead_end_component(
         bool is_goal_state = true;
         for (int i = goal.size() - 1; i >= 0; i--) {
             const auto& g = goal[i];
-            if (state[g.first] != g.second) {
+            if (state[g.first].get_value() != g.second) {
                 is_goal_state = false;
                 break;
             }
@@ -121,7 +120,7 @@ bool UCNeighborsRefinement::learn_from_dead_end_component(
         unsigned p = 0;
         for (int var = 0; var < m_task->get_num_variables(); var++) {
             for (int val = 0; val < m_task->get_variable_domain_size(var); val++) {
-                if (state[var] != val) {
+                if (state[var].get_value() != val) {
                     assert(p == strips::get_fact_id(var, val));
                     m_fact_to_negated_component[p].push_back(m_component_size);
                     m_negated_component_to_facts[m_component_size].push_back(p);
@@ -137,7 +136,7 @@ bool UCNeighborsRefinement::learn_from_dead_end_component(
         m_num_successors = 0;
         m_conjunction_to_successors.resize(m_hc->num_conjunctions());
         while (!neighbors.end()) {
-            const GlobalState &state = neighbors.current();
+            const State &state = neighbors.current();
 #ifndef NDEBUG
             int res =
 #endif
@@ -489,4 +488,4 @@ _parse(options::OptionParser& parser)
     return nullptr;
 }
 
-static PluginShared<conflict_driven_learning::ConflictLearner> _plugin("ucrn", _parse);
+static Plugin<conflict_driven_learning::ConflictLearner> _plugin("ucrn", _parse);

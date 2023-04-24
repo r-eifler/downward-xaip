@@ -20,7 +20,7 @@ private:
 public:
     SearchSpaceBase(const StateRegistry* state_registry);
     virtual ~SearchSpaceBase() = default;
-    Node operator[](const GlobalState& state);
+    Node operator[](const State& state);
     void trace_path(Node node, std::vector<OperatorID>& path);
 };
 
@@ -33,7 +33,7 @@ SearchSpaceBase<Info, Node>::SearchSpaceBase(
 template<typename Info, typename Node>
 Node
 SearchSpaceBase<Info, Node>::operator[](
-    const GlobalState& state)
+    const State& state)
 {
     return Node(m_data[state], state.get_id());
 }

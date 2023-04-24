@@ -70,7 +70,7 @@ HeuristicRefiner::notify(
 // bool HeuristicRefiner::notify(
 //        int bound,
 //        StateComponent &&component,
-//        std::vector<std::pair<int, GlobalState> > &recognized_neighbors)
+//        std::vector<std::pair<int, State> > &recognized_neighbors)
 //{
 //    return notify(bound, component, recognized_neighbors);
 //}

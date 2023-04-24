@@ -1,7 +1,7 @@
 #ifndef STATE_COMPONENT_H
 #define STATE_COMPONENT_H
 
-#include "../global_state.h"
+#include "../task_proxy.h"
 
 namespace conflict_driven_learning
 {
@@ -43,13 +43,13 @@ public:
 };
 
 
-using StateComponent = Component<GlobalState>;
+using StateComponent = Component<State>;
 template<typename Iterator>
-using StateComponentIterator = ComponentIterator<GlobalState, Iterator>;
+using StateComponentIterator = ComponentIterator<State, Iterator>;
 
-using SuccessorComponent = Component<std::pair<int, GlobalState> >;
+using SuccessorComponent = Component<std::pair<int, State> >;
 template<typename Iterator>
-using SuccessorComponentIterator = ComponentIterator<std::pair<int, GlobalState>, Iterator>;
+using SuccessorComponentIterator = ComponentIterator<std::pair<int, State>, Iterator>;
 
 }
 

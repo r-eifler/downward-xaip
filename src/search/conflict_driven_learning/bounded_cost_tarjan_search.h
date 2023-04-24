@@ -5,7 +5,6 @@
 #include "../per_state_information.h"
 #include "../operator_id.h"
 #include "../state_id.h"
-#include "../global_state.h"
 #include "../evaluator.h"
 #include "heuristic_refiner.h"
 
@@ -25,7 +24,7 @@ public:
     BoundedCostTarjanSearch(const options::Options& opts);
     virtual ~BoundedCostTarjanSearch() = default;
     virtual void print_statistics() const override;
-    virtual double get_heuristic_refinement_time() const override;
+    // virtual double get_heuristic_refinement_time() const override;
     static void add_options_to_parser(options::OptionParser& parser);
 
 protected:
@@ -33,19 +32,19 @@ protected:
 
     virtual void initialize() override;
     virtual SearchStatus step() override;
-    bool evaluate(const GlobalState& state, Evaluator* eval, int g);
-    bool expand(const GlobalState& state);
-    bool expand(const GlobalState& state,
+    bool evaluate(const State& state, Evaluator* eval, int g);
+    bool expand(const State& state);
+    bool expand(const State& state,
                 PerLayerData* layer);
     // bool increment_bound_and_push_initial_state();
 
     struct Locals {
-        GlobalState state;
+        State state;
         OperatorID successor_op;
         std::map<std::pair<bool, int>, std::deque<std::pair<OperatorID, StateID> > > open;
         bool zero_layer;
         unsigned neighbors_size;
-        Locals(const GlobalState& state, bool zero_layer, unsigned size);
+        Locals(const State& state, bool zero_layer, unsigned size);
     };
 
     struct ExpansionInfo {
@@ -64,7 +63,7 @@ protected:
 
     struct PerLayerData {
         int index;
-        std::deque<GlobalState> stack;
+        std::deque<State> stack;
         HashMap state_infos;
         PerLayerData();
     };
@@ -94,7 +93,7 @@ protected:
     PerStateInformation<int> m_state_information;
     std::deque<PerLayerData> m_layers;
     PerLayerData* m_last_layer;
-    std::deque<std::pair<int, GlobalState> > m_neighbors;
+    std::deque<std::pair<int, State> > m_neighbors;
     std::deque<Locals> m_call_stack;
     bool m_solved;
 

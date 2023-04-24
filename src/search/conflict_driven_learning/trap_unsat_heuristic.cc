@@ -4,7 +4,7 @@
 #include "set_utils.h"
 #include "../option_parser.h"
 #include "../plugin.h"
-#include "../global_state.h"
+#include "../task_proxy.h"
 #include "../utils/timer.h"
 
 #include <algorithm>
@@ -217,12 +217,12 @@ TrapUnsatHeuristic::compute_heuristic(const std::vector<unsigned> &state)
 }
 
 int
-TrapUnsatHeuristic::compute_heuristic(const GlobalState &state)
+TrapUnsatHeuristic::compute_heuristic(const State &state)
 {
     static std::vector<unsigned> state_fact_ids;
     state_fact_ids.clear();
     for (int var = 0; var < task->get_num_variables(); var++) {
-        state_fact_ids.push_back(strips::get_fact_id(var, state[var]));
+        state_fact_ids.push_back(strips::get_fact_id(var, state[var].get_value()));
     }
     return compute_heuristic(state_fact_ids);
 }
@@ -490,7 +490,7 @@ TrapUnsatHeuristic::set_transitions(
 }
 
 bool
-TrapUnsatHeuristic::evaluate_check_dead_end(const GlobalState& state)
+TrapUnsatHeuristic::evaluate_check_dead_end(const State& state)
 {
     return compute_heuristic(state) == DEAD_END;
 }
@@ -510,14 +510,13 @@ TrapUnsatHeuristic::get_num_transitions() const
 }
 }
 
-static Heuristic*
-_parse(options::OptionParser& parser)
+static std::shared_ptr<Heuristic> _parse(OptionParser &parser)
 {
     conflict_driven_learning::traps::TrapUnsatHeuristic::add_options_to_parser(parser);
     Options opts = parser.parse();
     if (!parser.dry_run()) {
         opts.set<bool>("cache_estimates", false);
-        return new conflict_driven_learning::traps::TrapUnsatHeuristic(opts);
+        return std::make_shared<conflict_driven_learning::traps::TrapUnsatHeuristic>(opts);
     }
     return nullptr;
 }

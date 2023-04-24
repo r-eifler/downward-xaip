@@ -4,7 +4,7 @@
 
 #include "../option_parser.h"
 #include "../plugin.h"
-#include "../global_state.h"
+#include "../task_proxy.h"
 #include "../utils/hash.h"
 
 #include <unordered_set>
@@ -66,7 +66,7 @@ TrapNeighborsRefinement::learn_from_dead_end_component(
     std::vector<std::vector<unsigned> > conjunctions;
     std::vector<unsigned> num_facts_goal_mutex;
 #ifndef NDEBUG
-    std::unordered_set<int> state_ids;
+    std::unordered_set<StateID> state_ids;
 #endif
 
     auto task = m_trap->get_abstract_task();
@@ -74,14 +74,14 @@ TrapNeighborsRefinement::learn_from_dead_end_component(
         conjunctions.emplace_back(m_task->get_num_variables());
         std::vector<unsigned>& conj = conjunctions.back();
         conj.clear();
-        const GlobalState& state = component.current();
+        const State& state = component.current();
 
         // the following code is required if goal in search is different from
         // goal in heuristic
         bool is_goal_state = true;
         for (int i = 0; i < task->get_num_goals(); i++) {
             FactPair g = task->get_goal_fact(i);
-            if (state[g.var] != g.value) {
+            if (state[g.var].get_value() != g.value) {
                 is_goal_state = false;
                 break;
             }
@@ -91,7 +91,7 @@ TrapNeighborsRefinement::learn_from_dead_end_component(
         }
 
         for (int var = 0; var < m_task->get_num_variables(); var++) {
-            conj.push_back(strips::get_fact_id(var, state[var]));
+            conj.push_back(strips::get_fact_id(var, state[var].get_value()));
         }
         lookup.insert(conj);
         unsigned num = 0;
@@ -102,8 +102,8 @@ TrapNeighborsRefinement::learn_from_dead_end_component(
         }
         num_facts_goal_mutex.push_back(num);
 #ifndef NDEBUG
-        assert(!state_ids.count(state.get_id().hash()));
-        state_ids.insert(state.get_id().hash());
+        assert(!state_ids.count(state.get_id()));
+        state_ids.insert(state.get_id());
 #endif
         component.next();
     }
@@ -264,7 +264,7 @@ TrapNeighborsRefinement::learn_from_dead_end_component(
     std::vector<unsigned> conjs;
     component.reset();
     while (!component.end()) {
-        const GlobalState& state = component.current();
+        const State& state = component.current();
         for (int var = 0; var < m_task->get_num_variables(); var++) {
             conjs.push_back(strips::get_fact_id(var, state[var]));
         }
@@ -300,5 +300,5 @@ _parse(options::OptionParser& parser)
     return nullptr;
 }
 
-static PluginShared<conflict_driven_learning::ConflictLearner> _plugin("trapsrn", _parse);
+static Plugin<conflict_driven_learning::ConflictLearner> _plugin("trapsrn", _parse);
 

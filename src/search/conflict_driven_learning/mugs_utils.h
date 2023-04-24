@@ -9,7 +9,7 @@
 #include <unordered_set>
 #include <vector>
 
-class GlobalState;
+class State;
 
 namespace conflict_driven_learning {
 namespace mugs {
@@ -23,7 +23,7 @@ extern unsigned num_satisfied_goals(const subgoal_t& subgoal);
 extern bool is_superset(const subgoal_t& super, const subgoal_t& sub);
 
 extern subgoal_t get_subgoals(
-    const GlobalState& state,
+    const State& state,
     const std::vector<std::pair<int, int>>& goal);
 
 extern void get_goal_facts(

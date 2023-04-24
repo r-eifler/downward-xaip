@@ -3,7 +3,7 @@
 #include "../abstract_task.h"
 #include "../evaluation_context.h"
 #include "../evaluation_result.h"
-#include "../global_state.h"
+#include "../task_proxy.h"
 #include "../option_parser.h"
 #include "../plugin.h"
 #include "../tasks/root_task.h"
@@ -97,7 +97,7 @@ _parse(options::OptionParser& p)
     return std::make_shared<MugsHCRefiner>(opts);
 }
 
-static PluginShared<HeuristicRefiner> _plugin("mugs_hc_refiner", _parse);
+static Plugin<HeuristicRefiner> _plugin("mugs_hc_refiner", _parse);
 
 } // namespace mugs
 } // namespace conflict_driven_learning

@@ -1,7 +1,7 @@
 #include "mugs_hc_heuristic.h"
 
 #include "../evaluation_context.h"
-#include "../global_state.h"
+#include "../task_proxy.h"
 #include "../option_parser.h"
 #include "../plugin.h"
 #include "strips_compilation.h"
@@ -179,23 +179,22 @@ MugsCriticalPathHeuristic::check_for_reachable_mug_top_down(
     return false;
 }
 
-void 
-MugsCriticalPathHeuristic::print_evaluator_statistics() const
-{
-    hc_->print_statistics();
-    MugsHeuristic::print_evaluator_statistics();
-}
+// void 
+// MugsCriticalPathHeuristic::print_evaluator_statistics() const
+// {
+//     hc_->print_statistics();
+//     MugsHeuristic::print_evaluator_statistics();
+// }
 
-static Evaluator*
-_parse(options::OptionParser& p)
-{
-    MugsCriticalPathHeuristic::add_options_to_parser(p);
-    options::Options opts = p.parse();
+static std::shared_ptr<Heuristic> _parse(OptionParser &parser) {
+
+    MugsCriticalPathHeuristic::add_options_to_parser(parser);
+    options::Options opts = parser.parse();
     opts.set<bool>("cache_estimates", false);
-    if (p.dry_run()) {
+    if (parser.dry_run()) {
         return nullptr;
     }
-    return new MugsCriticalPathHeuristic(opts);
+    return std::make_shared<MugsCriticalPathHeuristic>(opts);
 }
 
 static Plugin<Evaluator> _plugin("mugs_hc", _parse);

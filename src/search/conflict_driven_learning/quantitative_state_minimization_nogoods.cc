@@ -79,7 +79,7 @@ void QuantitativeStateMinimizationNoGoods::notify_on_new_conjunction(unsigned ci
 }
 
 void QuantitativeStateMinimizationNoGoods::refine_quantitative(
-    const GlobalState &state,
+    const State &state,
     int bound)
 {
     bool term = m_hc->set_early_termination_and_nogoods(false);

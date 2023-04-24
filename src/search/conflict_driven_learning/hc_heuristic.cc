@@ -51,7 +51,7 @@ bool NoGoodFormula::evaluate_formula(
 }
 
 void NoGoodFormula::refine_formula(
-    const GlobalState &state,
+    const State &state,
     int bound)
 {
     if (m_hc == NULL) {
@@ -75,7 +75,7 @@ int NoGoodFormula::evaluate_formula_quantitative(
 }
 
 void NoGoodFormula::refine_formula(
-    const GlobalState &state)
+    const State &state)
 {
     if (m_hc == NULL) {
         return;
@@ -327,7 +327,7 @@ void HCHeuristic::get_satisfied_conjunctions(
 }
 
 void HCHeuristic::get_satisfied_conjunctions(
-    const GlobalState &fdr_state,
+    const State &fdr_state,
     std::vector<unsigned> &hc_state)
 {
     std::fill(m_subset_count.begin(), m_subset_count.end(), 0);
@@ -669,7 +669,7 @@ HCHeuristic::evaluate_partial_state(const PartialState& state)
     return compute_heuristic_for_facts(fact_ids);
 }
 
-int HCHeuristic::compute_heuristic(const GlobalState &state)
+int HCHeuristic::compute_heuristic(const State &state)
 {
     std::vector<unsigned> fact_ids;
     for (int var = 0; var < task->get_num_variables(); var++) {
@@ -893,7 +893,7 @@ bool HCHeuristic::supports_partial_state_evaluation() const
     return true;
 }
 
-int HCHeuristic::evaluate(const GlobalState& state, int g)
+int HCHeuristic::evaluate(const State& state, int g)
 {
     g_value_ = g;
     return compute_heuristic(state);
@@ -904,7 +904,7 @@ HCHeuristic::compute_result(
     EvaluationContext &eval_context)
 {
     EvaluationResult result;
-    const GlobalState &state = eval_context.get_state();
+    const State &state = eval_context.get_state();
     g_value_ = eval_context.get_g_value();
     int heuristic = compute_heuristic(state);
     result.set_count_evaluation(true);

@@ -2,9 +2,8 @@
 
 #include "../abstract_task.h"
 #include "../evaluation_context.h"
-#include "../global_state.h"
+#include "../task_proxy.h"
 #include "../option_parser.h"
-#include "../plan_properties/MUGS.h"
 #include "../utils/timer.h"
 
 
@@ -128,35 +127,35 @@ MugsHeuristic::compute_result(EvaluationContext& context)
     return result;
 }
 
-void
-MugsHeuristic::print_evaluator_statistics() const
-{
-    utils::Timer t;
+// void
+// MugsHeuristic::print_evaluator_statistics() const
+// {
+//     utils::Timer t;
 
-    auto mugs =
-        max_achieved_subgoals_.get_minimal_extensions(goal_assignment_.size());
+//     auto mugs =
+//         max_achieved_subgoals_.get_minimal_extensions(goal_assignment_.size());
 
-    t.stop();
+//     t.stop();
 
-    //print mugs to file
-//    MUGS mugs_store =  MUGS(mugs, goal_fact_names_);
-//    mugs_store.generate_mugs_string_reverse(hard_goal_);
-//    mugs_store.output_mugs("test");
-    MUGS mugs_store =  MUGS(goal_fact_names_);
-    mugs_store.add_mugs_collection("test", mugs);
-    mugs_store.output_mugs();
+//     //print mugs to file
+// //    MUGS mugs_store =  MUGS(mugs, goal_fact_names_);
+// //    mugs_store.generate_mugs_string_reverse(hard_goal_);
+// //    mugs_store.output_mugs("test");
+//     // MUGS mugs_store =  MUGS(goal_fact_names_);
+//     // mugs_store.add_mugs_collection("test", mugs);
+//     // mugs_store.output_mugs();
 
-    std::cout << "++++++++++ MUGS HEURISTIC +++++++++++++++" << std::endl;
-    std::cout << "Size: " << max_achieved_subgoals_.size() << std::endl;
-    print_set(max_achieved_subgoals_.begin(), max_achieved_subgoals_.end());
-    std::cout << "++++++++++ MUGS HEURISTIC +++++++++++++++" << std::endl;
-    print_set(mugs.begin(), mugs.end(), goal_fact_names_, hard_goal_);
-    std::cout << "++++++++++++++++++++++++++++++++++++++++++++++++"
-              << std::endl;
-    std::cout << "Number of minimal unsolvable goal subsets: " << mugs.size()
-              << std::endl;
-    std::cout << "MUGS reconstruction time: " << t << std::endl;
-}
+//     std::cout << "++++++++++ MUGS HEURISTIC +++++++++++++++" << std::endl;
+//     std::cout << "Size: " << max_achieved_subgoals_.size() << std::endl;
+//     print_set(max_achieved_subgoals_.begin(), max_achieved_subgoals_.end());
+//     std::cout << "++++++++++ MUGS HEURISTIC +++++++++++++++" << std::endl;
+//     print_set(mugs.begin(), mugs.end(), goal_fact_names_, hard_goal_);
+//     std::cout << "++++++++++++++++++++++++++++++++++++++++++++++++"
+//               << std::endl;
+//     std::cout << "Number of minimal unsolvable goal subsets: " << mugs.size()
+//               << std::endl;
+//     std::cout << "MUGS reconstruction time: " << t << std::endl;
+// }
 
 } // namespace mugs
 } // namespace conflict_driven_learning

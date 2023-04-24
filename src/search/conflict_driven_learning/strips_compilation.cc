@@ -20,7 +20,7 @@ static Task strips_task;
 static std::vector<unsigned> variable_offset;
 static const AbstractTask* abstract_task_ref = NULL;
 
-void get_fact_ids(std::vector<unsigned>& fact_ids, const GlobalState& state)
+void get_fact_ids(std::vector<unsigned>& fact_ids, const State& state)
 {
     for (unsigned var = 0; var < variable_offset.size(); var++) {
         fact_ids.push_back(variable_offset[var] + state[var]);

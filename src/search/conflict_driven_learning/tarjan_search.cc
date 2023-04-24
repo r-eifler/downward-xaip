@@ -26,13 +26,13 @@
 #define NDEBUG_VERIFY_REFINEMENT 1
 #endif
 
-struct GlobalStateLess {
-  bool operator()(const GlobalState& s1, const GlobalState& s2) const {
+struct StateLess {
+  bool operator()(const State& s1, const State& s2) const {
       return s1.get_id().hash() < s2.get_id().hash();
   }
 };
 
-using StateSet = std::set<GlobalState, GlobalStateLess>;
+using StateSet = std::set<State, StateLess>;
 
 namespace conflict_driven_learning
 {
@@ -84,7 +84,7 @@ void TarjanSearch::initialize()
     m_current_index = 0;
     m_current_depth = 0;
     m_result = DFSResult::FAILED;
-    GlobalState istate = state_registry.get_initial_state();
+    State istate = state_registry.get_initial_state();
     for (Evaluator* pde : m_path_dependent_evaluators) {
         pde->notify_initial_state(istate);
     }
@@ -103,7 +103,7 @@ void TarjanSearch::initialize()
     }
 }
 
-bool TarjanSearch::evaluate(const GlobalState& state)
+bool TarjanSearch::evaluate(const State& state)
 {
     statistics.inc_evaluated_states();
     bool res = evaluate(state, m_guidance);
@@ -114,7 +114,7 @@ bool TarjanSearch::evaluate(const GlobalState& state)
     return res;
 }
 
-bool TarjanSearch::evaluate(const GlobalState& state, Evaluator* eval)
+bool TarjanSearch::evaluate(const State& state, Evaluator* eval)
 {
     statistics.inc_evaluations();
     if (eval == nullptr) {
@@ -129,7 +129,7 @@ bool TarjanSearch::evaluate(const GlobalState& state, Evaluator* eval)
     return true;
 }
 
-bool TarjanSearch::evaluate_dead_end_heuristic(const GlobalState& state)
+bool TarjanSearch::evaluate_dead_end_heuristic(const State& state)
 {
     if (m_dead_end_identifier == nullptr) {
         return false;
@@ -147,7 +147,7 @@ int TarjanSearch::get_h_value() const
     return m_eval_result.get_evaluator_value();
 }
 
-bool TarjanSearch::expand(const GlobalState& state)
+bool TarjanSearch::expand(const State& state)
 {
     static std::vector<OperatorID> aops;
     static ordered_set::OrderedSet<OperatorID> preferred;
@@ -196,7 +196,7 @@ bool TarjanSearch::expand(const GlobalState& state)
         }
     }
     for (unsigned i = 0; i < aops.size(); i++) {
-        GlobalState succ = state_registry.get_successor_state(
+        State succ = state_registry.get_successor_state(
                 state,
                 task_proxy.get_operators()[aops[i]]);
         for (Evaluator* pde : m_path_dependent_evaluators) {
@@ -249,8 +249,8 @@ SearchStatus TarjanSearch::step()
     bool in_dead_end_component = false;
     // if backtracked
     if (elem.last_successor_id != StateID::no_state) {
-        GlobalState state = state_registry.lookup_state(elem.node.get_state_id());
-        GlobalState succ = state_registry.lookup_state(elem.last_successor_id);
+        State state = state_registry.lookup_state(elem.node.get_state_id());
+        State succ = state_registry.lookup_state(elem.last_successor_id);
         SearchNode succ_node = m_search_space[succ];
         assert(succ_node.is_closed());
         elem.node.update_lowlink(succ_node.get_lowlink());
@@ -285,7 +285,7 @@ SearchStatus TarjanSearch::step()
     bool fully_expanded = true;
     while (m_open_list.layer_size() > 0) {
         StateID succ_id = m_open_list.pop_minimum();
-        GlobalState succ = state_registry.lookup_state(succ_id);
+        State succ = state_registry.lookup_state(succ_id);
         SearchNode succ_node = m_search_space[succ];
 
         if (succ_node.is_dead_end()) {
@@ -328,7 +328,7 @@ SearchStatus TarjanSearch::step()
 
         assert(elem.node.get_lowlink() <= elem.node.get_index());
         if (elem.node.get_index() == elem.node.get_lowlink()) {
-            std::deque<GlobalState>::iterator it = m_stack.begin();
+            std::deque<State>::iterator it = m_stack.begin();
             std::deque<unsigned>::iterator rnoff_it = m_rn_offset.begin();
             unsigned scc_size = 0;
             while (true) {
@@ -370,7 +370,7 @@ SearchStatus TarjanSearch::step()
                     {
                         std::vector<OperatorID> aops;
                         StateSet component;
-                        std::deque<GlobalState>::iterator compit = m_stack.begin();
+                        std::deque<State>::iterator compit = m_stack.begin();
                         while (compit != it) {
                             component.insert(*compit);
                             compit++;
@@ -379,7 +379,7 @@ SearchStatus TarjanSearch::step()
                         while (compit != it) {
                             g_successor_generator->generate_applicable_ops(*compit, aops);
                             for (unsigned i = 0; i < aops.size(); i++) {
-                                GlobalState succ = state_registry.get_successor_state(
+                                State succ = state_registry.get_successor_state(
                                         *compit,
                                         task_proxy.get_operators()[aops[i]]);
                                 if (!component.count(succ) && !recognized_neighbors.count(succ)) {
@@ -413,7 +413,7 @@ SearchStatus TarjanSearch::step()
             
 
                 c_dead_end_refinement = m_learner->notify_dead_end_component(
-                        StateComponentIterator<std::deque<GlobalState>::iterator>(m_stack.begin(), it),
+                        StateComponentIterator<std::deque<State>::iterator>(m_stack.begin(), it),
                         StateComponentIterator<StateSet::iterator>(recognized_neighbors.begin(), recognized_neighbors.end()));
                 recognized_neighbors.clear();
                 if (!c_dead_end_refinement && c_compute_recognized_neighbors) {

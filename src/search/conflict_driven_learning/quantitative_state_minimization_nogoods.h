@@ -33,7 +33,7 @@ protected:
     void setup_var_orders();
 
     virtual int evaluate_quantitative(const std::vector<unsigned> &conjunction_ids) override;
-    virtual void refine_quantitative(const GlobalState &state, int bound) override;
+    virtual void refine_quantitative(const State &state, int bound) override;
 public:
     using NoGoodFormula::NoGoodFormula;
     virtual ~QuantitativeStateMinimizationNoGoods() = default;

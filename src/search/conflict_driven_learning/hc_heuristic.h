@@ -5,7 +5,7 @@
 #include "../algorithms/segmented_vector.h"
 #include "../algorithms/priority_queues.h"
 #include "../heuristic.h"
-#include "../global_state.h"
+#include "../task_proxy.h"
 #include "../utils/timer.h"
 #include "../option_parser.h"
 
@@ -75,13 +75,13 @@ protected:
     {
         return evaluate(conjunction_ids) ? -1 : 0;
     }
-    virtual void refine_quantitative(const GlobalState &state, int bound)
+    virtual void refine_quantitative(const State &state, int bound)
     {
         if (bound < 0) {
             refine(state);
         }
     }
-    virtual void refine(const GlobalState &state)
+    virtual void refine(const State &state)
     {
         refine_quantitative(state, -1);
     }
@@ -97,9 +97,9 @@ public:
     virtual void synchronize_goal(std::shared_ptr<AbstractTask>) { }
     virtual void notify_on_new_conjunction(unsigned) {}
     bool evaluate_formula(const std::vector<unsigned> &conjunction_ids);
-    void refine_formula(const GlobalState &state);
+    void refine_formula(const State &state);
     int evaluate_formula_quantitative(const std::vector<unsigned> &conjunction_ids);
-    void refine_formula(const GlobalState &state, int bound);
+    void refine_formula(const State &state, int bound);
     const utils::Timer &get_refinement_timer() const;
     const utils::Timer &get_evaluation_timer() const;
     virtual void print_statistics() const = 0;
@@ -154,7 +154,7 @@ protected:
         const std::vector<unsigned> &conj,
         unsigned conjid);
 
-    virtual int compute_heuristic(const GlobalState &state) override;
+    virtual int compute_heuristic(const State &state) override;
 
     void initialize(unsigned m);
 public:
@@ -170,7 +170,7 @@ public:
     virtual void set_abstract_task(std::shared_ptr<AbstractTask> task) override;
 
     int get_cost_bound() const { return cost_bound_; }
-    int evaluate(const GlobalState& state, int g);
+    int evaluate(const State& state, int g);
     virtual int evaluate_partial_state(const PartialState& state) override;
     virtual EvaluationResult compute_result(
         EvaluationContext &eval_context) override;
@@ -181,7 +181,7 @@ public:
 
     void get_satisfied_conjunctions(const std::vector<unsigned> &conj,
                                     std::vector<unsigned> &ids);
-    void get_satisfied_conjunctions(const GlobalState &fdr_state,
+    void get_satisfied_conjunctions(const State &fdr_state,
                                     std::vector<unsigned> &ids);
 
     unsigned lookup_conjunction_id(

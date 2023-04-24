@@ -1,6 +1,6 @@
 #include "mugs_utils.h"
 
-#include "../global_state.h"
+#include "../task_proxy.h"
 
 #include <bitset>
 #include <cassert>
@@ -38,12 +38,12 @@ is_superset(const subgoal_t& super, const subgoal_t& sub)
 
 subgoal_t
 get_subgoals(
-    const GlobalState& state,
+    const State& state,
     const std::vector<std::pair<int, int>>& goal)
 {
     subgoal_t res = 0U;
     for (unsigned i = 0; i < goal.size(); i++) {
-        if (state[goal[i].first] == goal[i].second) {
+        if (state[goal[i].first].get_value() == goal[i].second) {
             res = res | (1U << i);
         }
     }

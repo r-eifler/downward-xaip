@@ -34,7 +34,7 @@ protected:
     void setup_var_orders();
 
     virtual bool evaluate(const std::vector<unsigned> &conjunction_ids) override;
-    virtual void refine(const GlobalState &state) override;
+    virtual void refine(const State &state) override;
 public:
     using NoGoodFormula::NoGoodFormula;
     virtual ~StateMinimizationNoGoods() = default;

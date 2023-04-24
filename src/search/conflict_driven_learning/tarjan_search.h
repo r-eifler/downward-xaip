@@ -36,10 +36,10 @@ protected:
     virtual void initialize() override;
     virtual SearchStatus step() override;
 
-    bool expand(const GlobalState &state);
-    bool evaluate(const GlobalState& state);
-    bool evaluate(const GlobalState& state, Evaluator* eval);
-    bool evaluate_dead_end_heuristic(const GlobalState& state);
+    bool expand(const State &state);
+    bool evaluate(const State& state);
+    bool evaluate(const State& state, Evaluator* eval);
+    bool evaluate_dead_end_heuristic(const State& state);
     int get_h_value() const;
 
     enum class DFSResult {
@@ -76,7 +76,7 @@ protected:
     SearchSpace m_search_space;
 
     unsigned m_current_index;
-    std::deque<GlobalState> m_stack;
+    std::deque<State> m_stack;
 
     DFSResult m_result;
     std::deque<CallStackElement> m_call_stack;

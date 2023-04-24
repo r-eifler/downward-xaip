@@ -3,7 +3,7 @@
 #include "strips_compilation.h"
 #include "set_utils.h"
 
-#include "../global_state.h"
+#include "../task_proxy.h"
 #include "../tasks/root_task.h"
 
 // #include "../../globals.h"
@@ -82,7 +82,7 @@ HCNeighborsRefinement::set_goal(const std::vector<std::pair<int, int>>& goal_fac
 }
 
 bool
-HCNeighborsRefinement::prepare_current_state_cost(int bound, const GlobalState& state)
+HCNeighborsRefinement::prepare_current_state_cost(int bound, const State& state)
 {
 #if DEBUG_VERBOSE_PRINT_OUTS
     std::cout << "refine(" << state.get_id() << "[" << std::flush;
@@ -118,12 +118,12 @@ HCNeighborsRefinement::prepare_component_data(StateComponent& component)
     m_fact_to_negated_component.resize(strips::num_facts());
     m_negated_component_to_facts.clear();
     while (!component.end()) {
-        const GlobalState &state = component.current();
+        const State &state = component.current();
         m_negated_component_to_facts.emplace_back();
         unsigned p = 0;
         for (int var = 0; var < m_task->get_num_variables(); var++) {
             for (int val = 0; val < m_task->get_variable_domain_size(var); val++) {
-                if (state[var] != val) {
+                if (state[var].get_value() != val) {
                     assert(p == strips::get_fact_id(var, val));
                     m_fact_to_negated_component[p].push_back(m_component_size);
                     m_negated_component_to_facts[m_component_size].push_back(p);
@@ -744,4 +744,4 @@ _parse(options::OptionParser& parser)
     return nullptr;
 }
 
-static PluginShared<conflict_driven_learning::HeuristicRefiner> _plugin("hcrn", _parse);
+static Plugin<conflict_driven_learning::HeuristicRefiner> _plugin("hcrn", _parse);

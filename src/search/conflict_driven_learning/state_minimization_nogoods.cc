@@ -70,7 +70,7 @@ void StateMinimizationNoGoods::notify_on_new_conjunction(unsigned cid)
 }
 
 void StateMinimizationNoGoods::refine(
-    const GlobalState &state)
+    const State &state)
 {
     bool term = m_hc->set_early_termination_and_nogoods(false);
 

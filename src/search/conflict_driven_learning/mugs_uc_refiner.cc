@@ -3,7 +3,7 @@
 #include "../abstract_task.h"
 #include "../evaluation_context.h"
 #include "../evaluation_result.h"
-#include "../global_state.h"
+#include "../task_proxy.h"
 #include "../option_parser.h"
 #include "../plugin.h"
 #include "../tasks/root_task.h"
@@ -63,13 +63,13 @@ MugsUCRefiner::learn_from_dead_end_component(
     assert(!mugs.empty());
 
     const int bound = std::numeric_limits<int>::max();
-    std::vector<std::pair<int, GlobalState>> neighbors;
+    std::vector<std::pair<int, State>> neighbors;
     neighbors_.reset();
     while (!neighbors_.end()) {
         neighbors.emplace_back(0, neighbors_.current());
         neighbors_.next();
     }
-    auto nit = SuccessorComponentIterator<std::vector<std::pair<int, GlobalState>>::const_iterator>(
+    auto nit = SuccessorComponentIterator<std::vector<std::pair<int, State>>::const_iterator>(
             neighbors.begin(), neighbors.end());
 
     states.reset();
@@ -111,7 +111,7 @@ _parse(options::OptionParser& p)
     return std::make_shared<MugsUCRefiner>(opts);
 }
 
-static PluginShared<ConflictLearner> _plugin("mugs_uc_refiner", _parse);
+static Plugin<ConflictLearner> _plugin("mugs_uc_refiner", _parse);
 
 } // namespace mugs
 } // namespace conflict_driven_learning
