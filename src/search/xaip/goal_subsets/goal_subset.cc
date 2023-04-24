@@ -10,12 +10,13 @@ GoalSubset::GoalSubset(){
     goals = boost::dynamic_bitset<>(0,0);
 }
 
-GoalSubset::GoalSubset(int max_num_goals){
+GoalSubset::GoalSubset(size_t max_num_goals){
     goals = boost::dynamic_bitset<>(max_num_goals,0);
 }
 
-GoalSubset::GoalSubset(int goal_id, int max_num_goals){
-    goals = boost::dynamic_bitset<>(max_num_goals, goal_id);
+GoalSubset::GoalSubset(size_t max_num_goals, size_t index){
+    goals = boost::dynamic_bitset<>(max_num_goals, 0);
+    goals[index] = true;
 }
 
 GoalSubset::GoalSubset(boost::dynamic_bitset<> goals): 

@@ -17,17 +17,17 @@ class GoalSubset {
     public:
 
     GoalSubset();
-    GoalSubset(int max_num_goals);
+    GoalSubset(size_t max_num_goals);
     GoalSubset(boost::dynamic_bitset<> goals);
-    GoalSubset(int goal_id, int max_num_goals);
+    GoalSubset(size_t max_num_goals, size_t index);
 
 
-    bool contains(int goal_id) const{
-        return goals[goal_id];
+    bool contains(size_t index) const{
+        return goals[index];
     };
 
-    void add(int goal_id) {
-        goals[goal_id] = true;
+    void add(size_t index) {
+        goals[index] = true;
     };
 
     bool is_subset_of(GoalSubset set) const{
@@ -72,6 +72,10 @@ class GoalSubset {
 
     size_t count() const {
         return goals.count();
+    }
+
+    void set(size_t index, bool value) { 
+        goals[index] = value; 
     }
 
     bool operator==(const GoalSubset &other) const{ 

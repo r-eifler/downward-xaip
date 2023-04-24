@@ -35,8 +35,7 @@ protected:
     virtual int compute_heuristic(const State &ancestor_state) override;
 public:
     explicit HSPMaxHeuristic(const options::Options &opts);
-    boost::dynamic_bitset<> compute_reachable_goal_facts(const State &state);
-    boost::dynamic_bitset<> compute_reachable_goal_facts(const State &state, int remaining_cost);
+    std::vector<int> get_heuristic_values(const State &state, std::vector<FactPair> facts);
 };
 }
 
