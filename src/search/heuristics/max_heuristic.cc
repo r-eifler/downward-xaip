@@ -110,7 +110,7 @@ vector<int> HSPMaxHeuristic::get_heuristic_values(const State &state, vector<Fac
     for(FactPair fp : facts){
         const Proposition* prop = get_proposition(get_prop_id(fp.var, fp.value));
         costs.push_back(prop->cost);
-        cout << "h(" << fp.var << " = " << fp.value << ") = " << prop->cost << endl; 
+        // cout << "h(" << fp.var << " = " << fp.value << ") = " << prop->cost << endl; 
     }
     return costs;
 }

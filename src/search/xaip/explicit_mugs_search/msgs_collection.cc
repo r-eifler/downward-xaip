@@ -143,22 +143,22 @@ bool MSGSCollection::prune(const State &state, vector<int> costs, int remaining_
         reachable_goals.set(i,costs[i] != -1 && costs[i] <= remaining_cost);
     }
 
-    cout << "reachable goals: " << endl;
-    reachable_goals.print();
+    // cout << "reachable goals: " << endl;
+    // reachable_goals.print();
 
 
     if(hard_goal_list.size() == 0){
         if(this->contains_superset(reachable_goals)){
-            cout<< "contains superset" << endl;
+            // cout<< "contains superset" << endl;
             return true;
         }
         else{
             GoalSubset satisfied_goals = get_satisfied_all_goals(state);
-            cout << "satisfied goals: " << endl;
-            satisfied_goals.print();
+            // cout << "satisfied goals: " << endl;
+            // satisfied_goals.print();
             if(!contains_superset(satisfied_goals)){
                 this->add_and_mimize(satisfied_goals);
-                cout<< "add new goal subset" << endl;
+                // cout<< "add new goal subset" << endl;
             }
             return false;
         }
@@ -174,13 +174,13 @@ bool MSGSCollection::prune(const State &state, vector<int> costs, int remaining_
 
         //TODO does it make sense to check whether a superset of soft goals is reachable?
         if(! reachable_hard_goals.all() || superset_alreday_readched){
-            cout<< "contains superset" << endl;
+            // cout<< "contains superset" << endl;
             return true;
         }
         else{
             if(satisfied_hard_goals.all() && !contains_superset(satisfied_soft_goals)){
                 this->add_and_mimize(satisfied_soft_goals);
-                cout<< "add new goal subset" << endl;
+                // cout<< "add new goal subset" << endl;
             }
             return superset_alreday_readched;
         }
@@ -192,11 +192,11 @@ bool MSGSCollection::track(const State &state){
 
     if(hard_goal_list.size() == 0){
         GoalSubset satisfied_goals = get_satisfied_all_goals(state);
-        cout << "satisfied goals: " << endl;
-        satisfied_goals.print();
+        // cout << "satisfied goals: " << endl;
+        // satisfied_goals.print();
         if(!contains_superset(satisfied_goals)){
             this->add_and_mimize(satisfied_goals);
-            cout<< "add new goal subset" << endl;
+            // cout<< "add new goal subset" << endl;
             return true;
         }
         return false;
@@ -207,7 +207,7 @@ bool MSGSCollection::track(const State &state){
 
         if(satisfied_hard_goals.all() && !contains_superset(satisfied_soft_goals)){
             this->add_and_mimize(satisfied_soft_goals);
-            cout<< "add new goal subset" << endl;
+            // cout<< "add new goal subset" << endl;
             return true;
         }
         return false;
@@ -227,6 +227,11 @@ void MSGSCollection::print() const {
     for(FactPair g : soft_goal_list){
         cout << "\t" << taskproxy.get_variables()[g.var].get_fact(g.value).get_name() << endl;
     }
+    cout << "*********************************"  << endl;
+    cout << "#MSGS: " << this->size() << endl;
+    cout << "*********************************"  << endl;
+    this->print_subsets();
+    cout << "*********************************"  << endl;
     cout << "*********************************"  << endl;
     cout << "#MUGS: " << mugs.size() << endl;
     cout << "*********************************"  << endl;
