@@ -29,12 +29,12 @@ void ReachableGoalSubsetsHMaxPruning::initialize(const shared_ptr<AbstractTask> 
 
 bool ReachableGoalSubsetsHMaxPruning::prune(const State &state, int remaining_cost){
 
-    cout << "---------------------------------------------------------------" << endl;
-    cout << "prune state remaining cost: "  << remaining_cost << endl;
-    cout << "-------------------" << endl;
-    for(size_t i = 0; i < state.size(); i++)
-        cout << state[i].get_variable().get_id() << " = " << state[i].get_value()  << "    -->  " << state[i].get_name() << endl;
-    cout << "-------------------" << endl;
+    // cout << "---------------------------------------------------------------" << endl;
+    // cout << "prune state remaining cost: "  << remaining_cost << endl;
+    // cout << "-------------------" << endl;
+    // for(size_t i = 0; i < state.size(); i++)
+    //     cout << state[i].get_variable().get_id() << " = " << state[i].get_value()  << "    -->  " << state[i].get_name() << endl;
+    // cout << "-------------------" << endl;
 
     vector<int> costs = max_heuristic->get_heuristic_values(state, current_msgs.get_goal_facts());
 
