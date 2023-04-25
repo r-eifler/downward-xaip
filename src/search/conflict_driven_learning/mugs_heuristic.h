@@ -15,7 +15,7 @@ namespace mugs {
 class MugsHeuristic : public Heuristic {
 public:
     MugsHeuristic(const options::Options& opts);
-    // virtual void print_statistics() const override;
+    virtual void print_statistics() const override;
     virtual EvaluationResult
     compute_result(EvaluationContext& context) override;
     static void add_options_to_parser(options::OptionParser& parser);

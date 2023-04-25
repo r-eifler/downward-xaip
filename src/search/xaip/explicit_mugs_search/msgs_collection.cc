@@ -52,6 +52,8 @@ void MSGSCollection::initialize(shared_ptr<AbstractTask> task_) {
         soft_goal_fact_names.push_back(name);
         cout << gp.var << " = " << gp.value  << "    -->  " << name << endl;
     }
+
+    overall_timer.reset();
 }
 
 void MSGSCollection::add_and_mimize(GoalSubset subset){
@@ -137,6 +139,7 @@ vector<FactPair> MSGSCollection::get_goal_facts() {
 bool MSGSCollection::prune(const State &state, vector<int> costs, int remaining_cost){
 
     // costs containes the costs of the facts in all_goal_list (in the same order)
+    overall_timer.resume();
 
     GoalSubset reachable_goals = GoalSubset(all_goal_list.size());
     for(size_t i = 0; i < all_goal_list.size(); i++){
@@ -149,6 +152,7 @@ bool MSGSCollection::prune(const State &state, vector<int> costs, int remaining_
     if(hard_goal_list.size() == 0){
         if(this->contains_superset(reachable_goals)){
             // cout<< "contains superset" << endl;
+            overall_timer.stop();
             return true;
         }
         else{
@@ -159,6 +163,7 @@ bool MSGSCollection::prune(const State &state, vector<int> costs, int remaining_
                 this->add_and_mimize(satisfied_goals);
                 // cout<< "add new goal subset" << endl;
             }
+            overall_timer.stop();
             return false;
         }
     }
@@ -214,8 +219,13 @@ bool MSGSCollection::track(const State &state){
 }
 
 void MSGSCollection::print() const {
-    GoalSubsets mugs = this->complement().minimal_hitting_sets();
 
+    utils::Timer hit_timer;
+    GoalSubsets mugs = this->complement().minimal_hitting_sets();
+    hit_timer.stop();
+
+    cout << "HIT computation: " << hit_timer << endl;
+    cout << "Prunig time: " << overall_timer << endl;
     cout << "*********************************"  << endl;
     cout << "#hard goals: " << hard_goal_list.size() << endl;
     TaskProxy taskproxy = TaskProxy(*tasks::g_root_task.get());

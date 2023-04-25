@@ -255,6 +255,7 @@ GoalSubsets GoalSubsetSpace::generate_MSGS(){
 
 void GoalSubsetSpace::print(){
     GoalSubsets mugs =this->generate_MUGS();
+    GoalSubsets msgs =this->generate_MSGS();
 
     cout << "*********************************"  << endl;
     cout << "Number of generated goal subsets: " << generated.size() << endl;
@@ -271,6 +272,10 @@ void GoalSubsetSpace::print(){
     for(FactPair g : soft_goal_list){
         cout << "\t" << taskproxy.get_variables()[g.var].get_fact(g.value).get_name() << endl;
     }
+    cout << "*********************************"  << endl;
+    cout << "#MSGS: " << msgs.size() << endl;
+    cout << "*********************************"  << endl;
+    msgs.print_subsets();
     cout << "*********************************"  << endl;
     cout << "#MUGS: " << mugs.size() << endl;
     cout << "*********************************"  << endl;

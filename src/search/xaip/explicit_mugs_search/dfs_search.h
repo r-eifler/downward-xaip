@@ -3,12 +3,12 @@
 
 #include "../search_engine.h"
 #include "../evaluator.h"
-#include "../global_state.h"
+#include "../task_proxy.h"
 
-#include "../conflict_driven_learning/search_node.h"
-#include "../conflict_driven_learning/search_node_info.h"
-#include "../conflict_driven_learning/search_space.h"
-#include "../conflict_driven_learning/layered_map.h"
+#include "../../conflict_driven_learning/search_node.h"
+#include "../../conflict_driven_learning/search_node_info.h"
+#include "../../conflict_driven_learning/search_space.h"
+#include "../../conflict_driven_learning/layered_map.h"
 
 #include <memory>
 #include <vector>
