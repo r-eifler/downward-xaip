@@ -12,7 +12,7 @@ void noop_delete(T* ) {}
 
 HCHeuristicRefiner::HCHeuristicRefiner(const options::Options &opts)
     : c_x_limit(opts.get<double>("x")),
-      m_hc(dynamic_cast<HCHeuristic *>(opts.get<Evaluator *>("hc")), noop_delete<HCHeuristic>)
+      m_hc(std::dynamic_pointer_cast<HCHeuristic>(opts.get<std::shared_ptr<Evaluator>>("hc")))
 {
     if (c_x_limit < 0) {
         c_counter_limit = std::numeric_limits<size_t>::max();
@@ -34,7 +34,7 @@ std::shared_ptr<Evaluator> HCHeuristicRefiner::get_underlying_heuristic()
 
 void HCHeuristicRefiner::add_options_to_parser(options::OptionParser &parser)
 {
-    parser.add_option<Evaluator *>("hc");
+    parser.add_option<std::shared_ptr<Evaluator>>("hc");
     parser.add_option<double>("x", "", "-1");
 }
 

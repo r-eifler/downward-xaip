@@ -9,6 +9,7 @@ using PartialState = std::vector<std::pair<int, int> >;
 
 class PartialStateEvaluator {
 public:
+    virtual ~PartialStateEvaluator() = default;
     virtual int evaluate_partial_state(const PartialState& partial_state) = 0;
 };
 

@@ -2,7 +2,6 @@
 #include "strips_compilation.h"
 #include "../task_proxy.h"
 #include "../task_utils/task_properties.h"
-#include "../global_state.h"
 
 #include <utility>
 #include <algorithm>
@@ -23,7 +22,7 @@ static const AbstractTask* abstract_task_ref = NULL;
 void get_fact_ids(std::vector<unsigned>& fact_ids, const State& state)
 {
     for (unsigned var = 0; var < variable_offset.size(); var++) {
-        fact_ids.push_back(variable_offset[var] + state[var]);
+        fact_ids.push_back(variable_offset[var] + state[var].get_value());
     }
 }
 
@@ -50,6 +49,12 @@ unsigned get_fact_id(int var, int val)
 {
     assert(_initialized);
     return variable_offset[var] + val;
+}
+
+unsigned get_fact_id(int var, const FactProxy& val)
+{
+    assert(_initialized);
+    return variable_offset[var] + val.get_value();
 }
 
 size_t num_facts()

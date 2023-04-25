@@ -102,7 +102,7 @@ void QuantitativeStateMinimizationNoGoods::refine_quantitative(
             int var = order[j];
             previous_facts = facts;
             for (int val = 0; val < m_task->get_variable_domain_size(var); val++) {
-                if (val != state[var]) {
+                if (val != state[var].get_value()) {
                     facts.push_back(strips::get_fact_id(var, val));
                 }
             }

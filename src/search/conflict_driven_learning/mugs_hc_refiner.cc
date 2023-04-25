@@ -17,8 +17,8 @@ namespace conflict_driven_learning {
 namespace mugs {
 
 MugsHCRefiner::MugsHCRefiner(const options::Options& opts)
-    : mugs_hc_(dynamic_cast<MugsCriticalPathHeuristic*>(
-        opts.get<Evaluator*>("mugs_hc")))
+    : mugs_hc_(std::dynamic_pointer_cast<MugsCriticalPathHeuristic>(
+        opts.get<std::shared_ptr<Evaluator>>("mugs_hc")))
     , hc_refiner_(std::dynamic_pointer_cast<conflict_driven_learning::hc_heuristic::HCHeuristicRefiner>(opts.get<std::shared_ptr<HeuristicRefiner>>("hc_refiner")))
 {
 }
@@ -26,14 +26,14 @@ MugsHCRefiner::MugsHCRefiner(const options::Options& opts)
 void
 MugsHCRefiner::add_options_to_parser(options::OptionParser& parser)
 {
-    parser.add_option<Evaluator*>("mugs_hc");
+    parser.add_option<std::shared_ptr<Evaluator>>("mugs_hc");
     parser.add_option<std::shared_ptr<HeuristicRefiner>>("hc_refiner");
 }
 
 std::shared_ptr<Evaluator>
 MugsHCRefiner::get_underlying_heuristic()
 {
-    return std::shared_ptr<Evaluator>(mugs_hc_, [](const auto&) {});
+    return mugs_hc_;
 }
 
 bool

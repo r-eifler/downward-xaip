@@ -12,16 +12,26 @@
 #include "../task_utils/task_properties.h"
 #include "../tasks/cost_adapted_task.h"
 #include "../utils/system.h"
+#include "../state_id.h"
 #include "hc_heuristic.h"
 #include "state_component.h"
 
 #include <algorithm>
 #include <limits>
+#include <unordered_map>
 
 #ifndef NDEBUG
 #define DEBUG_BOUNDED_COST_DFS_ASSERT_LEARNING 1
 #define DEBUG_BOUNDED_COST_DFS_ASSERT_NEIGHBORS 1
 #endif
+
+namespace {
+struct StateIDHash {
+    std::size_t operator()(const StateID& state_id) const {
+	return std::hash<std::size_t>()(state_id(state_id));
+    }
+};
+}
 
 namespace conflict_driven_learning {
 namespace bounded_cost {
@@ -89,17 +99,17 @@ BoundedCostTarjanSearch::BoundedCostTarjanSearch(const options::Options& opts)
     // , c_learning_belt(opts.contains("learning_belt") ? bound -
     // opts.get<int>("learning_belt") : 0)
     , m_task(
-          OperatorCost(opts.get_enum("cost_type")) != OperatorCost::NORMAL
-              ? std::make_shared<tasks::CostAdaptedTask>(opts)
+          cost_type != OperatorCost::NORMAL
+              ? std::make_shared<tasks::CostAdaptedTask>(task, cost_type)
               : task)
     , m_task_proxy(*m_task)
     , m_expansion_evaluator(
-          opts.contains("eval") ? opts.get<Evaluator*>("eval") : nullptr)
+          opts.contains("eval") ? opts.get<std::shared_ptr<Evaluator>>("eval") : nullptr)
     , m_preferred(
-          opts.contains("preferred") ? opts.get<Evaluator*>("preferred")
+          opts.contains("preferred") ? opts.get<std::shared_ptr<Evaluator>>("preferred")
                                      : nullptr)
     , m_pruning_evaluator(
-          opts.contains("u_eval") ? opts.get<Evaluator*>("u_eval") : nullptr)
+          opts.contains("u_eval") ? opts.get<std::shared_ptr<Evaluator>>("u_eval") : nullptr)
     , m_refiner(
           opts.contains("learn")
               ? opts.get<std::shared_ptr<HeuristicRefiner>>("learn")
@@ -171,7 +181,7 @@ BoundedCostTarjanSearch::initialize()
     } else {
         m_pruning_method->initialize(task);
         if ((!c_ignore_eval_dead_ends
-             && !evaluate(istate, m_expansion_evaluator, 0))
+             && !evaluate(istate, m_expansion_evaluator.get(), 0))
             || !expand(istate)) {
             // || !increment_bound_and_push_initial_state()) {
             std::cout << "Initial state is dead-end!" << std::endl;
@@ -217,7 +227,7 @@ BoundedCostTarjanSearch::expand(const State& state, PerLayerData* layer)
 
     // TODO check if already computed after last refinement, and if so skip
     // evaluation
-    if (!evaluate(state, m_pruning_evaluator, m_current_g)) {
+    if (!evaluate(state, m_pruning_evaluator.get(), m_current_g)) {
         _set_bound(status, INF);
         // std::cout << "Dead end -> " << _get_bound(status) << std::endl;
         return false;
@@ -242,7 +252,7 @@ BoundedCostTarjanSearch::expand(const State& state, PerLayerData* layer)
     m_pruning_method->prune_operators(state, aops);
     statistics.inc_generated(aops.size());
     if (m_preferred) {
-        if (evaluate(state, m_preferred, m_current_g)) {
+        if (evaluate(state, m_preferred.get(), m_current_g)) {
             const std::vector<OperatorID>& pref =
                 m_eval_result.get_preferred_operators();
             for (int i = pref.size() - 1; i >= 0; i--) {
@@ -259,7 +269,7 @@ BoundedCostTarjanSearch::expand(const State& state, PerLayerData* layer)
         }
         if (_get_bound(succ_info) != INF
             && (evaluate(
-                    succ, m_expansion_evaluator, m_current_g + op.get_cost())
+                    succ, m_expansion_evaluator.get(), m_current_g + op.get_cost())
                 || c_ignore_eval_dead_ends)) {
             has_zero_cost = has_zero_cost || op.get_cost() == 0;
             std::pair<bool, int> key(
@@ -294,7 +304,7 @@ SearchStatus
 BoundedCostTarjanSearch::step()
 {
     static std::vector<std::pair<int, State>> component_neighbors;
-    static std::unordered_map<StateID, int> hashed_neighbors;
+    static std::unordered_map<StateID, int, StateIDHash> hashed_neighbors;
 
     if (m_solved) {
         Plan plan;
@@ -368,9 +378,9 @@ BoundedCostTarjanSearch::step()
                 succ_status = 0;
                 if (task_properties::is_goal_state(m_task_proxy, succ_state)) {
                     evaluate(
-                        succ_state, m_expansion_evaluator, m_current_g); // mugs
+                        succ_state, m_expansion_evaluator.get(), m_current_g); // mugs
                     evaluate(
-                        succ_state, m_pruning_evaluator, m_current_g); // mugs
+                        succ_state, m_pruning_evaluator.get(), m_current_g); // mugs
                     ///TODO do we need the prune state function ?
                     // m_pruning_method->prune_state(succ_state);
                     m_solved = true;
@@ -470,7 +480,7 @@ BoundedCostTarjanSearch::step()
                 }
 #if DEBUG_BOUNDED_COST_DFS_ASSERT_NEIGHBORS
                 if (c_compute_neighbors) {
-                    std::unordered_set<StateID> component_state_ids;
+                    std::unordered_set<StateID, StateIDHash> component_state_ids;
                     if (state_info != NULL) {
                         for (auto it = m_last_layer->stack.begin();; it++) {
                             component_state_ids.insert((*it).get_id());
@@ -482,7 +492,7 @@ BoundedCostTarjanSearch::step()
                     } else {
                         component_state_ids.insert(locals.state.get_id());
                     }
-                    std::unordered_set<StateID> successor_state_ids;
+                    std::unordered_set<StateID, StateIDHash> successor_state_ids;
                     for (auto it = m_neighbors.begin() + locals.neighbors_size;
                          it != m_neighbors.end();
                          it++) {
@@ -595,7 +605,6 @@ BoundedCostTarjanSearch::step()
 void
 BoundedCostTarjanSearch::print_statistics() const
 {
-    SearchEngine::print_statistics();
     std::cout << "Registered: " << state_registry.size() << " state(s)"
               << std::endl;
     statistics.print_detailed_statistics();
@@ -627,8 +636,8 @@ BoundedCostTarjanSearch::print_statistics() const
 void
 BoundedCostTarjanSearch::add_options_to_parser(options::OptionParser& parser)
 {
-    parser.add_option<Evaluator*>("eval", "", options::OptionParser::NONE);
-    parser.add_option<Evaluator*>("u_eval", "", options::OptionParser::NONE);
+    parser.add_option<std::shared_ptr<Evaluator>>("eval", "", options::OptionParser::NONE);
+    parser.add_option<std::shared_ptr<Evaluator>>("u_eval", "", options::OptionParser::NONE);
     parser.add_option<std::shared_ptr<HeuristicRefiner>>(
         "learn", "", options::OptionParser::NONE);
     parser.add_option<bool>("ignore_eval_dead_ends", "", "false");
@@ -636,7 +645,7 @@ BoundedCostTarjanSearch::add_options_to_parser(options::OptionParser& parser)
     parser.add_option<int>("max_bound", "", options::OptionParser::NONE);
     parser.add_option<double>("step", "", "2.0");
     // parser.add_option<int>("learning_belt", "", options::OptionParser::NONE);
-    parser.add_option<Evaluator*>("preferred", "", options::OptionParser::NONE);
+    parser.add_option<std::shared_ptr<Evaluator>>("preferred", "", options::OptionParser::NONE);
     parser.add_option<std::shared_ptr<PruningMethod>>(
         "pruning",
         "Pruning methods can prune or reorder the set of applicable operators "
@@ -645,7 +654,6 @@ BoundedCostTarjanSearch::add_options_to_parser(options::OptionParser& parser)
         "states "
         "that are considered.",
         "null()");
-    add_cost_type_option_to_parser(parser);
     SearchEngine::add_options_to_parser(parser);
 }
 

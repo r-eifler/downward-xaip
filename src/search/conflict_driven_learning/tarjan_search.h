@@ -3,8 +3,6 @@
 
 #include "../search_engine.h"
 #include "../evaluator.h"
-#include "../global_state.h"
-
 #include "search_node.h"
 #include "search_node_info.h"
 #include "search_space.h"
@@ -30,7 +28,7 @@ class TarjanSearch : public SearchEngine
 public:
     TarjanSearch(const options::Options &opts);
     virtual void print_statistics() const override;
-    virtual double get_heuristic_refinement_time() const override;
+    double get_heuristic_refinement_time() const;
     static void add_options_to_parser(options::OptionParser &parser);
 protected:
     virtual void initialize() override;
@@ -65,11 +63,11 @@ protected:
     bool c_compute_recognized_neighbors;
 
     EvaluationResult m_eval_result;
-    Evaluator* m_guidance;
-    Evaluator* m_preferred;
+    std::shared_ptr<Evaluator> m_guidance;
+    std::shared_ptr<Evaluator> m_preferred;
     std::set<Evaluator*> m_path_dependent_evaluators;
     std::shared_ptr<ConflictLearner> m_learner;
-    Evaluator* m_dead_end_identifier;
+    std::shared_ptr<Evaluator> m_dead_end_identifier;
 
     std::shared_ptr<PruningMethod> m_pruning_method;
 

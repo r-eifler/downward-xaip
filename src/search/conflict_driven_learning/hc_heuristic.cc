@@ -7,7 +7,6 @@
 
 #include "../evaluation_context.h"
 #include "../abstract_task.h"
-#include "../global_state.h"
 #include "../option_parser.h"
 #include "../plugin.h"
 #include "../utils/timer.h"
@@ -1216,7 +1215,7 @@ int UCHeuristic::compute_heuristic_get_reachable_conjunctions(
 }
 }
 
-static Heuristic*
+static std::shared_ptr<Heuristic>
 _parse(options::OptionParser& parser)
 {
     conflict_driven_learning::hc_heuristic::HCHeuristic::add_options_to_parser(parser);
@@ -1224,21 +1223,21 @@ _parse(options::OptionParser& parser)
     if (!parser.dry_run()) {
         TaskProxy proxy(*opts.get<std::shared_ptr<AbstractTask>>("transform"));
         if (task_properties::is_unit_cost(proxy)) {
-            return new conflict_driven_learning::hc_heuristic::HCHeuristicUnitCost(opts);
+            return std::make_shared< conflict_driven_learning::hc_heuristic::HCHeuristicUnitCost>(opts);
         } else {
-            return new conflict_driven_learning::hc_heuristic::HCHeuristicGeneralCost(opts);
+            return std::make_shared< conflict_driven_learning::hc_heuristic::HCHeuristicGeneralCost>(opts);
         }
     }
     return NULL;
 }
 
-static Heuristic*
+static std::shared_ptr<Heuristic>
 _parse_uc(options::OptionParser& parser)
 {
     conflict_driven_learning::hc_heuristic::HCHeuristic::add_options_to_parser(parser);
     options::Options opts = parser.parse();
     if (!parser.dry_run()) {
-        return new conflict_driven_learning::hc_heuristic::UCHeuristic(opts);
+        return std::make_shared< conflict_driven_learning::hc_heuristic::UCHeuristic>(opts);
     }
     return NULL;
 }

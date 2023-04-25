@@ -53,7 +53,7 @@ public:
         std::vector<std::pair<int, int>>& sat) const;
 
 protected:
-    virtual int compute_heuristic(const State&) { return 0; }
+    virtual int compute_heuristic(const State&) override { return 0; }
     virtual bool is_any_mug_reachable(const EvaluationContext& context) = 0;
     virtual void on_removed_subgoal(const subgoal_t&) {}
     virtual void on_added_subgoal(const subgoal_t&) {}

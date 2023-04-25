@@ -6,6 +6,8 @@
 #include <vector>
 #include <iostream>
 
+using ulong = unsigned long;
+
 namespace goalsubset {
 
 class GoalSubset {

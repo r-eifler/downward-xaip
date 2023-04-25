@@ -8,6 +8,7 @@
 #include <string>
 
 class State;
+class FactProxy;
 
 namespace conflict_driven_learning
 {
@@ -84,6 +85,7 @@ unsigned get_fact_id(const std::pair<t_var, t_val> &assignment)
 {
     return get_fact_id(assignment.first, assignment.second);
 }
+unsigned get_fact_id(int var, const FactProxy& fact);
 std::pair<int, int> get_variable_assignment(const unsigned& fact_id);
 std::size_t num_facts();
 void get_fact_ids(std::vector<unsigned>& fact_ids, const State& state);

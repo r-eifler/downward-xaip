@@ -28,7 +28,6 @@ struct ForwardHyperTransition {
     ForwardHyperTransition(unsigned label)
         : label(label), dead(false)
     {}
-    ForwardHyperTransition(const ForwardHyperTransition& other) = default;
 };
 
 class TrapUnsatHeuristic : public Heuristic {
@@ -104,7 +103,7 @@ protected:
 
     const bool c_updatable_transitions;
 
-    std::vector<PartialStateEvaluator*> m_evaluators;
+    std::vector<std::shared_ptr<PartialStateEvaluator>> m_evaluators;
     const conflict_driven_learning::strips::Task *m_task;
 
     // per action

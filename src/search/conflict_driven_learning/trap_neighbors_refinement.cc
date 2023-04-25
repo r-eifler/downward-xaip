@@ -11,6 +11,15 @@
 #include <limits>
 #include <memory>
 
+namespace std {
+template<>
+struct hash<StateID> {
+    size_t operator()(const StateID& state_id) const {
+	return hash<size_t>()(state_id(state_id));
+    }
+};
+}
+
 namespace conflict_driven_learning {
 namespace traps {
 
@@ -18,7 +27,7 @@ static const int INTMIN = std::numeric_limits<int>::min();
 
 TrapNeighborsRefinement::TrapNeighborsRefinement(const options::Options& opts)
     : c_recompute_reachability(opts.get<bool>("recompute_reachability"))
-    , m_trap(dynamic_cast<TrapUnsatHeuristic*>(opts.get<Evaluator*>("trap")))
+    , m_trap(std::dynamic_pointer_cast<TrapUnsatHeuristic>(opts.get<std::shared_ptr<Evaluator>>("trap")))
     , m_task(m_trap->get_abstract_task().get())
 {
     strips::initialize(*m_task);
@@ -37,13 +46,13 @@ void
 TrapNeighborsRefinement::add_options_to_parser(options::OptionParser& parser)
 {
     parser.add_option<bool>("recompute_reachability", "", "false");
-    parser.add_option<Evaluator*>("trap");
+    parser.add_option<std::shared_ptr<Evaluator>>("trap");
 }
 
 Evaluator*
 TrapNeighborsRefinement::get_underlying_heuristic()
 {
-    return m_trap;
+    return m_trap.get();
 }
 
 bool

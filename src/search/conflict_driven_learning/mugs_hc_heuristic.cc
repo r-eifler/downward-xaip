@@ -12,7 +12,7 @@ namespace mugs {
 MugsCriticalPathHeuristic::MugsCriticalPathHeuristic(
     const options::Options& opts)
     : MugsHeuristic(opts)
-    , hc_(dynamic_cast<hc_heuristic::HCHeuristic*>(opts.get<Evaluator*>("hc")))
+    , hc_(std::dynamic_pointer_cast<hc_heuristic::HCHeuristic>(opts.get<std::shared_ptr<Evaluator>>("hc")))
 {
     std::cout << "Initializing MugsCriticalPathHeuristic ..." << std::endl;
     all_goals_ = 0U;
@@ -30,8 +30,14 @@ MugsCriticalPathHeuristic::MugsCriticalPathHeuristic(
 void
 MugsCriticalPathHeuristic::add_options_to_parser(options::OptionParser& parser)
 {
-    parser.add_option<Evaluator*>("hc", "", "hc(nogoods=false)");
+    parser.add_option<std::shared_ptr<Evaluator>>("hc", "", "hc(nogoods=false)");
     MugsHeuristic::add_options_to_parser(parser);
+}
+
+hc_heuristic::HCHeuristic*
+MugsCriticalPathHeuristic::get_underlying_heuristic() const
+{ 
+    return hc_.get();
 }
 
 void

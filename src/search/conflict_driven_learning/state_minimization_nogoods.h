@@ -5,6 +5,7 @@
 #include "formula.h"
 #include "../algorithms/segmented_vector.h"
 
+#include <map>
 #include <vector>
 
 namespace conflict_driven_learning

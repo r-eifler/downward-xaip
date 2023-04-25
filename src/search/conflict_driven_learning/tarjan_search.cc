@@ -3,8 +3,6 @@
 
 #include "state_component.h"
 
-#include "../globals.h"
-#include "../global_state.h"
 #include "../state_registry.h"
 #include "../task_proxy.h"
 #include "../evaluation_context.h"
@@ -28,7 +26,9 @@
 
 struct StateLess {
   bool operator()(const State& s1, const State& s2) const {
-      return s1.get_id().hash() < s2.get_id().hash();
+      StateID i1 = s1.get_id();
+      StateID i2 = s2.get_id();
+      return i1(i1) < i2(i2);
   }
 };
 
@@ -52,10 +52,10 @@ TarjanSearch::TarjanSearch(const options::Options &opts)
     , c_compatible_pruning_method(opts.get<bool>("compatible_pruning_method"))
     , c_dead_end_refinement(opts.contains("learn"))
     , c_compute_recognized_neighbors(c_dead_end_refinement)
-    , m_guidance(opts.contains("eval") ? opts.get<Evaluator *>("eval") : nullptr)
-    , m_preferred(opts.contains("preferred") ? opts.get<Evaluator*>("preferred") : nullptr)
+    , m_guidance(opts.contains("eval") ? opts.get<std::shared_ptr<Evaluator>>("eval") : nullptr)
+    , m_preferred(opts.contains("preferred") ? opts.get<std::shared_ptr<Evaluator>>("preferred") : nullptr)
     , m_learner(opts.contains("learn") ? opts.get<std::shared_ptr<ConflictLearner>>("learn") : nullptr)
-    , m_dead_end_identifier(opts.contains("u_eval") ? opts.get<Evaluator *>("u_eval") : nullptr)
+    , m_dead_end_identifier(opts.contains("u_eval") ? opts.get<std::shared_ptr<Evaluator >>("u_eval") : nullptr)
     , m_pruning_method(opts.get<std::shared_ptr<PruningMethod>>("pruning"))
     , m_search_space(&state_registry)
     , m_current_index(0)
@@ -106,7 +106,7 @@ void TarjanSearch::initialize()
 bool TarjanSearch::evaluate(const State& state)
 {
     statistics.inc_evaluated_states();
-    bool res = evaluate(state, m_guidance);
+    bool res = evaluate(state, m_guidance.get());
     if (!res && !c_prune_eval_dead_ends) {
         m_eval_result.set_evaluator_value(0);
         return true;
@@ -160,6 +160,7 @@ bool TarjanSearch::expand(const State& state)
         return false;
     }
 
+#if 0
     if (m_pruning_method->prune_state(state)) {
         node.mark_dead_end();
         if (c_compatible_pruning_method) {
@@ -167,6 +168,7 @@ bool TarjanSearch::expand(const State& state)
         }
         return false;
     }
+#endif
 
     statistics.inc_expanded();
 
@@ -179,7 +181,7 @@ bool TarjanSearch::expand(const State& state)
     m_call_stack.emplace_back(node);
 
     m_open_list.push_layer();
-    g_successor_generator->generate_applicable_ops(state, aops);
+    successor_generator.generate_applicable_ops(state, aops);
     unsigned num_all_aops = aops.size();
     m_pruning_method->prune_operators(state, aops);
     if (aops.size() < num_all_aops && !c_compatible_pruning_method) {
@@ -188,7 +190,7 @@ bool TarjanSearch::expand(const State& state)
 
     statistics.inc_generated(aops.size());
     if (m_preferred) {
-        if (evaluate(state, m_preferred)) {
+        if (evaluate(state, m_preferred.get())) {
             const std::vector<OperatorID>& pref = m_eval_result.get_preferred_operators();
             for (int i = pref.size() - 1; i >= 0; i--) {
                 preferred.insert(pref[i]);
@@ -235,12 +237,10 @@ SearchStatus TarjanSearch::step()
     static StateSet recognized_neighbors;
 
     if (m_result == DFSResult::SOLVED) {
-        this->run_finished_successfully = true;
         return SearchStatus::SOLVED;
     }
 
     if (m_call_stack.empty()) {
-        this->run_finished_successfully = true;
         return SearchStatus::FAILED;
     }
 
@@ -297,7 +297,7 @@ SearchStatus TarjanSearch::step()
         } else if (!succ_node.is_closed()) {
             if (task_properties::is_goal_state(task_proxy, succ)) {
                 evaluate_dead_end_heuristic(succ); // mugs
-                m_pruning_method->prune_state(succ);
+                // m_pruning_method->prune_state(succ);
                 std::vector<OperatorID> plan;
                 m_search_space.trace_path(succ_node, plan);
                 set_plan(plan);
@@ -451,14 +451,13 @@ SearchStatus TarjanSearch::step()
 
 void TarjanSearch::print_statistics() const
 {
-    SearchEngine::print_statistics();
     std::cout << "Registered: " << state_registry.size() << " state(s)" << std::endl;
     statistics.print_detailed_statistics();
     if (m_learner != nullptr) {
         m_learner->print_statistics();
     }
     if (m_dead_end_identifier != nullptr) {
-        m_dead_end_identifier->print_evaluator_statistics();
+        // m_dead_end_identifier->print_evaluator_statistics();
     }
     m_pruning_method->print_statistics();
 }
@@ -472,9 +471,9 @@ TarjanSearch::get_heuristic_refinement_time() const
 void TarjanSearch::add_options_to_parser(options::OptionParser &parser)
 {
     SearchEngine::add_options_to_parser(parser);
-    parser.add_option<Evaluator *>("eval", "", options::OptionParser::NONE);
-    parser.add_option<Evaluator *>("u_eval", "", options::OptionParser::NONE);
-    parser.add_option<Evaluator *>("preferred", "", options::OptionParser::NONE);
+    parser.add_option<std::shared_ptr<Evaluator>>("eval", "", options::OptionParser::NONE);
+    parser.add_option<std::shared_ptr<Evaluator>>("u_eval", "", options::OptionParser::NONE);
+    parser.add_option<std::shared_ptr<Evaluator>>("preferred", "", options::OptionParser::NONE);
     parser.add_option<std::shared_ptr<ConflictLearner>>("learn", "", options::OptionParser::NONE);
     parser.add_option<bool>("recompute_u",
                             "recompute dead-end detection heuristic after each refinement",
@@ -504,4 +503,4 @@ _parse(options::OptionParser& parser)
     return nullptr;
 }
 
-static PluginShared<SearchEngine> _plugin("dfs", _parse);
+static Plugin<SearchEngine> _plugin("dfs", _parse);

@@ -30,7 +30,7 @@ protected:
 
     const bool c_recompute_reachability;
 
-    TrapUnsatHeuristic* m_trap;
+    std::shared_ptr<TrapUnsatHeuristic> m_trap;
     const AbstractTask* m_task;
     std::vector<bool> m_fact_mutex_with_goal;
     std::vector<int> m_variable_order;

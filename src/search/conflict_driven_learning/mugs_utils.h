@@ -55,13 +55,6 @@ public:
         using pointer = const value_type*;
         using reference = const value_type&;
 
-        const_iterator(const const_iterator& other) = default;
-        const_iterator(const_iterator&& other) = default;
-        ~const_iterator() = default;
-
-        const_iterator& operator=(const const_iterator&) = default;
-        const_iterator& operator=(const_iterator&&) = default;
-
         const_iterator& operator++()
         {
             it_++;

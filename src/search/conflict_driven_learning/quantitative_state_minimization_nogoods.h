@@ -6,6 +6,7 @@
 #include "../algorithms/segmented_vector.h"
 
 #include <vector>
+#include <map>
 
 namespace conflict_driven_learning
 {

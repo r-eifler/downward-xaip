@@ -14,7 +14,7 @@ public:
     MugsCriticalPathHeuristic(const options::Options& opts);
     static void add_options_to_parser(options::OptionParser& parser);
 
-    hc_heuristic::HCHeuristic* get_underlying_heuristic() const { return hc_; }
+    hc_heuristic::HCHeuristic* get_underlying_heuristic() const;
     void sync();
     // virtual void print_evaluator_statistics() const override;
 
@@ -33,7 +33,7 @@ protected:
         std::vector<unsigned>& disabled) const;
 
 private:
-    hc_heuristic::HCHeuristic* hc_;
+    std::shared_ptr<hc_heuristic::HCHeuristic> hc_;
 
     std::vector<bool> in_hard_goal_;
     std::vector<unsigned> goal_conjunctions_;

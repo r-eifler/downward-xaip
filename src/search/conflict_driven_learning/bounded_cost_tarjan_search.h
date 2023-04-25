@@ -54,8 +54,10 @@ protected:
     };
 
     class HashMap {
+    public:
+	struct stateidhash { std::size_t operator()(const StateID& s) const { return std::hash<std::size_t>()(s(s)); } };
     private:
-        std::unordered_map<StateID, ExpansionInfo> data;
+        std::unordered_map<StateID, ExpansionInfo, stateidhash> data;
     public:
         ExpansionInfo& operator[](const StateID& state);
         void remove(const StateID& state);
@@ -81,9 +83,9 @@ protected:
     std::shared_ptr<AbstractTask> m_task;
     TaskProxy m_task_proxy;
 
-    Evaluator* m_expansion_evaluator;
-    Evaluator* m_preferred;
-    Evaluator* m_pruning_evaluator;
+    std::shared_ptr<Evaluator> m_expansion_evaluator;
+    std::shared_ptr<Evaluator> m_preferred;
+    std::shared_ptr<Evaluator> m_pruning_evaluator;
     std::set<Evaluator*> m_path_dependent_evaluators;
     std::shared_ptr<HeuristicRefiner> m_refiner;
 

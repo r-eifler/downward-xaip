@@ -83,7 +83,7 @@ void StateMinimizationNoGoods::refine(
         for (unsigned j = 0; j < order.size(); j++) {
             int var = order[j];
             for (int val = 0; val < m_task->get_variable_domain_size(var); val++) {
-                if (val != state[var]) {
+                if (val != state[var].get_value()) {
                     m_new_facts.push_back(strips::get_fact_id(var, val));
                 }
             }
@@ -92,7 +92,7 @@ void StateMinimizationNoGoods::refine(
                     m_reachable_conjunctions);
             if (res != HCHeuristic::DEAD_END) {
                 m_hc->revert_incremental_computation(m_new_facts, m_reachable_conjunctions);
-                m_clause.push_back(strips::get_fact_id(var, state[var]));
+                m_clause.push_back(strips::get_fact_id(var, state[var].get_value()));
             } else {
                 new_facts.insert(new_facts.end(), m_new_facts.begin(), m_new_facts.end());
                 reachable.insert(reachable.end(), m_reachable_conjunctions.begin(), m_reachable_conjunctions.end());

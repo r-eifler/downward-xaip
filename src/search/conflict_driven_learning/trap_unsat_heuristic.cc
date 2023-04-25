@@ -31,9 +31,9 @@ TrapUnsatHeuristic::TrapUnsatHeuristic(const options::Options& opts)
     if (c_updatable_transitions) {
         m_progression_lookup.set_num_keys(strips::num_facts());
     }
-    std::vector<Evaluator*> evals = opts.get_list<Evaluator*>("evals");
+    std::vector<std::shared_ptr<Evaluator>> evals = opts.get<std::vector<std::shared_ptr<Evaluator>>>("evals");
     for (unsigned i = 0; i < evals.size(); i++) {
-        m_evaluators.push_back(dynamic_cast<PartialStateEvaluator*>(evals[i]));
+        m_evaluators.push_back(std::dynamic_pointer_cast<PartialStateEvaluator>(evals[i]));
         assert(m_evaluators.back() != nullptr);
     }
     initialize(opts.get<int>("k"));
@@ -43,7 +43,7 @@ void
 TrapUnsatHeuristic::add_options_to_parser(options::OptionParser& parser)
 {
     parser.add_option<int>("k", "", "0");
-    parser.add_list_option<Evaluator *>("evals", "", "[]");
+    parser.add_list_option<std::shared_ptr<Evaluator>>("evals", "", "[]");
     parser.add_option<bool>("update_transitions", "", "false");
     Heuristic::add_options_to_parser(parser);
 }

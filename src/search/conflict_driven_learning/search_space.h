@@ -3,7 +3,6 @@
 
 #include "../state_registry.h"
 #include "../per_state_information.h"
-#include "../global_state.h"
 #include "../operator_id.h"
 
 #include <vector>

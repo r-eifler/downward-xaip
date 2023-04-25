@@ -6,9 +6,6 @@
 #include "../task_proxy.h"
 #include "../tasks/root_task.h"
 
-// #include "../../globals.h"
-// #include "../../operator.h"
-
 #include "../option_parser.h"
 #include "../plugin.h"
 #include "../utils/timer.h"

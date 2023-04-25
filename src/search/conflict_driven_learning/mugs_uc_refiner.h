@@ -30,7 +30,7 @@ protected:
         StateComponent& neighbors) override;
     virtual void initialize() override;
 
-    MugsCriticalPathHeuristic* mugs_hc_;
+    std::shared_ptr<MugsCriticalPathHeuristic> mugs_hc_;
     std::shared_ptr<hc_heuristic::HCHeuristicRefiner> hc_refiner_;
 };
 
