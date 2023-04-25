@@ -27,15 +27,22 @@ ReachableGoalSubsetMaxHeuristic::ReachableGoalSubsetMaxHeuristic(const Options &
     if (log.is_at_least_normal()) {
         log << "Initializing reachable goal subsets max heuristic..." << endl;
     }
+
+    overall_timer.reset();
 }
 
 EvaluationResult ReachableGoalSubsetMaxHeuristic::compute_result(EvaluationContext& context){
     State state = context.get_state();
 
+    overall_timer.resume();
     vector<int> costs = get_heuristic_values(state, current_msgs.get_goal_facts());
+    overall_timer.stop();
 
     //TODO handle instances with no explecit cost bound
     int remaining_cost = is_cost_bounded ? cost_bound - context.get_g_value() : INT_MAX;
+
+    // cout << "Remaining cost: " << remaining_cost << endl;
+
     bool should_be_pruned = current_msgs.prune(state, costs, remaining_cost);
 
     EvaluationResult result;
@@ -44,6 +51,7 @@ EvaluationResult ReachableGoalSubsetMaxHeuristic::compute_result(EvaluationConte
         num_pruned_states++;
         if(is_cost_bounded){
             // cout << cost_bound << " - " <<  context.get_g_value() << " = " << cost_bound - context.get_g_value() << endl;
+            // cout << "prune"  << endl;
             result.set_evaluator_value(cost_bound - context.get_g_value()); //TODO why?
         }
         else 
@@ -68,6 +76,7 @@ EvaluationResult ReachableGoalSubsetMaxHeuristic::compute_result(EvaluationConte
 
 void ReachableGoalSubsetMaxHeuristic::print_statistics() const {
     cout << "num pruned states: " << num_pruned_states << endl;
+    cout << "hmax computation time: " << overall_timer << endl;
     current_msgs.print();
 }
 

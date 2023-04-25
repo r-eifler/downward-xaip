@@ -119,14 +119,14 @@ MugsCriticalPathHeuristic::is_any_mug_reachable(
     int hval = hc_->compute_heuristic_for_facts(state_fact_ids);
     // NOTE: for the following check to make sense, the heuristic must consider
     // the entire goal (including all soft-goals)
-    if (hval != DEAD_END && (!is_cost_bounded_ || hval < remaining_budget)) {
+    if (hval != DEAD_END && (!is_cost_bounded_ || hval < remaining_budget)) { 
         return true;
     }
     std::vector<unsigned> tobeprocessed;
     for (unsigned i = 0; i < goal_conjunctions_.size(); i++) {
         const auto& info = hc_->get_conjunction_data(goal_conjunctions_[i]);
         if (!info.achieved()
-            || (is_cost_bounded_ && info.cost >= remaining_budget)) {
+            || (is_cost_bounded_ && info.cost >= remaining_budget)) { //TODO Why >= and not >
             if (in_hard_goal_[i]) {
                 // hard goals cannot be removed
                 assert(!check_for_reachable_mug_enumerative(remaining_budget));

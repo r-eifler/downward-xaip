@@ -141,9 +141,13 @@ bool MSGSCollection::prune(const State &state, vector<int> costs, int remaining_
     // costs containes the costs of the facts in all_goal_list (in the same order)
     overall_timer.resume();
 
+    // cout<< "-------------- CURRENT MSGS ------------------" << endl;
+    // this->print_subsets();
+    // cout<< "-------------- CURRENT MSGS ------------------" << endl;
+
     GoalSubset reachable_goals = GoalSubset(all_goal_list.size());
     for(size_t i = 0; i < all_goal_list.size(); i++){
-        reachable_goals.set(i, costs[i] != -1 && costs[i] <= remaining_cost);
+        reachable_goals.set(i, costs[i] != -1 && costs[i] < remaining_cost); // TODO why < and nor <=
     }
 
     // cout << "reachable goals: " << endl;

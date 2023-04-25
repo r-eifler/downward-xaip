@@ -5,6 +5,7 @@
 #include "../../heuristic.h"
 
 #include "../algorithms/priority_queues.h"
+#include "../../utils/timer.h"
 
 #include "msgs_collection.h"
 
@@ -20,6 +21,8 @@ private:
     
     int num_pruned_states = 0;
     MSGSCollection current_msgs;
+
+    utils::Timer overall_timer;
 
 protected:
 
