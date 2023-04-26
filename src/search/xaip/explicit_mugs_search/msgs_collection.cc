@@ -147,7 +147,8 @@ bool MSGSCollection::prune(const State &state, vector<int> costs, int remaining_
 
     GoalSubset reachable_goals = GoalSubset(all_goal_list.size());
     for(size_t i = 0; i < all_goal_list.size(); i++){
-        reachable_goals.set(i, costs[i] != -1 && costs[i] < remaining_cost); // TODO why < and nor <=
+        // in FD the cost bound is strict thus we can test for < instead of <=
+        reachable_goals.set(i, costs[i] != -1 && costs[i] < remaining_cost); 
     }
 
     // cout << "reachable goals: " << endl;
