@@ -227,8 +227,8 @@ SearchStatus EagerSearch::step() {
                 statistics.inc_dead_ends();
                 continue;
             }
-            if (pruning_method->prune_state(s,bound - succ_g)){
-                node->mark_as_dead_end();
+            if (pruning_method->prune_state(succ_state, bound - succ_g)){
+                succ_node.mark_as_dead_end();
                 statistics.inc_dead_ends();
                 continue;
             }

@@ -91,6 +91,8 @@ public:
 
     virtual void set_abstract_task(std::shared_ptr<AbstractTask> task);
     std::shared_ptr<AbstractTask> get_abstract_task() const;
+
+    virtual void print_statistics() const {};
 };
 
 #endif

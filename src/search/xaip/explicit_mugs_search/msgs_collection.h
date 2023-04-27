@@ -4,6 +4,8 @@
 #include "../goal_subsets/goal_subsets.h"
 #include "../../task_proxy.h"
 #include "../../tasks/root_task.h"
+#include "../../utils/timer.h"
+
 #include <iostream>
 #include <string>
 #include <unordered_set>
@@ -20,6 +22,8 @@ private:
     std::vector<FactPair> all_goal_list;
 
     std::vector<std::string> soft_goal_fact_names;
+
+    utils::Timer overall_timer;
 
 protected:
 

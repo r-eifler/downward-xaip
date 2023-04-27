@@ -60,6 +60,16 @@ int AdditiveCartesianHeuristic::compute_heuristic(const State &ancestor_state) {
     return sum_h;
 }
 
+std::vector<int> AdditiveCartesianHeuristic::get_heuristic_values(const State &state, std::vector<FactPair>){
+    vector<int> costs;
+    for (const CartesianHeuristicFunction &function : heuristic_functions) {
+        int value = function.get_value(state);
+        assert(value >= 0);
+        costs.push_back(value);
+    }
+    return costs;
+}
+
 static shared_ptr<Heuristic> _parse(OptionParser &parser) {
     parser.document_synopsis(
         "Additive CEGAR heuristic",

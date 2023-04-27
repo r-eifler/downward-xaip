@@ -35,6 +35,10 @@ public:
     bool operator!=(const StateID &other) const {
         return !(*this == other);
     }
+
+    std::size_t operator()(StateID const id) const{
+        return id.value;
+    }
 };
 
 

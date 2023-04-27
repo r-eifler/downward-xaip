@@ -90,8 +90,8 @@ static Facts filter_and_order_facts(
     utils::RandomNumberGenerator &rng,
     utils::LogProxy &log) {
     TaskProxy task_proxy(*task);
-    remove_initial_state_facts(task_proxy, facts);
-    order_facts(task, fact_order, facts, rng, log);
+    // remove_initial_state_facts(task_proxy, facts);
+    // order_facts(task, fact_order, facts, rng, log);
     return facts;
 }
 

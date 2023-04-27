@@ -40,6 +40,11 @@ public:
     explicit EagerSearch(const options::Options &opts);
     virtual ~EagerSearch() = default;
 
+    void set_pruning_method( std::shared_ptr<PruningMethod> pruning_method){
+        std::cout << "********** set pruning method ***************" << std::endl;
+        this->pruning_method = pruning_method;
+    }
+
     virtual void print_statistics() const override;
 
     void dump_search_space() const;

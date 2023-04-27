@@ -125,7 +125,7 @@ vector<CartesianHeuristicFunction> CostSaturation::generate_heuristic_functions(
                    num_non_looping_transitions >= max_non_looping_transitions ||
                    timer.is_expired() ||
                    !utils::extra_memory_padding_is_reserved() ||
-                   state_is_dead_end(initial_state);
+                   state_is_dead_end(initial_state); 
         };
 
     utils::reserve_extra_memory_padding(memory_padding_in_mb);
@@ -193,7 +193,7 @@ void CostSaturation::build_abstractions(
     function<bool()> should_abort) {
     int rem_subtasks = subtasks.size();
     for (shared_ptr<AbstractTask> subtask : subtasks) {
-        subtask = get_remaining_costs_task(subtask);
+        // subtask = get_remaining_costs_task(subtask);
 
         assert(num_states < max_states);
         CEGAR cegar(
@@ -221,17 +221,17 @@ void CostSaturation::build_abstractions(
             abstraction->get_transition_system().get_incoming_transitions(),
             costs,
             abstraction->get_goals());
-        vector<int> saturated_costs = compute_saturated_costs(
-            abstraction->get_transition_system(),
-            init_distances,
-            goal_distances,
-            use_general_costs);
+        // vector<int> saturated_costs = compute_saturated_costs(
+        //     abstraction->get_transition_system(),
+        //     init_distances,
+        //     goal_distances,
+        //     use_general_costs);
 
         heuristic_functions.emplace_back(
             abstraction->extract_refinement_hierarchy(),
             move(goal_distances));
 
-        reduce_remaining_costs(saturated_costs);
+        // reduce_remaining_costs(saturated_costs);
 
         if (should_abort())
             break;

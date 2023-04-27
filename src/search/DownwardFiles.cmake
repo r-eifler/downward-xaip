@@ -478,11 +478,53 @@ fast_downward_plugin(
         xaip/goal_space_search/plugin_sgss
         xaip/goal_space_search/dualization
         xaip/explicit_mugs_search/msgs_collection
+        xaip/explicit_mugs_search/iterated_mugs_search
+        xaip/explicit_mugs_search/osp_max_heuristic
+        xaip/explicit_mugs_search/osp_cartesian_heuristic
         xaip/explicit_mugs_search/reachable_goal_subsets_hmax_pruning
+        xaip/explicit_mugs_search/reachable_goal_subsets_cegar_pruning
         xaip/explicit_mugs_search/reachable_goal_subsets_max_heuristic
         xaip/explicit_mugs_search/reachable_goal_subsets_tracking
+        xaip/explicit_mugs_search/dfs_search
     DEPENDS MAX_HEURISTIC
 )
+
+fast_downward_plugin(
+    NAME "CONFLICT_LEARNING"
+    SOURCES
+        conflict_driven_learning/hash_utils
+
+        conflict_driven_learning/conflict_learner
+        conflict_driven_learning/state_component
+        conflict_driven_learning/layered_map
+        conflict_driven_learning/search_node_info
+        conflict_driven_learning/search_node
+        conflict_driven_learning/search_space
+        conflict_driven_learning/tarjan_search
+        conflict_driven_learning/strips_compilation
+        conflict_driven_learning/hc_heuristic
+        conflict_driven_learning/formula
+        conflict_driven_learning/state_minimization_nogoods
+        conflict_driven_learning/quantitative_state_minimization_nogoods
+        conflict_driven_learning/hc_conflict_learner
+        conflict_driven_learning/uc_neighbors_refinement
+
+        conflict_driven_learning/heuristic_refiner
+        # conflict_driven_learning/bounded_cost_depth_first_search
+        conflict_driven_learning/bounded_cost_tarjan_search
+        conflict_driven_learning/hc_heuristic_refiner
+        conflict_driven_learning/hc_neighbors_refinement
+
+        conflict_driven_learning/partial_state_evaluator
+        conflict_driven_learning/trap_unsat_heuristic
+        conflict_driven_learning/trap_neighbors_refinement
+
+        conflict_driven_learning/mugs_utils
+        conflict_driven_learning/mugs_heuristic
+        conflict_driven_learning/mugs_hc_heuristic
+        conflict_driven_learning/mugs_uc_refiner
+        conflict_driven_learning/mugs_hc_refiner
+    )
 
 fast_downward_plugin(
     NAME LP_SOLVER

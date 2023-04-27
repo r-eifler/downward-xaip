@@ -13,13 +13,14 @@ class CartesianHeuristicFunction;
   summing all of their values.
 */
 class AdditiveCartesianHeuristic : public Heuristic {
-    const std::vector<CartesianHeuristicFunction> heuristic_functions;
-
+    
 protected:
+    const std::vector<CartesianHeuristicFunction> heuristic_functions;
     virtual int compute_heuristic(const State &ancestor_state) override;
 
 public:
     explicit AdditiveCartesianHeuristic(const options::Options &opts);
+    std::vector<int> get_heuristic_values(const State &state, std::vector<FactPair> facts);
 };
 }
 

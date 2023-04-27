@@ -99,6 +99,8 @@ public:
       the given state is cached, i.e., is_estimate_cached returns true.
     */
     virtual int get_cached_estimate(const State &state) const;
+
+    virtual void print_statistics() const {};
 };
 
 extern void add_evaluator_options_to_parser(options::OptionParser &parser);
