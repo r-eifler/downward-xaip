@@ -16,6 +16,11 @@ ReachableGoalSubsetsHMaxPruning::ReachableGoalSubsetsHMaxPruning(const Options &
 }
 
 void ReachableGoalSubsetsHMaxPruning::initialize(const shared_ptr<AbstractTask> &task) {
+    if(initialized){
+        return;
+    }
+    initialized = true;
+
     PruningMethod::initialize(task);
 
     max_heuristic = static_pointer_cast<max_heuristic::HSPMaxHeuristic>(h);

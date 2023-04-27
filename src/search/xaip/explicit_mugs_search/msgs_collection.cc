@@ -13,6 +13,10 @@ MSGSCollection::MSGSCollection() {}
 void MSGSCollection::initialize(shared_ptr<AbstractTask> task_) {
 
     cout << "---------------- INIT MSGS Collection ---------------------- " << endl;
+    if(soft_goal_list.size() > 0){
+        cout << "--> already initialized" << endl;
+        return;
+    }
 
     assert(!task_);
     task = task_;

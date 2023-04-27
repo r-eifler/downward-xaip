@@ -18,6 +18,8 @@ class ReachableGoalSubsetsHMaxPruning : public PruningMethod {
     std::shared_ptr<max_heuristic::HSPMaxHeuristic> max_heuristic;
     MSGSCollection current_msgs;
 
+    bool initialized = false;
+
     bool prune(const State &state, int remaining_cost) override;
     void prune(const State &, std::vector<OperatorID> &) override {};
 
