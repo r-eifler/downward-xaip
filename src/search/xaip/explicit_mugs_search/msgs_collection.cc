@@ -157,26 +157,16 @@ bool MSGSCollection::prune(const State &state, vector<int> costs, int remaining_
 
     // cout << "reachable goals: " << endl;
     // reachable_goals.print();
-<<<<<<< HEAD
-
-=======
->>>>>>> explicit-mugs-search
 
     if(hard_goal_list.size() == 0){
         if(this->contains_superset(reachable_goals)){
             // cout<< "contains superset" << endl;
-<<<<<<< HEAD
-=======
             overall_timer.stop();
->>>>>>> explicit-mugs-search
             return true;
         }
         else{
             GoalSubset satisfied_goals = get_satisfied_all_goals(state);
-<<<<<<< HEAD
-=======
             assert(reachable_goals.is_superset_of(satisfied_goals));
->>>>>>> explicit-mugs-search
             // cout << "satisfied goals: " << endl;
             // satisfied_goals.print();
             if(!contains_superset(satisfied_goals)){
