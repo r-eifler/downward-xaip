@@ -162,6 +162,7 @@ bool MSGSCollection::prune(const State &state, vector<int> costs, int remaining_
         }
         else{
             GoalSubset satisfied_goals = get_satisfied_all_goals(state);
+            assert(reachable_goals.is_superset_of(satisfied_goals));
             // cout << "satisfied goals: " << endl;
             // satisfied_goals.print();
             if(!contains_superset(satisfied_goals)){
