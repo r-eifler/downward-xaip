@@ -20,6 +20,7 @@ protected:
 
 public:
     explicit AdditiveCartesianHeuristic(const options::Options &opts);
+    std::vector<int> get_heuristic_values(const State &state, std::vector<FactPair> facts);
 };
 }
 
