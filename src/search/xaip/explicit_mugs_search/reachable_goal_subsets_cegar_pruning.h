@@ -18,6 +18,8 @@ class ReachableGoalSubsetsCegarPruning : public PruningMethod {
     std::shared_ptr<cegar::AdditiveCartesianHeuristic> cegar_heuristic;
     MSGSCollection current_msgs;
 
+    bool initialized = false;
+
     bool prune(const State &state, int remaining_cost) override;
     void prune(const State &, std::vector<OperatorID> &) override {};
 

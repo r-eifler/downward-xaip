@@ -16,6 +16,11 @@ ReachableGoalSubsetsCegarPruning::ReachableGoalSubsetsCegarPruning(const Options
 }
 
 void ReachableGoalSubsetsCegarPruning::initialize(const shared_ptr<AbstractTask> &task) {
+    if(initialized){
+        return;
+    }
+    initialized = true;
+
     PruningMethod::initialize(task);
 
     cegar_heuristic = static_pointer_cast<cegar::AdditiveCartesianHeuristic>(h);

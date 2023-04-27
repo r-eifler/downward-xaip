@@ -480,6 +480,7 @@ fast_downward_plugin(
         xaip/explicit_mugs_search/msgs_collection
         xaip/explicit_mugs_search/iterated_mugs_search
         xaip/explicit_mugs_search/osp_max_heuristic
+        xaip/explicit_mugs_search/osp_cartesian_heuristic
         xaip/explicit_mugs_search/reachable_goal_subsets_hmax_pruning
         xaip/explicit_mugs_search/reachable_goal_subsets_cegar_pruning
         xaip/explicit_mugs_search/reachable_goal_subsets_max_heuristic

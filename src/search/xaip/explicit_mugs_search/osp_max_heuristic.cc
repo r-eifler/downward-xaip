@@ -33,6 +33,7 @@ int OSPMaxHeuristic::compute_heuristic(const State &ancestor_state) {
         const Proposition *goal = get_proposition(goal_id);
         int goal_cost = goal->cost;
         total_cost = max(total_cost, goal_cost);
+        total_cost +=  goal_cost;
     }
     // cout << total_cost << endl;
     return total_cost;
