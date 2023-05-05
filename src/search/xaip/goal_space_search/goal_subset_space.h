@@ -22,8 +22,8 @@ enum GoalSubsetStatus {UNDIFINED, SOLVABLE, UNSOLVABLE};
 
 class GoalSpaceNode {
 protected:
-    std::vector<GoalSpaceNode*> children;
-    uint sleep_set_i = 0;
+    std::vector<GoalSpaceNode*> subsets;
+    std::vector<GoalSpaceNode*> supersets;
     goalsubset::GoalSubset goals;
     GoalSubsetStatus status = UNDIFINED;
     bool printed = false;
@@ -38,19 +38,21 @@ public:
     }
 
     void solved(bool propagate = false){
+        assert(!statusDefined());
         status = SOLVABLE;
         if (propagate) {
-            for(GoalSpaceNode* child : children){
-                child->solved(true);
+            for(GoalSpaceNode* subset : subsets){
+                subset->solved(true);
             }
         }
     }
 
     void not_solved(bool propagate = false){
+        assert(!statusDefined());
         status = UNSOLVABLE;
         if (propagate) {
-            for(GoalSpaceNode* child : children){
-                child->not_solved(true);
+            for(GoalSpaceNode* superset : supersets){
+                superset->not_solved(true);
             }
         }
     }
@@ -67,8 +69,12 @@ public:
         return status == UNSOLVABLE;
     }
 
-    void addChild(GoalSpaceNode* node){
-        children.push_back(node);
+    void add_subset(GoalSpaceNode* node){
+        subsets.push_back(node);
+    }
+
+    void add_superset(GoalSpaceNode* node){
+        supersets.push_back(node);
     }
 
    
@@ -80,16 +86,20 @@ public:
         return goals;
     }
 
-    void set_sleep_set_id(uint id){
-        this->sleep_set_i = id;
+    bool has_subsets(){
+        return subsets.size() > 0;
     }
 
-    bool hasChildren(){
-        return children.size() > 0;
+    bool has_supersets(){
+        return supersets.size() > 0;
     }
 
-    std::vector<GoalSpaceNode*> getChildren(){
-        return children;
+    std::vector<GoalSpaceNode*> get_supersets(){
+        return supersets;
+    }
+
+     std::vector<GoalSpaceNode*> get_subsets(){
+        return subsets;
     }
 
     void resetPrinted(){

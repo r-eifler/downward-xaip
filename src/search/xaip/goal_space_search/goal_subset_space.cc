@@ -40,7 +40,6 @@ vector<GoalSpaceNode*> GoalSpaceNode::weaken() const {
     vector<GoalSubset> new_subsets = goals.weaken();
     vector<GoalSpaceNode*> new_nodes;
     for(GoalSubset subset : new_subsets){
-        // if(!subset.is_empty())
         new_nodes.push_back(new GoalSpaceNode(subset));
     }
     return new_nodes;
@@ -106,7 +105,9 @@ GoalSubsetSpace::GoalSubsetSpace(GoalsProxy goals, bool all_soft_goals, bool wea
         soft_goal_fact_names.push_back(task_proxy.get_variables()[gp.var].get_fact(gp.value).get_name());
     }
 
-    boost::dynamic_bitset<> init_goals = weaken ? boost::dynamic_bitset<>(soft_goal_list.size(), (1U << soft_goal_list.size()) - 1) : boost::dynamic_bitset<>(soft_goal_list.size(), 0);
+    boost::dynamic_bitset<> init_goals = weaken ? 
+        boost::dynamic_bitset<>(soft_goal_list.size(), (1U << soft_goal_list.size()) - 1) : 
+        boost::dynamic_bitset<>(soft_goal_list.size(), 0);
     root = new GoalSpaceNode(GoalSubset(init_goals));
     current_node = root;
     open_list.push_back(root); 
@@ -135,28 +136,50 @@ void GoalSubsetSpace::expand(){
     // }
     // cout << "children:"  << endl;
     //TODO implement a more efficient version
-    //TODO Check whether dublicate nodes are generated
     for (GoalSpaceNode* node : new_nodes){
         // node->get_goals().print();
-        auto old_node_it = generated.find(node);
-        if(old_node_it != generated.end()){
+        auto existing_node_it = generated.find(node);
+        if(existing_node_it != generated.end()){
+
+            // new node not needed use existing copy
+            delete node;
+
             // cout << "--> already exists"  << endl;
-            // (*old_node_it)->print();
+            // (*existing_node_it)->print();
+
+            if (weaken){
+                current_node->add_subset(*existing_node_it);
+                (*existing_node_it)->add_superset(current_node);
+            }
+            else{
+                current_node->add_superset(*existing_node_it);
+                (*existing_node_it)->add_subset(current_node);
+            }
+
+            // propagate status
             if(weaken && current_node->isSolvable()){
                 // cout << "is solvable" << endl;
-                (*old_node_it)->solved();
+                (*existing_node_it)->solved();
             }
             else if(!weaken && current_node->isUnSolvable()){
                 // cout << "is not solvable" << endl;
-                (*old_node_it)->not_solved();
+                (*existing_node_it)->not_solved();
             }
-            current_node->addChild(*old_node_it);
-            delete node;
+            
         }
         else{
             // cout << "--> new node"  << endl;
-            current_node->addChild(node);
+            if (weaken){
+                current_node->add_subset(node);
+                (node)->add_superset(current_node);
+            }
+            else{
+                current_node->add_superset(node);
+                (node)->add_subset(current_node);
+            }
+            // cout << "--> links updated"  << endl;
             generated.insert(node);
+
             if(weaken && current_node->isSolvable()){
                 // cout << "is solvable" << endl;
                 node->solved();
@@ -204,17 +227,13 @@ vector<FactPair> GoalSubsetSpace::get_current_goals()
 
 GoalSubsets GoalSubsetSpace::generate_MUGS(){
 
-    if(!weaken){
-        return this->generate_MSGS().complement().minimal_hitting_sets();
-    }
-
     GoalSubsets mugs = GoalSubsets();
 
     for (GoalSpaceNode* node: generated){
         // node->print();
         if(node->isUnSolvable()){
             bool all_solvable = true;
-            for (GoalSpaceNode* child : node->getChildren()){
+            for (GoalSpaceNode* child : node->get_subsets()){
                 all_solvable &= child->isSolvable();
             }
             if(all_solvable){
@@ -229,17 +248,13 @@ GoalSubsets GoalSubsetSpace::generate_MUGS(){
 
 GoalSubsets GoalSubsetSpace::generate_MSGS(){
 
-    if(weaken){
-        return this->generate_MUGS().complement().minimal_hitting_sets();
-    }
-
     GoalSubsets msgs = GoalSubsets();
 
     for (GoalSpaceNode* node: generated){
 
         if(node->isSolvable()){
             bool all_unsolvable = true;
-            for (GoalSpaceNode* child : node->getChildren()){
+            for (GoalSpaceNode* child : node->get_supersets()){
                 all_unsolvable &= child->isUnSolvable();
             }
             if(all_unsolvable){

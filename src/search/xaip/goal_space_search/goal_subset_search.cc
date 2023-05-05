@@ -75,9 +75,9 @@ SearchStatus GoalSubsetSearch::step() {
 
     num_solved_nodes++;
 
-    cout << "-------------- NEXT GOAL SUBSET -----------------------" << endl;
-    meta_search_space->get_current_node()->print();
-    cout << "-------------------------------------" << endl;
+    // cout << "-------------- NEXT GOAL SUBSET -----------------------" << endl;
+    // meta_search_space->get_current_node()->print();
+    // cout << "-------------------------------------" << endl;
 
     meta_search_space->expand();
 
@@ -90,7 +90,7 @@ void GoalSubsetSearch::print_statistics() const {
     // statistics.print_detailed_statistics();
 
     cout << "-------------------------------------" << endl;
-    cout << "#solved goal subsets: "  << num_solved_nodes << endl;;
+    cout << "#solved goal subsets: "  << num_solved_nodes << endl;
 
     meta_search_space->print();
 }
