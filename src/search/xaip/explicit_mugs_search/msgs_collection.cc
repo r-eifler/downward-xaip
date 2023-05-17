@@ -18,6 +18,8 @@ void MSGSCollection::initialize(shared_ptr<AbstractTask> task_) {
         return;
     }
 
+    num_visited_states_since_last_added = 0;
+
     assert(!task_);
     task = task_;
 
@@ -144,6 +146,7 @@ bool MSGSCollection::prune(const State &state, vector<int> costs, int remaining_
 
     // costs containes the costs of the facts in all_goal_list (in the same order)
     overall_timer.resume();
+    num_visited_states_since_last_added++;
 
     // cout<< "-------------- CURRENT MSGS ------------------" << endl;
     // this->print_subsets();
@@ -171,7 +174,8 @@ bool MSGSCollection::prune(const State &state, vector<int> costs, int remaining_
             // satisfied_goals.print();
             if(!contains_superset(satisfied_goals)){
                 this->add_and_mimize(satisfied_goals);
-                // cout<< "add new goal subset" << endl;
+                cout << "Num states since last add new goal subset: " << num_visited_states_since_last_added << endl;
+                num_visited_states_since_last_added = 0;
             }
             overall_timer.stop();
             return false;
@@ -236,6 +240,7 @@ void MSGSCollection::print() const {
 
     cout << "HIT computation: " << hit_timer << endl;
     cout << "Prunig time: " << overall_timer << endl;
+    cout << "Final Num states since last add new goal subset: " << num_visited_states_since_last_added << endl;
     cout << "*********************************"  << endl;
     cout << "#hard goals: " << hard_goal_list.size() << endl;
     TaskProxy taskproxy = TaskProxy(*tasks::g_root_task.get());
@@ -247,10 +252,6 @@ void MSGSCollection::print() const {
         cout << "\t" << taskproxy.get_variables()[g.var].get_fact(g.value).get_name() << endl;
     }
 
-    cout << "*********************************"  << endl;
-    cout << "#MSGS: " << this->size() << endl;
-    cout << "*********************************"  << endl;
-    this->print_subsets();
     cout << "*********************************"  << endl;
     cout << "#MSGS: " << this->size() << endl;
     cout << "*********************************"  << endl;

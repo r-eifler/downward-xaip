@@ -25,6 +25,8 @@ private:
 
     utils::Timer overall_timer;
 
+    int num_visited_states_since_last_added;
+
 protected:
 
     goalsubset::GoalSubset get_satisfied_soft_goals(const State &state);
