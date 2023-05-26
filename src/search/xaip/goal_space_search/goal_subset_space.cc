@@ -290,13 +290,28 @@ void GoalSubsetSpace::print(){
     cout << "*********************************"  << endl;
     cout << "#MSGS: " << msgs.size() << endl;
     cout << "*********************************"  << endl;
-    msgs.print_subsets();
+    if(msgs.size() > 500){
+        cout << "Too many msgs to print!" << endl;
+    }
+    else{
+        msgs.print_subsets();
+    }
     cout << "*********************************"  << endl;
     cout << "#MUGS: " << mugs.size() << endl;
     cout << "*********************************"  << endl;
-    mugs.print_subsets();
+    if(mugs.size() > 500){
+        cout << "Too many mugs to print!" << endl;
+    }
+    else{
+        mugs.print_subsets();
+    }
     cout << "*********************************"  << endl;
-    mugs.print(soft_goal_fact_names);
+    if(mugs.size() > 500){
+        cout << "Too many mugs to print!" << endl;
+    }
+    else{
+        mugs.print(soft_goal_fact_names);
+    }
     cout << "*********************************"  << endl;
 }
 

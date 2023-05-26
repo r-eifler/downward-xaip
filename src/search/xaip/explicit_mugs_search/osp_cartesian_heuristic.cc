@@ -27,14 +27,14 @@ OSPCartesianHeuristic::OSPCartesianHeuristic(
 
 int OSPCartesianHeuristic::compute_heuristic(const State &ancestor_state) {
     State state = convert_ancestor_state(ancestor_state);
-    int sum_h = 0;
+    int max_cost = 0;
     for (const CartesianHeuristicFunction &function : heuristic_functions) {
         int value = function.get_value(state);
         assert(value >= 0);
-        sum_h += value;
+        max_cost = max(max_cost, value);
     }
-    assert(sum_h >= 0);
-    return sum_h;
+    assert(max_cost >= 0);
+    return max_cost;
 }
 
 static shared_ptr<Heuristic> _parse(OptionParser &parser) {

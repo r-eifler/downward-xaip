@@ -255,14 +255,29 @@ void MSGSCollection::print() const {
     cout << "*********************************"  << endl;
     cout << "#MSGS: " << this->size() << endl;
     cout << "*********************************"  << endl;
-    this->print_subsets();
+    if(this->size() > 500){
+        cout << "Too many msgs to print!" << endl;
+    }
+    else{
+        this->print_subsets();
+    }
     cout << "*********************************"  << endl;
     cout << "*********************************"  << endl;
     cout << "#MUGS: " << mugs.size() << endl;
     cout << "*********************************"  << endl;
-    mugs.print_subsets();
+    if(mugs.size() > 500){
+        cout << "Too many mugs to print!" << endl;
+    }
+    else{
+        mugs.print_subsets();
+    }
     cout << "*********************************"  << endl;
-    mugs.print(soft_goal_fact_names);
+    if(mugs.size() > 500){
+        cout << "Too many mugs to print!" << endl;
+    }
+    else{
+        mugs.print(soft_goal_fact_names);
+    }
     cout << "*********************************"  << endl;
 }
 

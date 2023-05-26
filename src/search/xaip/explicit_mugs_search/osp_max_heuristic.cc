@@ -28,15 +28,14 @@ int OSPMaxHeuristic::compute_heuristic(const State &ancestor_state) {
     setup_exploration_queue_state(state);
     relaxed_exploration();
 
-    int total_cost = 0;
+    int max_cost = 0;
     for (PropID goal_id : goal_propositions) {
         const Proposition *goal = get_proposition(goal_id);
         int goal_cost = goal->cost;
-        total_cost = max(total_cost, goal_cost);
-        total_cost +=  goal_cost;
+        max_cost = max(max_cost, goal_cost);
     }
     // cout << total_cost << endl;
-    return total_cost;
+    return max_cost;
 }
 
 static shared_ptr<Heuristic> _parse(OptionParser &parser) {
