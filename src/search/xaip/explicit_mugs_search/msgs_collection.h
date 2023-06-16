@@ -26,6 +26,7 @@ private:
     utils::Timer overall_timer;
 
     int num_visited_states_since_last_added;
+    int num_pruned_states = 0;
 
 protected:
 

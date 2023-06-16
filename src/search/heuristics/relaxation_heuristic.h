@@ -113,6 +113,7 @@ public:
     explicit RelaxationHeuristic(const options::Options &options);
 
     virtual bool dead_ends_are_reliable() const override;
+    virtual void set_abstract_task(std::shared_ptr<AbstractTask> task);
 };
 }
 

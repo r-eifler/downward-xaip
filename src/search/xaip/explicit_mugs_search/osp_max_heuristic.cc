@@ -34,7 +34,6 @@ int OSPMaxHeuristic::compute_heuristic(const State &ancestor_state) {
         int goal_cost = goal->cost;
         max_cost = max(max_cost, goal_cost);
     }
-    // cout << total_cost << endl;
     return max_cost;
 }
 

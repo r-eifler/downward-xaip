@@ -164,6 +164,7 @@ bool MSGSCollection::prune(const State &state, vector<int> costs, int remaining_
     if(hard_goal_list.size() == 0){
         if(this->contains_superset(reachable_goals)){
             // cout<< "contains superset" << endl;
+            num_pruned_states += 1;
             overall_timer.stop();
             return true;
         }
@@ -174,7 +175,7 @@ bool MSGSCollection::prune(const State &state, vector<int> costs, int remaining_
             // satisfied_goals.print();
             if(!contains_superset(satisfied_goals)){
                 this->add_and_mimize(satisfied_goals);
-                cout << "Num states since last add new goal subset: " << num_visited_states_since_last_added << endl;
+                // cout << "Num states since last add new goal subset: " << num_visited_states_since_last_added << endl;
                 num_visited_states_since_last_added = 0;
             }
             overall_timer.stop();
@@ -193,6 +194,7 @@ bool MSGSCollection::prune(const State &state, vector<int> costs, int remaining_
         //TODO does it make sense to check whether a superset of soft goals is reachable?
         if(! reachable_hard_goals.all() || superset_alreday_readched){
             // cout<< "contains superset" << endl;
+            num_pruned_states += 1;
             return true;
         }
         else{
@@ -200,6 +202,8 @@ bool MSGSCollection::prune(const State &state, vector<int> costs, int remaining_
                 this->add_and_mimize(satisfied_soft_goals);
                 // cout<< "add new goal subset" << endl;
             }
+            if(superset_alreday_readched)
+                num_pruned_states += 1;
             return superset_alreday_readched;
         }
 
@@ -240,7 +244,8 @@ void MSGSCollection::print() const {
 
     cout << "HIT computation: " << hit_timer << endl;
     cout << "Prunig time: " << overall_timer << endl;
-    cout << "Final Num states since last add new goal subset: " << num_visited_states_since_last_added << endl;
+    cout << "#pruned states: " << num_pruned_states << endl;
+    // cout << "Final Num states since last add new goal subset: " << num_visited_states_since_last_added << endl;
     cout << "*********************************"  << endl;
     cout << "#hard goals: " << hard_goal_list.size() << endl;
     TaskProxy taskproxy = TaskProxy(*tasks::g_root_task.get());

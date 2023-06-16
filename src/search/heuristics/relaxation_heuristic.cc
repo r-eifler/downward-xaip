@@ -301,4 +301,25 @@ void RelaxationHeuristic::simplify() {
         log << " done! [" << unary_operators.size() << " unary operators]" << endl;
     }
 }
+
+
+void
+RelaxationHeuristic::set_abstract_task(std::shared_ptr<AbstractTask> task)
+{
+    Heuristic::set_abstract_task(task);
+
+    for (uint i = 0; i < propositions.size(); i++) {
+       propositions[i].is_goal = false;
+    }
+
+    goal_propositions.clear();
+    GoalsProxy goals = task_proxy.get_goals();
+    goal_propositions.reserve(goals.size());
+    for (FactProxy goal : goals) {
+        PropID prop_id = get_prop_id(goal);
+        propositions[prop_id].is_goal = true;
+        goal_propositions.push_back(prop_id);
+    }
+}
+
 }
