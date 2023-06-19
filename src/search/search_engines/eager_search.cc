@@ -72,10 +72,14 @@ void EagerSearch::initialize() {
 
     path_dependent_evaluators.assign(evals.begin(), evals.end());
 
+    pruning_method->initialize(task);
+
     State initial_state = state_registry.get_initial_state();
     for (Evaluator *evaluator : path_dependent_evaluators) {
         evaluator->notify_initial_state(initial_state);
     }
+
+    pruning_method->prune_state(initial_state, bound);
 
     /*
       Note: we consider the initial state as reached by a preferred
@@ -99,7 +103,6 @@ void EagerSearch::initialize() {
 
     print_initial_evaluator_values(eval_context);
 
-    pruning_method->initialize(task);
 }
 
 void EagerSearch::print_statistics() const {
