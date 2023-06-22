@@ -115,7 +115,8 @@ SearchStatus EagerSearch::step() {
     tl::optional<SearchNode> node;
     while (true) {
         if (open_list->empty()) {
-            log << "Completely explored state space -- no solution!" << endl;
+            if (log.is_at_least_normal())
+                log << "Completely explored state space -- no solution!" << endl;
             return FAILED;
         }
         StateID id = open_list->remove_min();

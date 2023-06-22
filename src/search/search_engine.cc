@@ -25,19 +25,22 @@ class PruningMethod;
 
 successor_generator::SuccessorGenerator &get_successor_generator(
     const TaskProxy &task_proxy, utils::LogProxy &log) {
-    log << "Building successor generator..." << flush;
+    if (log.is_at_least_normal())
+        log << "Building successor generator..." << flush;
     int peak_memory_before = utils::get_peak_memory_in_kb();
     utils::Timer successor_generator_timer;
     successor_generator::SuccessorGenerator &successor_generator =
         successor_generator::g_successor_generators[task_proxy];
     successor_generator_timer.stop();
+    if (log.is_at_least_normal()){
     log << "done!" << endl;
-    int peak_memory_after = utils::get_peak_memory_in_kb();
-    int memory_diff = peak_memory_after - peak_memory_before;
-    log << "peak memory difference for successor generator creation: "
-        << memory_diff << " KB" << endl
-        << "time for successor generation creation: "
-        << successor_generator_timer << endl;
+        int peak_memory_after = utils::get_peak_memory_in_kb();
+        int memory_diff = peak_memory_after - peak_memory_before;
+        log << "peak memory difference for successor generator creation: "
+            << memory_diff << " KB" << endl
+            << "time for successor generation creation: "
+            << successor_generator_timer << endl;
+    }
     return successor_generator;
 }
 
@@ -59,7 +62,8 @@ SearchEngine::SearchEngine(const Options &opts)
         utils::exit_with(ExitCode::SEARCH_INPUT_ERROR);
     }
     bound = opts.get<int>("bound");
-    task_properties::print_variable_statistics(task_proxy);
+    if (log.is_at_least_normal())
+        task_properties::print_variable_statistics(task_proxy);
 }
 
 SearchEngine::~SearchEngine() {
@@ -95,12 +99,14 @@ void SearchEngine::search() {
         }
     }
     // TODO: Revise when and which search times are logged.
-    log << "Actual search time: " << timer.get_elapsed_time() << endl;
+    if (log.is_at_least_normal())
+        log << "Actual search time: " << timer.get_elapsed_time() << endl;
 }
 
 bool SearchEngine::check_goal_and_set_plan(const State &state) {
     if (task_properties::is_goal_state(task_proxy, state)) {
-        log << "Solution found!" << endl;
+        if (log.is_at_least_normal())
+            log << "Solution found!" << endl;
         Plan plan;
         search_space.trace_path(state, plan);
         set_plan(plan);

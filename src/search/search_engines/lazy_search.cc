@@ -43,7 +43,8 @@ void LazySearch::set_preferred_operator_evaluators(
 }
 
 void LazySearch::initialize() {
-    log << "Conducting lazy best first search, (real) bound = " << bound << endl;
+    if (log.is_at_least_normal())
+        log << "Conducting lazy best first search, (real) bound = " << bound << endl;
 
     assert(open_list);
     set<Evaluator *> evals;
@@ -117,7 +118,8 @@ void LazySearch::generate_successors() {
 
 SearchStatus LazySearch::fetch_next_state() {
     if (open_list->empty()) {
-        log << "Completely explored state space -- no solution!" << endl;
+        if (log.is_at_least_normal())
+            log << "Completely explored state space -- no solution!" << endl;
         return FAILED;
     }
 
