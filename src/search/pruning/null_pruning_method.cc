@@ -12,7 +12,8 @@ NullPruningMethod::NullPruningMethod(const Options &opts)
 
 void NullPruningMethod::initialize(const shared_ptr<AbstractTask> &task) {
     PruningMethod::initialize(task);
-    log << "pruning method: none" << endl;
+    // if (log.is_at_least_normal())
+    //     log << "pruning method: none" << endl;
 }
 
 static shared_ptr<PruningMethod> _parse(OptionParser &parser) {

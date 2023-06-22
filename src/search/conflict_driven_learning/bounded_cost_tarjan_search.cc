@@ -176,7 +176,8 @@ BoundedCostTarjanSearch::initialize()
     }
     _set_bound(m_state_information[istate], 0);
     if (task_properties::is_goal_state(m_task_proxy, istate)) {
-        std::cout << "Initial state satisfies goal condition!" << std::endl;
+        if (log.is_at_least_normal())
+            log << "Initial state satisfies goal condition!" << std::endl;
         m_solved = true;
     } else {
         m_pruning_method->initialize(task);
@@ -323,7 +324,8 @@ BoundedCostTarjanSearch::step()
             return SearchStatus::IN_PROGRESS;
         }
 #endif
-        std::cout << "Completely explored state space" << std::endl;
+        if (log.is_at_least_normal())
+            log << "Completely explored state space" << std::endl;
         return SearchStatus::FAILED;
     }
 
