@@ -231,9 +231,7 @@ SearchStatus EagerSearch::step() {
                 statistics.inc_dead_ends();
                 continue;
             }
-            if (pruning_method->prune_state(succ_state, bound - succ_g)){
-                succ_node.mark_as_dead_end();
-                statistics.inc_dead_ends();
+            if (pruning_method->prune_state(succ_state, bound - (node->get_real_g() + op.get_cost()))){
                 continue;
             }
             succ_node.open(*node, op, get_adjusted_cost(op));
