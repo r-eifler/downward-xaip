@@ -36,7 +36,7 @@ class SearchEngine {
     Plan plan;
 protected:
     // Hold a reference to the task implementation and pass it to objects that need it.
-    const std::shared_ptr<AbstractTask> task;
+    std::shared_ptr<AbstractTask> task;
     // Use task_proxy to access task information.
     TaskProxy task_proxy;
 
@@ -71,6 +71,13 @@ public:
     void set_bound(int b) {bound = b;}
     int get_bound() {return bound;}
     PlanManager &get_plan_manager() {return plan_manager;}
+
+    void setTask(const std::shared_ptr<AbstractTask> t){ 
+        task = t;
+        task_proxy = TaskProxy(*t.get());
+        state_registry.set_task_proxy(task_proxy);
+    }
+    const std::shared_ptr<AbstractTask> & getTask() {return task;}
 
     /* The following three methods should become functions as they
        do not require access to private/protected class members. */

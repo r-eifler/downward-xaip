@@ -28,6 +28,7 @@ class FactsProxy;
 class GoalsProxy;
 class HardGoalsProxy;
 class SoftGoalsProxy;
+class RelaxedTasksProxy;
 class OperatorProxy;
 class OperatorsProxy;
 class PreconditionsProxy;
@@ -584,6 +585,18 @@ public:
     }
 };
 
+class RelaxedTasksProxy {
+    const AbstractTask *task;
+public:
+    explicit RelaxedTasksProxy(const AbstractTask &task)
+            : task(&task) {}
+    ~RelaxedTasksProxy() = default;
+
+    std::vector<RelaxedTaskDefinition> get_relaxed_task_definitions() const {
+        return task->get_relaxed_task_definitions();
+    }
+};
+
 
 bool does_fire(const EffectProxy &effect, const State &state);
 
@@ -740,6 +753,10 @@ public:
         const StateRegistry &registry, StateID id,
         const PackedStateBin *buffer, std::vector<int> &&state_values) const {
         return State(*task, registry, id, buffer, std::move(state_values));
+    }
+
+    RelaxedTasksProxy get_relaxed_task() const {
+        return RelaxedTasksProxy(*task);
     }
 
     State get_initial_state() const {

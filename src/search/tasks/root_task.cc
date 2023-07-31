@@ -63,6 +63,7 @@ class RootTask : public AbstractTask {
     vector<FactPair> goals;
     vector<FactPair> hard_goals;
     vector<FactPair> soft_goals;
+    vector<RelaxedTaskDefinition> relaxed_tasks;
 
     const ExplicitVariable &get_variable(int var) const;
     const ExplicitEffect &get_effect(int op_id, int effect_id, bool is_axiom) const;
@@ -109,6 +110,8 @@ public:
 
     virtual int get_num_soft_goals() const override;
     virtual FactPair get_soft_goal_fact(int index) const override;
+
+    virtual vector<RelaxedTaskDefinition> get_relaxed_task_definitions() const override;
 
     virtual vector<int> get_initial_state_values() const override;
     virtual void convert_ancestor_state_values(
@@ -168,6 +171,19 @@ vector<FactPair> read_facts(istream &in) {
         conditions.push_back(condition);
     }
     return conditions;
+}
+
+vector<int> read_numbers(istream &in) {
+    int count;
+    in >> count;
+    vector<int> numbers;
+    numbers.reserve(count);
+    for (int i = 0; i < count; ++i) {
+        int p;
+        in >> p;
+        numbers.push_back(p);
+    }
+    return numbers;
 }
 
 ExplicitVariable::ExplicitVariable(istream &in) {
@@ -333,6 +349,34 @@ vector<FactPair> read_soft_goal(istream &in) {
     return goals;
 }
 
+RelaxedTaskDefinition read_relaxed_task(istream &in) {
+    check_magic(in, "begin_relaxed_task");
+    int id;
+    in >> id;
+    std::string name;
+    in >> name;
+    vector<FactPair> init = read_facts(in);
+    std::string limit_type;
+    in >> limit_type;
+    vector<FactPair> limits = read_facts(in);
+    vector<int> lower_cover = read_numbers(in);
+    vector<int> upper_cover = read_numbers(in);
+    check_magic(in, "end_relaxed_task");
+
+    return RelaxedTaskDefinition(id, name, init, limit_type, limits,lower_cover, upper_cover);
+}
+
+vector<RelaxedTaskDefinition> read_relaxed_tasks(istream &in) {
+    int count;
+    in >> count;
+    vector<RelaxedTaskDefinition> tasks;
+    for (int i = 0; i < count; i++){
+        tasks.push_back(read_relaxed_task(in));
+    }
+
+    return tasks;
+}
+
 vector<ExplicitOperator> read_actions(
     istream &in, bool is_axiom, bool use_metric,
     const vector<ExplicitVariable> &variables) {
@@ -367,8 +411,9 @@ RootTask::RootTask(istream &in) {
     }
 
     goals = read_goal(in);
-    // hard_goals = read_hard_goal(in);
-    // soft_goals = read_soft_goal(in);
+    hard_goals = read_hard_goal(in);
+    soft_goals = read_soft_goal(in);
+    relaxed_tasks = read_relaxed_tasks(in);
 
     check_facts(goals, variables);
     operators = read_actions(in, false, use_metric, variables);
@@ -521,6 +566,10 @@ int RootTask::get_num_soft_goals() const {
 
 FactPair RootTask::get_soft_goal_fact(int index) const {
     return soft_goals[index];
+}
+
+vector<RelaxedTaskDefinition> RootTask::get_relaxed_task_definitions() const {
+    return relaxed_tasks;
 }
 
 vector<int> RootTask::get_initial_state_values() const {

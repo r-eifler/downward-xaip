@@ -176,6 +176,10 @@ public:
         return task_proxy;
     }
 
+    void set_task_proxy(TaskProxy proxy){
+        this->task_proxy = proxy;
+    }
+
     int get_num_variables() const {
         return num_variables;
     }

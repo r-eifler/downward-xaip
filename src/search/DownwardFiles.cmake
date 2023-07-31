@@ -486,6 +486,10 @@ fast_downward_plugin(
         xaip/explicit_mugs_search/reachable_goal_subsets_max_heuristic
         xaip/explicit_mugs_search/reachable_goal_subsets_tracking
         xaip/explicit_mugs_search/dfs_search
+        xaip/relaxations/relaxed_task
+        xaip/relaxations/task_relaxation_tracker
+        xaip/relaxations/relaxation_iterated_search
+        xaip/relaxations/goal_subsets/output_handler
     DEPENDS MAX_HEURISTIC
 )
 

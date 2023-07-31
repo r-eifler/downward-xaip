@@ -7,6 +7,7 @@
 #include "task_proxy.h"
 
 #include "algorithms/ordered_set.h"
+#include "xaip/goal_subsets/goal_subsets.h"
 
 #include <memory>
 #include <vector>
@@ -91,6 +92,13 @@ public:
 
     virtual void set_abstract_task(std::shared_ptr<AbstractTask> task);
     std::shared_ptr<AbstractTask> get_abstract_task() const;
+
+    virtual GoalSubsets get_msgs() const;
+    virtual GoalSubsets get_mugs() const;
+    virtual void compute_mugs() ;
+    virtual  void init_msgs(GoalSubsets goals);
+    virtual void print_mugs() const;
+    virtual void print_mugs(GoalSubsets msgs) const;
 
     virtual void print_statistics() const {};
 };

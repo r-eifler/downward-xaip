@@ -8,6 +8,7 @@
 #include "task_utils/task_properties.h"
 #include "tasks/cost_adapted_task.h"
 #include "tasks/root_task.h"
+#include "xaip/goal_subsets/goal_subsets.h"
 
 #include <cassert>
 #include <cstdlib>
@@ -116,4 +117,30 @@ void Heuristic::set_abstract_task(std::shared_ptr<AbstractTask> t){
 
 std::shared_ptr<AbstractTask> Heuristic::get_abstract_task() const {
     return task;
+}
+
+GoalSubsets Heuristic::get_msgs() const{
+    GoalSubsets empty;
+    return empty;
+}
+
+void Heuristic::compute_mugs() {
+
+}
+
+GoalSubsets Heuristic::get_mugs() const{
+    GoalSubsets empty;
+    return empty;
+}
+
+void Heuristic::init_msgs(GoalSubsets goals){
+    std::cout << "Number of msgs" << goals.size() << std::endl;
+}
+
+void Heuristic::print_mugs() const{
+
+}
+
+void Heuristic::print_mugs(GoalSubsets msgs) const{
+    std::cout << "Number of msgs" << msgs.size() << std::endl;
 }

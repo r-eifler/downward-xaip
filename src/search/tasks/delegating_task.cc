@@ -112,6 +112,10 @@ FactPair DelegatingTask::get_goal_fact(int index) const {
     return parent->get_goal_fact(index);
 }
 
+vector<RelaxedTaskDefinition> DelegatingTask::get_relaxed_task_definitions() const {
+    return parent->get_relaxed_task_definitions();
+}
+
 vector<int> DelegatingTask::get_initial_state_values() const {
     return parent->get_initial_state_values();
 }
