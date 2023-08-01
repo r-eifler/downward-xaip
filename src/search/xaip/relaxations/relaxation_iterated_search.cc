@@ -13,20 +13,21 @@
 using namespace std;
 using namespace goalsubset;
 
-namespace dwq_iterated_search {
+namespace relaxation_iterated_search {
 RelaxationIteratedSearch::RelaxationIteratedSearch(const Options &opts, options::Registry &registry,
                                const options::Predefinitions &predefinitions)
     : SearchEngine(opts),
-        registry(registry),
-      predefinitions(predefinitions),
-      engine_configs(opts.get_list<ParseTree>("engine_configs")),
-      propagate_msgs(opts.get<bool>("propagate_msgs")){
+    engine_configs(opts.get_list<ParseTree>("engine_configs")),
+    registry(registry),
+    predefinitions(predefinitions),
+    propagate_msgs(opts.get<bool>("propagate_msgs")){
 
     taskRelaxationTracker = new TaskRelaxationTracker(task);
 
-    std::vector<Evaluator*> evaluators = opts.get_list<Evaluator*>("heu");
-    for (Evaluator* eval : evaluators) {
-        heuristic.push_back(dynamic_cast<Heuristic*>(eval));
+    std::vector<shared_ptr<Evaluator>> evaluators = opts.get_list<shared_ptr<Evaluator>>("heu");
+    for (shared_ptr<Evaluator> eval : evaluators) {
+        Evaluator* e_pointer = eval.get();
+        heuristic.push_back(dynamic_cast<Heuristic*>(e_pointer));
         assert(heuristic.back() != nullptr);
     }
 }
@@ -35,7 +36,7 @@ shared_ptr<SearchEngine> RelaxationIteratedSearch::get_search_engine() {
 
     //update global root task with current relaxed task
     relaxedTask = taskRelaxationTracker->next_relaxed_task();
-    tasks::g_root_task = make_shared<extra_tasks::ModifiedInitTask>(this->getTask(), relaxedTask->get_init());
+    tasks::g_root_task = make_shared<extra_tasks::ModifiedInitTask>(task, relaxedTask->get_init());
 
     cout << "*******************************************************" << endl;
     cout << "Iteration: " << relaxedTask->get_name() << endl;
@@ -155,7 +156,7 @@ static shared_ptr<SearchEngine> _parse(OptionParser &parser) {
     parser.add_option<bool>("propagate_msgs",
                             "propagate the maximally solvable goal subsets",
                             "true");
-    parser.add_list_option<Evaluator*>("heu", "reference to heuristic to update abstract task");
+    parser.add_list_option<shared_ptr<Evaluator>>("heu", "reference to heuristic to update abstract task");
     SearchEngine::add_options_to_parser(parser);
     Options opts = parser.parse();
 

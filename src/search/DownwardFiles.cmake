@@ -477,6 +477,7 @@ fast_downward_plugin(
         xaip/goal_space_search/plugin_wgss
         xaip/goal_space_search/plugin_sgss
         xaip/goal_space_search/dualization
+        xaip/goal_subsets/output_handler
         xaip/explicit_mugs_search/msgs_collection
         xaip/explicit_mugs_search/iterated_mugs_search
         xaip/explicit_mugs_search/osp_max_heuristic
@@ -489,7 +490,7 @@ fast_downward_plugin(
         xaip/relaxations/relaxed_task
         xaip/relaxations/task_relaxation_tracker
         xaip/relaxations/relaxation_iterated_search
-        xaip/relaxations/goal_subsets/output_handler
+        xaip/relaxations/modified_init_task   
     DEPENDS MAX_HEURISTIC
 )
 

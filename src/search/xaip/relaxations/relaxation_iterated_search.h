@@ -14,7 +14,7 @@ class Options;
 
 class Heuristic;
 
-namespace dwq_iterated_search {
+namespace relaxation_iterated_search {
 class RelaxationIteratedSearch : public SearchEngine {
     const std::vector<options::ParseTree> engine_configs;
 
