@@ -153,6 +153,8 @@ void RelaxationIteratedSearch::save_plan_if_necessary() {
 
 static shared_ptr<SearchEngine> _parse(OptionParser &parser) {
     parser.document_synopsis("Relaxation Iterated search", "");
+    parser.add_list_option<ParseTree>("engine_configs",
+                                      "list of search engines for each phase");
     parser.add_option<bool>("propagate_msgs",
                             "propagate the maximally solvable goal subsets",
                             "true");

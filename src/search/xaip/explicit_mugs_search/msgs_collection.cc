@@ -46,6 +46,11 @@ void MSGSCollection::initialize(shared_ptr<AbstractTask> task_) {
         }
     }
 
+    cout << "#hard goals: " << hard_goal_list.size() << endl;
+
+    //sort goal facts according to there variable id
+    std::sort(hard_goal_list.begin(), hard_goal_list.end());
+
     cout << "#soft goals: " << soft_goal_list.size() << endl;
 
     //sort goal facts according to there variable id
