@@ -15,6 +15,7 @@
 
 #include "../goal_subsets/goal_subset.h"
 #include "../goal_subsets/goal_subsets.h"
+#include "../goal_subsets/output_handler.h"
 #include "../explicit_mugs_search/msgs_collection.h"
 
 #include <cassert>
@@ -120,6 +121,20 @@ void RelaxationExtensionSearch::print_statistics() const {
     statistics.print_detailed_statistics();
     search_space.print_statistics();
     pruning_method->print_statistics();
+
+    int num_goal_facts = task_proxy.get_goals().size();
+    std::vector<std::string> goal_fact_names;
+    for(int i = 0; i < num_goal_facts; i++){
+        FactProxy gp = task_proxy.get_goals()[i];
+        int id = gp.get_variable().get_id();
+        int value = gp.get_value();
+        goal_fact_names.push_back(task_proxy.get_variables()[id].get_fact(value).get_name());
+    }
+    OutputHandler output_handler = OutputHandler(goal_fact_names, "relaxation_mugs.json", true);
+    for(RelaxedTask* task: this->taskRelaxationTracker->get_relaxed_tasks()){
+        output_handler.add_goal_subsets(task->get_name(), task->get_msgs().get_mugs());
+    }
+    output_handler.output();
 }
 
 bool RelaxationExtensionSearch::expand(const State &state){
