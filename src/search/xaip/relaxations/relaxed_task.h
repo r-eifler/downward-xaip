@@ -7,6 +7,7 @@
 
 #include "../../task_proxy.h"
 #include "../goal_subsets/goal_subsets.h"
+#include "../explicit_mugs_search/msgs_collection.h"
 
 class RelaxedTask {
 
@@ -19,8 +20,7 @@ private:
     std::vector<RelaxedTask*> lower_cover;
     std::vector<RelaxedTask*> upper_cover;
     std::unordered_set<StateID> frontier;
-    GoalSubsets msgs;
-    GoalSubsets mugs;
+    MSGSCollection msgs_collection;
     bool solvable = false;
 
 public:
@@ -40,17 +40,16 @@ public:
     std::unordered_set<StateID> get_frontier(){return frontier;}
     void add_frontier_state(StateID id){frontier.insert(id);}
 
-    GoalSubsets get_msgs() const {return msgs;}
-    void set_msgs(GoalSubsets goal_subsets){msgs = goal_subsets;}
-
-    GoalSubsets get_mugs() const {return mugs;}
-    void set_mugs(GoalSubsets goal_subsets){mugs = goal_subsets;}
+    MSGSCollection get_msgs() const {return msgs_collection;}
+    void set_msgs(MSGSCollection msgs_collection){this->msgs_collection = msgs_collection;}
 
     void set_solvable(bool s){solvable = s;}
     bool get_solvable(){return solvable;}
 
     bool sat_limits(const State &state);
-    void propagate_solvable(GoalSubsets goal_subsets);
+    void propagate_solvable(MSGSCollection goal_subsets);
+
+    void print();
 
 };
 

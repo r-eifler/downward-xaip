@@ -30,10 +30,10 @@ bool RelaxedTask::sat_limits(const State &state){
     return true;
 }
 
-void RelaxedTask::propagate_solvable(GoalSubsets goal_subsets){
+void RelaxedTask::propagate_solvable(MSGSCollection goal_subsets){
     // TODO remove overhead from calling the same task multiple times
     solvable = true;
-    msgs = goal_subsets;
+    msgs_collection = goal_subsets;
     // mugs should be automatically empty
     for (RelaxedTask* rtc : upper_cover){
         rtc->propagate_solvable(goal_subsets);
@@ -62,4 +62,11 @@ std::set<RelaxedTask*> RelaxedTask::get_lower_bound(){
     }
 
     return tasks;
+}
+
+void RelaxedTask::print() {
+    cout << "-----------------------------------------------------" << endl;
+    cout << "RESULTS: " << this->name << endl;
+    msgs_collection.print();
+    cout << "-----------------------------------------------------" << endl;
 }

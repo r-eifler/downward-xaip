@@ -4,7 +4,7 @@
 #include "../../pruning_method.h"
 #include "../../heuristic.h"
 #include "../../heuristics/max_heuristic.h"
-#include "msgs_collection.h"
+#include "../explicit_mugs_search/msgs_collection.h"
 #include "../goal_subsets/goal_subset.h"
 
 #include <memory>
@@ -23,6 +23,9 @@ public:
     explicit ReachableGoalSubsetsTracking(const options::Options &opts);
     virtual void initialize(const std::shared_ptr<AbstractTask> &) override;
     virtual void print_statistics() const override;
+
+    virtual MSGSCollection get_msgs() const override;
+    virtual void init_msgs(MSGSCollection goals) override;
 };
 
 }

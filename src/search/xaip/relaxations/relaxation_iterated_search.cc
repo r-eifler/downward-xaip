@@ -5,7 +5,7 @@
 #include "modified_init_task.h"
 #include "../tasks/root_task.h"
 #include "../heuristic.h"
-#include "../goal_subsets/goal_subset.h"
+#include "../explicit_mugs_search/msgs_collection.h"
 #include "../goal_subsets/output_handler.h"
 
 #include <iostream>
@@ -93,12 +93,13 @@ SearchStatus RelaxationIteratedSearch::step() {
 
     current_search->search();
 
-    for (Heuristic* h : heuristic) {
-        GoalSubsets msgs = h->get_msgs();
-        relaxedTask->set_msgs(msgs);
-        h->compute_mugs();
-        relaxedTask->set_mugs(h->get_mugs());
-    }
+    //TODO get the msgs collection form the pruning function
+    // for (Heuristic* h : heuristic) {
+    //     GoalSubsets msgs = h->get_msgs();
+    //     relaxedTask->set_msgs(msgs);
+    //     h->compute_mugs();
+    //     relaxedTask->set_mugs(h->get_mugs());
+    // }
 
     if (current_search->found_solution()){
         cout << "solved Iteration: " << relaxedTask->get_name() << endl;
@@ -141,7 +142,7 @@ void RelaxationIteratedSearch::print_statistics() const {
     }
     OutputHandler output_handler = OutputHandler(goal_fact_names, "relaxation_mugs.json", true);
     for(RelaxedTask* task: this->taskRelaxationTracker->get_relaxed_tasks()){
-        output_handler.add_goal_subsets(task->get_name(), task->get_mugs());
+        output_handler.add_goal_subsets(task->get_name(), task->get_msgs().get_mugs());
     }
     output_handler.output();
 }

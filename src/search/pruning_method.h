@@ -6,6 +6,8 @@
 #include "../utils/logging.h"
 #include "../utils/timer.h"
 
+#include "xaip/explicit_mugs_search/msgs_collection.h"
+
 #include <memory>
 #include <vector>
 
@@ -44,6 +46,9 @@ public:
     void prune_operators(const State &state, std::vector<OperatorID> &op_ids);
     bool prune_state(const State &state, int remaining_cost);
     virtual void print_statistics() const;
+
+    virtual MSGSCollection get_msgs() const;
+    virtual void init_msgs(MSGSCollection collection);
 };
 
 extern void add_pruning_options_to_parser(options::OptionParser &parser);

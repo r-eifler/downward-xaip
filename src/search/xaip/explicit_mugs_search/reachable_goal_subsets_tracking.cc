@@ -35,6 +35,14 @@ void ReachableGoalSubsetsTracking::print_statistics() const {
     current_msgs.print();
 }
 
+MSGSCollection ReachableGoalSubsetsTracking::get_msgs() const {
+    return current_msgs;
+}
+
+void ReachableGoalSubsetsTracking::init_msgs(MSGSCollection subsets) {
+    current_msgs = subsets;
+}
+
 
 static shared_ptr<PruningMethod> _parse(OptionParser &parser) {
     parser.document_synopsis(

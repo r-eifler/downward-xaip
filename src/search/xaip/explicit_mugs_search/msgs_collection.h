@@ -11,7 +11,7 @@
 #include <unordered_set>
 
 
-class MSGSCollection : GoalSubsets{
+class MSGSCollection : public GoalSubsets{
 
 private: 
 
@@ -44,11 +44,14 @@ protected:
 public:
     explicit MSGSCollection();
     void initialize(std::shared_ptr<AbstractTask> task);
+    void initialize(MSGSCollection &base);
 
     std::vector<FactPair> get_goal_facts();
 
     bool prune(const State &state, std::vector<int> costs, int remaining_cost);
     bool track(const State &state);
+
+    GoalSubsets get_mugs() const;
 
     void print() const;
 };

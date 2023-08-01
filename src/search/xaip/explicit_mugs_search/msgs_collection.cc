@@ -67,6 +67,18 @@ void MSGSCollection::initialize(shared_ptr<AbstractTask> task_) {
     overall_timer.reset();
 }
 
+void MSGSCollection::initialize(MSGSCollection &base){
+    task = base.task;
+
+    soft_goal_list = base.soft_goal_list;
+    hard_goal_list = base.hard_goal_list;
+    all_goal_list = base.all_goal_list;
+
+    soft_goal_fact_names = base.soft_goal_fact_names;
+    
+    overall_timer.reset();
+}
+
 void MSGSCollection::add_and_mimize(GoalSubset subset){
     this->add(subset);
     this->minimize_non_maximal_subsets();
@@ -239,6 +251,10 @@ bool MSGSCollection::track(const State &state){
         }
         return false;
     }
+}
+
+GoalSubsets MSGSCollection::get_mugs() const{
+    return this->complement().minimal_hitting_sets();
 }
 
 void MSGSCollection::print() const {

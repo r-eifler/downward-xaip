@@ -97,6 +97,16 @@ void PruningMethod::print_statistics() const {
     }
 }
 
+MSGSCollection PruningMethod::get_msgs() const{
+    MSGSCollection empty;
+    return empty;
+}
+
+void PruningMethod::init_msgs(MSGSCollection collection){
+    std::cout << "Number of msgs" << collection.size() << std::endl;
+}
+
+
 void add_pruning_options_to_parser(options::OptionParser &parser) {
     utils::add_log_options_to_parser(parser);
     parser.document_note(

@@ -490,7 +490,8 @@ fast_downward_plugin(
         xaip/relaxations/relaxed_task
         xaip/relaxations/task_relaxation_tracker
         xaip/relaxations/relaxation_iterated_search
-        xaip/relaxations/modified_init_task   
+        xaip/relaxations/modified_init_task
+        xaip/relaxations/relaxation_extension_search
     DEPENDS MAX_HEURISTIC
 )
 
