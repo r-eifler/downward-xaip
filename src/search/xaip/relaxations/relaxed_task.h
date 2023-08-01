@@ -41,7 +41,8 @@ public:
     void add_frontier_state(StateID id){frontier.insert(id);}
 
     MSGSCollection get_msgs() const {return msgs_collection;}
-    void set_msgs(MSGSCollection msgs_collection){this->msgs_collection = msgs_collection;}
+    void add_msgs(MSGSCollection msgs_collection){this->msgs_collection.add_and_mimize(msgs_collection);}
+
 
     void set_solvable(bool s){solvable = s;}
     bool get_solvable(){return solvable;}

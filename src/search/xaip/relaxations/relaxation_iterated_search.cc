@@ -20,16 +20,10 @@ RelaxationIteratedSearch::RelaxationIteratedSearch(const Options &opts, options:
     engine_configs(opts.get_list<ParseTree>("engine_configs")),
     registry(registry),
     predefinitions(predefinitions),
+    pruning_method(opts.get<shared_ptr<PruningMethod>>("pruning")),
     propagate_msgs(opts.get<bool>("propagate_msgs")){
 
     taskRelaxationTracker = new TaskRelaxationTracker(task);
-
-    std::vector<shared_ptr<Evaluator>> evaluators = opts.get_list<shared_ptr<Evaluator>>("heu");
-    for (shared_ptr<Evaluator> eval : evaluators) {
-        Evaluator* e_pointer = eval.get();
-        heuristic.push_back(dynamic_cast<Heuristic*>(e_pointer));
-        assert(heuristic.back() != nullptr);
-    }
 }
 
 shared_ptr<SearchEngine> RelaxationIteratedSearch::get_search_engine() {
@@ -45,20 +39,14 @@ shared_ptr<SearchEngine> RelaxationIteratedSearch::get_search_engine() {
     for (FactPair fp : relaxedTask->get_init())
         cout << fp.var << " = " << fp.value << endl;
 
-    for (Heuristic* h : heuristic) {
-        h->set_abstract_task(tasks::g_root_task);
-
-
-        GoalSubsets init_msgs;
-        if(propagate_msgs) {
-            for (RelaxedTask *t: relaxedTask->get_lower_cover()) {
-                GoalSubsets t_msgs = t->get_msgs();
-                for(GoalSubset gs : t_msgs)
-                    init_msgs.add(gs);
-            }
+    if(propagate_msgs) {
+        for (RelaxedTask *t: relaxedTask->get_lower_cover()) {
+                relaxedTask->add_msgs(t->get_msgs());
         }
-        h->init_msgs(init_msgs);
     }
+
+    pruning_method->init_msgs(relaxedTask->get_msgs());
+    
 
     OptionParser parser(engine_configs[0], registry, predefinitions, false);
     shared_ptr<SearchEngine> engine(parser.start_parsing<shared_ptr<SearchEngine>>());

@@ -7,6 +7,7 @@
 #include "relaxed_task.h"
 #include "../options/registries.h"
 #include "../options/predefinitions.h"
+#include "../../pruning_method.h"
 
 namespace options {
 class Options;
@@ -25,7 +26,8 @@ class RelaxationIteratedSearch : public SearchEngine {
 
     TaskRelaxationTracker* taskRelaxationTracker;
     RelaxedTask* relaxedTask = NULL;
-    std::vector<Heuristic *> heuristic;
+
+    std::shared_ptr<PruningMethod> pruning_method;
 
     std::shared_ptr<SearchEngine> get_search_engine();
     std::shared_ptr<SearchEngine> create_phase();

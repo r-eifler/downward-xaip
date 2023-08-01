@@ -372,7 +372,7 @@ bool RelaxationExtensionSearch::next_relaxed_task() {
 
     // update MSGS of finished iteration
     MSGSCollection msgs = pruning_method->get_msgs();
-    relaxedTask->set_msgs(msgs);
+    relaxedTask->add_msgs(msgs);
     relaxedTask->print();
     statistics.print_detailed_statistics();
 

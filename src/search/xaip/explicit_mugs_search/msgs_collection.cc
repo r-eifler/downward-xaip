@@ -84,6 +84,12 @@ void MSGSCollection::add_and_mimize(GoalSubset subset){
     this->minimize_non_maximal_subsets();
 }
 
+void MSGSCollection::add_and_mimize(GoalSubsets subsets) {
+    for (GoalSubset gs : subsets){
+        add_and_mimize(gs);
+    }
+}
+
 bool MSGSCollection::contains_superset(GoalSubset subset){
     for(GoalSubset s : subsets){
         if(s.is_superset_of(subset)){

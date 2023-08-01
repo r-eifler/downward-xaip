@@ -36,6 +36,7 @@ public:
     void add(goalsubset::GoalSubset subset);
     bool contains(goalsubset::GoalSubset subset);
     void add(GoalSubsetHashSet subsets);
+    void add(GoalSubsets subsets);
 
     void print(std::vector<std::string> goal_facts_names) const;
     void print_subsets() const;

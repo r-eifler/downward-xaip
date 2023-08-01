@@ -47,6 +47,7 @@ public:
     void initialize(MSGSCollection &base);
 
     std::vector<FactPair> get_goal_facts();
+    void add_and_mimize(GoalSubsets subsets);
 
     bool prune(const State &state, std::vector<int> costs, int remaining_cost);
     bool track(const State &state);
