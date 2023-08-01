@@ -29,6 +29,7 @@ import simplify
 import timers
 import tools
 import variable_order
+import xaip
 
 # TODO: The translator may generate trivial derived variables which are always
 # true, for example if there ia a derived predicate in the input that only
@@ -519,18 +520,23 @@ def unsolvable_sas_task(msg):
     print("%s! Generating unsolvable task..." % msg)
     return trivial_task(solvable=False)
 
-def pddl_to_sas(task):
+def pddl_to_sas(task, xpp):
     with timers.timing("Instantiating", block=True):
         (relaxed_reachable, atoms, actions, goal_list, axioms,
          reachable_action_params) = instantiate.explore(task)
 
-    if not relaxed_reachable:
-        return unsolvable_sas_task("No relaxed solution")
-    elif goal_list is None:
+    # still want to explore the MUGS
+    # if not relaxed_reachable:
+    #     return unsolvable_sas_task("No relaxed solution")
+    
+    if goal_list is None:
         return unsolvable_sas_task("Trivially false goal")
 
     for item in goal_list:
         assert isinstance(item, pddl.Literal)
+        
+    # extend atoms with atoms used in the relaxations
+    add_reachable_facts = xpp.get_needed_facts()
 
     with timers.timing("Computing fact groups", block=True):
         groups, mutex_groups, translation_key = fact_groups.compute_groups(
@@ -573,6 +579,11 @@ def pddl_to_sas(task):
           simplified_effect_condition_counter)
     print("%d implied preconditions added" %
           added_implied_precondition_counter)
+    
+    # determine which variables should not be simplified
+    skip_simplification = xpp.get_needed_values(sas_task)
+    print("Skip simplification (filter_unreachable_propositions) for: ")
+    print(skip_simplification)
 
     if options.filter_unreachable_facts:
         with timers.timing("Detecting unreachable propositions", block=True):
@@ -677,6 +688,11 @@ def dump_statistics(sas_task):
 
 def main():
     timer = timers.Timer()
+    
+    print("domain: ", options.domain)
+    print("problem: ", options.task)
+    print("explanations settings: ", options.explanation_settings)
+    
     with timers.timing("Parsing", True):
         task = pddl_parser.open(
             domain_filename=options.domain, task_filename=options.task)
@@ -684,15 +700,59 @@ def main():
     with timers.timing("Normalizing task"):
         normalize.normalize(task)
 
-    if options.generate_relaxed_task:
-        # Remove delete effects.
-        for action in task.actions:
-            for index, effect in reversed(list(enumerate(action.effects))):
-                if effect.literal.negated:
-                    del action.effects[index]
+    # TODO do we need this?
+    # if options.generate_relaxed_task:
+    #     # Remove delete effects.
+    #     for action in task.actions:
+    #         for index, effect in reversed(list(enumerate(action.effects))):
+    #             if effect.literal.negated:
+    #                 del action.effects[index]
 
-    sas_task = pddl_to_sas(task)
+    # TODO add this as option
+    # print("#########################################################")
+    # print("Write FDR json file")
+    # file = open("fdr.json", "w")
+    # task.to_json(file)
+
+    xpp = xaip.XPPFramework(options, task)
+
+    sas_task = pddl_to_sas(task, xpp)
+
+    # TODO was is this doing?
+    filtered_operator = list(filter(lambda o: not o.name.startswith('(change_'), sas_task.operators))
+    sas_task.operators = filtered_operator
+
+    xpp.sas_task = sas_task
+
+    # print("-------------------- Variables --------------------")
+    # for v in sas_task.variables.value_names:
+    #     print(v)
+
+    # print("-------------------- Operators --------------------")
+    # for o in sas_task.operators:
+    #    print(o.name)
+
     dump_statistics(sas_task)
+
+    #compile plan properties and relaxed tasks
+    xpp.run()
+
+    #take a look
+    # print("-------------- Properties compiled ----------------------")
+    # for v in sas_task.variables.value_names:
+    #     print(v)
+    #
+    # print("Operators:")
+    # for o in sas_task.operators:
+    #     print(o.name)
+    #     print(o.pre_post)
+        # print(o.cost)
+
+    # print("Init:")
+    # print(sas_task.init.values)
+
+    #print("Goal:")
+    #print(sas_task.goal.pairs)
 
     with timers.timing("Writing output"):
         with open(options.sas_file, "w") as output_file:

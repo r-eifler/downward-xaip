@@ -22,8 +22,21 @@ class SASTask:
         self.axioms = sorted(axioms, key=lambda axiom: (
             axiom.condition, axiom.effect))
         self.metric = metric
+        self.soft_goal = SASSoftGoal()
+        self.hard_goal = SASHardGoal()
+        self.relaxed_tasks = []
         if DEBUG:
             self.validate()
+            
+    def addHardGoalFact(self, pair):
+        self.hard_goal.add_goal_fact(pair)
+
+    def addSoftGoalFact(self, pair):
+        self.soft_goal.add_goal_fact(pair)
+
+    def addRelaxedTask(self, t):
+        self.relaxed_tasks.append(SASRelaxedTask(t.id, t.name, t.init, t.limit_type, t.limits, t.lower_cover, t.upper_cover))
+
 
     def validate(self):
         """Fail an assertion if the task is invalid.
@@ -67,6 +80,10 @@ class SASTask:
         self.init.dump()
         print("goal:")
         self.goal.dump()
+        print("softgoal:")
+        self.soft_goal.dump()
+        print("hardgoal:")
+        self.hard_goal.dump()
         print("%d operators:" % len(self.operators))
         for operator in self.operators:
             operator.dump()
@@ -88,6 +105,11 @@ class SASTask:
             mutex.output(stream)
         self.init.output(stream)
         self.goal.output(stream)
+        self.hard_goal.output(stream)
+        self.soft_goal.output(stream)
+        print(len(self.relaxed_tasks), file=stream)
+        for t in self.relaxed_tasks:
+            t.output(stream)
         print(len(self.operators), file=stream)
         for op in self.operators:
             op.output(stream)
@@ -227,8 +249,24 @@ class SASInit:
 
 
 class SASGoal:
-    def __init__(self, pairs):
+    def __init__(self, pairs=None):
+        if pairs is None:
+            pairs = []
+        self.goal_type = 'goal'
         self.pairs = sorted(pairs)
+        
+    def __contains__(self, item):
+        return item in self.pairs
+
+    def add_goal_fact(self, pair):
+        self.pairs = sorted(self.pairs + [pair])
+
+    def remove_goal_fact(self, pair):
+        self.pairs.remove(pair)
+        self.pairs = sorted(self.pairs)
+
+    def reset_facts(self, new_facts):
+        self.pairs = new_facts
 
     def validate(self, variables):
         """Assert that the goal is nonempty and a valid condition."""
@@ -240,14 +278,28 @@ class SASGoal:
             print("v%d: %d" % (var, val))
 
     def output(self, stream):
-        print("begin_goal", file=stream)
+        print("begin_" + self.goal_type, file=stream)
         print(len(self.pairs), file=stream)
         for var, val in self.pairs:
             print(var, val, file=stream)
-        print("end_goal", file=stream)
+        print("end_" + self.goal_type, file=stream)
 
     def get_encoding_size(self):
         return len(self.pairs)
+    
+
+class SASSoftGoal(SASGoal):
+
+    def __init__(self):
+        super().__init__()
+        self.goal_type = 'soft_goal'
+
+
+class SASHardGoal(SASGoal):
+
+    def __init__(self):
+        super().__init__()
+        self.goal_type = 'hard_goal'
 
 
 class SASOperator:
@@ -475,3 +527,47 @@ class SASAxiom:
 
     def get_encoding_size(self):
         return 1 + len(self.condition)
+
+
+class SASRelaxedTask:
+    def __init__(self, id, name, init, limit_type, limits, lower_cover, upper_cover):
+        self.id = id
+        self.name = name
+        self.init = init
+        self.limits = limits
+        self.limit_type = limit_type
+        self.lower_cover = lower_cover
+        self.upper_cover = upper_cover
+
+    def validate(self, variables):
+        return True
+
+    def dump(self):
+        # TODO
+        print('TODO')
+
+    def to_JSON(self, stream):
+        # TODO
+        print('TODO')
+
+    def output(self, stream):
+        print("begin_relaxed_task", file=stream)
+        print(self.id, file=stream)
+        print(self.name, file=stream)
+        print(len(self.init), file=stream)
+        for i, j in self.init:
+            print(i, j, file=stream)
+        print(self.limit_type, file=stream)
+        print(len(self.limits), file=stream)
+        for i, j in self.limits:
+            print(i, j, file=stream)
+        print(len(self.lower_cover), file=stream)
+        for i in self.lower_cover:
+            print(i, file=stream)
+        print(len(self.upper_cover), file=stream)
+        for i in self.upper_cover:
+            print(i, file=stream)
+        print("end_relaxed_task", file=stream)
+
+    def get_encoding_size(self):
+        return 1 + len(self.relaxation_order)

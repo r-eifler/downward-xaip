@@ -9,6 +9,8 @@ def parse_args():
     argparser.add_argument(
         "task", help="path to task pddl file")
     argparser.add_argument(
+        "explanation_settings", help="path to explanation settings file")
+    argparser.add_argument(
         "--relaxed", dest="generate_relaxed_task", action="store_true",
         help="output relaxed task (no delete effects)")
     argparser.add_argument(
@@ -57,6 +59,9 @@ def parse_args():
         help="How to assign layers to derived variables. 'min' attempts to put as "
         "many variables into the same layer as possible, while 'max' puts each variable "
         "into its own layer unless it is part of a cycle.")
+    argparser.add_argument(
+        "--compile-relaxed-tasks", dest="compile_relaxed_tasks", default=False, action="store_true",
+        help="TODO")
     return argparser.parse_args()
 
 
