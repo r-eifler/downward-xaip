@@ -268,7 +268,7 @@ class VariableOrder:
         axioms[:] = new_axioms
 
 
-def find_and_apply_variable_order(sas_task, reorder_vars=True,
+def find_and_apply_variable_order(sas_task, also_necessary = [], reorder_vars=True,
                                   filter_unimportant_vars=True):
     if reorder_vars or filter_unimportant_vars:
         cg = CausalGraph(sas_task)
@@ -278,6 +278,8 @@ def find_and_apply_variable_order(sas_task, reorder_vars=True,
             order = list(range(len(sas_task.variables.ranges)))
         if filter_unimportant_vars:
             necessary = cg.calculate_important_vars(sas_task.goal)
+            for v in also_necessary:
+                necessary[v] = True
             print("%s of %s variables necessary." % (len(necessary),
                                                      len(order)))
             order = [var for var in order if necessary[var]]

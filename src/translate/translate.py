@@ -537,6 +537,8 @@ def pddl_to_sas(task, xpp):
         
     # extend atoms with atoms used in the relaxations
     add_reachable_facts = xpp.get_needed_facts()
+    for f in add_reachable_facts:
+        atoms.add(pddl.Atom(f.pred, f.args))
 
     with timers.timing("Computing fact groups", block=True):
         groups, mutex_groups, translation_key = fact_groups.compute_groups(
@@ -588,16 +590,20 @@ def pddl_to_sas(task, xpp):
     if options.filter_unreachable_facts:
         with timers.timing("Detecting unreachable propositions", block=True):
             try:
-                simplify.filter_unreachable_propositions(sas_task)
+                simplify.filter_unreachable_propositions(sas_task, skip_simplification)
             except simplify.Impossible:
                 return unsolvable_sas_task("Simplified to trivially false goal")
             except simplify.TriviallySolvable:
                 return solvable_sas_task("Simplified to empty goal")
 
+    # determine which variables should not be simplified
+    skip_simplification = xpp.get_needed_values(sas_task)
+    print("Skip simplification (find_and_apply_variable_order) reordering for: ")
+    print(skip_simplification)
     if options.reorder_variables or options.filter_unimportant_vars:
         with timers.timing("Reordering and filtering variables", block=True):
             variable_order.find_and_apply_variable_order(
-                sas_task, options.reorder_variables,
+                sas_task, skip_simplification, options.reorder_variables,
                 options.filter_unimportant_vars)
 
     return sas_task
@@ -718,7 +724,7 @@ def main():
 
     sas_task = pddl_to_sas(task, xpp)
 
-    # TODO was is this doing?
+    # TODO what is this doing?
     filtered_operator = list(filter(lambda o: not o.name.startswith('(change_'), sas_task.operators))
     sas_task.operators = filtered_operator
 
