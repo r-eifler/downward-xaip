@@ -47,6 +47,8 @@ public:
     bool prune_state(const State &state, int remaining_cost);
     virtual void print_statistics() const;
 
+    virtual void set_abstract_task(std::shared_ptr<AbstractTask> task);
+
     virtual MSGSCollection get_msgs() const;
     virtual void init_msgs(MSGSCollection collection);
 };

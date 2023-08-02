@@ -97,6 +97,10 @@ void PruningMethod::print_statistics() const {
     }
 }
 
+void PruningMethod::set_abstract_task(std::shared_ptr<AbstractTask> t){
+    task = t;
+}
+
 MSGSCollection PruningMethod::get_msgs() const{
     MSGSCollection empty;
     return empty;
