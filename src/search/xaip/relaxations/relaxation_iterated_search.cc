@@ -7,6 +7,7 @@
 #include "../heuristic.h"
 #include "../explicit_mugs_search/msgs_collection.h"
 #include "../goal_subsets/output_handler.h"
+#include "../../search_engines/eager_search.h"
 
 #include <iostream>
 
@@ -50,6 +51,7 @@ shared_ptr<SearchEngine> RelaxationIteratedSearch::get_search_engine() {
 
     OptionParser parser(engine_configs[0], registry, predefinitions, false);
     shared_ptr<SearchEngine> engine(parser.start_parsing<shared_ptr<SearchEngine>>());
+    static_pointer_cast<eager_search::EagerSearch>(engine)->set_pruning_method(this->pruning_method);
 
     cout << "Starting search: ";
     kptree::print_tree_bracketed(engine_configs[0], cout);
@@ -81,13 +83,9 @@ SearchStatus RelaxationIteratedSearch::step() {
 
     current_search->search();
 
-    //TODO get the msgs collection form the pruning function
-    // for (Heuristic* h : heuristic) {
-    //     GoalSubsets msgs = h->get_msgs();
-    //     relaxedTask->set_msgs(msgs);
-    //     h->compute_mugs();
-    //     relaxedTask->set_mugs(h->get_mugs());
-    // }
+    relaxedTask->add_msgs(pruning_method->get_msgs());
+    // relaxedTask->print();
+
 
     if (current_search->found_solution()){
         cout << "solved Iteration: " << relaxedTask->get_name() << endl;
@@ -147,7 +145,10 @@ static shared_ptr<SearchEngine> _parse(OptionParser &parser) {
     parser.add_option<bool>("propagate_msgs",
                             "propagate the maximally solvable goal subsets",
                             "true");
-    parser.add_list_option<shared_ptr<Evaluator>>("heu", "reference to heuristic to update abstract task");
+    parser.add_option<shared_ptr<PruningMethod>>(
+        "pruning",
+        "TODO",
+        "null()");
     SearchEngine::add_options_to_parser(parser);
     Options opts = parser.parse();
 

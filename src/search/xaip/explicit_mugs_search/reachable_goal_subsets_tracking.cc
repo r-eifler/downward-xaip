@@ -15,12 +15,16 @@ ReachableGoalSubsetsTracking::ReachableGoalSubsetsTracking(const Options &opts)
 }
 
 void ReachableGoalSubsetsTracking::initialize(const shared_ptr<AbstractTask> &task) {
+    if (initialized)
+        return;
+
     PruningMethod::initialize(task);
 
     current_msgs = MSGSCollection();
     current_msgs.initialize(task);
 
     log << "initialize pruning method: reachable goal subset tracking" << endl;
+    initialized = true;
 }
 
 

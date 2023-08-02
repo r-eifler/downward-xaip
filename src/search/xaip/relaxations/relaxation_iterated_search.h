@@ -22,12 +22,12 @@ class RelaxationIteratedSearch : public SearchEngine {
     options::Registry registry;
     options::Predefinitions predefinitions;
 
+    std::shared_ptr<PruningMethod> pruning_method;
+
     bool propagate_msgs;
 
     TaskRelaxationTracker* taskRelaxationTracker;
     RelaxedTask* relaxedTask = NULL;
-
-    std::shared_ptr<PruningMethod> pruning_method;
 
     std::shared_ptr<SearchEngine> get_search_engine();
     std::shared_ptr<SearchEngine> create_phase();

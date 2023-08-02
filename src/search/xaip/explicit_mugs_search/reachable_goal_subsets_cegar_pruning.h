@@ -28,6 +28,9 @@ public:
     explicit ReachableGoalSubsetsCegarPruning(const options::Options &opts);
     virtual void initialize(const std::shared_ptr<AbstractTask> &) override;
     virtual void print_statistics() const override;
+    
+    virtual MSGSCollection get_msgs() const override;
+    virtual void init_msgs(MSGSCollection goals) override;
 };
 
 }

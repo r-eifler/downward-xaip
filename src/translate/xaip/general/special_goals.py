@@ -44,8 +44,9 @@ class Goal:
 # the soft or in the hard goals
 def set_goals(sas_task, EXPSET, options):
     print("****************************************************************************")
-    if EXPSET.has_hard_goals() or EXPSET.has_soft_goals():
-        print("hard and soft goals are specified")
+    if EXPSET.has_hard_goals() and EXPSET.has_soft_goals():
+        print("hard AND soft goals are specified")
+        print("properties can defined as hard or soft goals are not considered")
         # add hard goals
         for hg in EXPSET.hard_goals:
             sas_task.addHardGoalFact(hg.get_sas_fact(sas_task, EXPSET))
@@ -55,17 +56,13 @@ def set_goals(sas_task, EXPSET, options):
             sas_task.addSoftGoalFact(sg.get_sas_fact(sas_task, EXPSET))
 
         # make goals consistent with hard + soft goals
-        # if options.all_goals_as_sas_goal_facts :
         sas_task.goal.reset_facts([g.get_sas_fact(sas_task, EXPSET) for g in EXPSET.hard_goals + EXPSET.soft_goals])
-        # else:
-        #     sas_task.goal.reset_facts([g.get_sas_fact(sas_task, EXPSET) for g in EXPSET.hard_goals])
+
 
     else:
-        print("original goal facts are hard goals and all properties are soft goals")
-        print("(accept if indicated differently with all_soft_goals=True)")
-        # original goal facts are hard goals and all properties are soft goals
+        print("original goal facts and all properties are soft goals")
         for gf in sas_task.goal.pairs:
-            sas_task.addHardGoalFact(gf)
+            sas_task.addSoftGoalFact(gf)
 
         for pg in EXPSET.get_action_set_properties() + EXPSET.get_ltl_properties() + EXPSET.get_goal_properties():
             pair = Goal(pg.name).get_sas_fact(sas_task, EXPSET)

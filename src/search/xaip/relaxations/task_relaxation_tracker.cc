@@ -9,8 +9,8 @@ TaskRelaxationTracker::TaskRelaxationTracker(const std::shared_ptr<AbstractTask>
     cout << "################# TASK RELAXATION TRACKER ##############" << endl;
 
     for (RelaxedTaskDefinition tc : task_proxy.get_relaxed_task().get_relaxed_task_definitions()) {
-        RelaxedTask* task = new RelaxedTask(tc.id, tc.name, tc.init, tc.limit_type, tc.limits);
-        relaxed_tasks.push_back(task);
+        RelaxedTask* releaxed_task = new RelaxedTask(task, tc.id, tc.name, tc.init, tc.limit_type, tc.limits);
+        relaxed_tasks.push_back(releaxed_task);
     }
     cout << "#relaxed tasks: " << relaxed_tasks.size() << endl;
     for (RelaxedTaskDefinition tc : task_proxy.get_relaxed_task().get_relaxed_task_definitions()){

@@ -44,7 +44,6 @@ protected:
 public:
     explicit MSGSCollection();
     void initialize(std::shared_ptr<AbstractTask> task);
-    void initialize(MSGSCollection &base);
 
     std::vector<FactPair> get_goal_facts();
     void add_and_mimize(GoalSubsets subsets);

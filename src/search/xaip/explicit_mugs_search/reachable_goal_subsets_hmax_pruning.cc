@@ -31,6 +31,14 @@ void ReachableGoalSubsetsHMaxPruning::initialize(const shared_ptr<AbstractTask> 
     log << "initialize pruning method: reachable goal subset pruning" << endl;
 }
 
+MSGSCollection ReachableGoalSubsetsHMaxPruning::get_msgs() const {
+    return current_msgs;
+}
+
+void ReachableGoalSubsetsHMaxPruning::init_msgs(MSGSCollection subsets) {
+    current_msgs = subsets;
+}
+
 
 bool ReachableGoalSubsetsHMaxPruning::prune(const State &state, int remaining_cost){
 

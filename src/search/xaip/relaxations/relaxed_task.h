@@ -24,7 +24,7 @@ private:
     bool solvable = false;
 
 public:
-    RelaxedTask(int id, std::string name, std::vector<FactPair> init, std::string limit_type, std::vector<FactPair> limits);
+    RelaxedTask(std::shared_ptr<AbstractTask> task, int id, std::string name, std::vector<FactPair> init, std::string limit_type, std::vector<FactPair> limits);
 
     int get_id(){return id;}
     std::string get_name(){return name;}

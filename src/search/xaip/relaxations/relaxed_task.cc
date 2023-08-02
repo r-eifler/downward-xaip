@@ -2,9 +2,12 @@
 
 using namespace std;
 
-RelaxedTask::RelaxedTask(int id, string name, std::vector<FactPair> init, std::string limit_type,
-                         std::vector<FactPair> limits):
-        id(id), name(name), init(init), limit_type(limit_type), limits(limits){
+RelaxedTask::RelaxedTask(std::shared_ptr<AbstractTask> task, int id, string name, 
+    std::vector<FactPair> init, std::string limit_type, std::vector<FactPair> limits):
+    id(id), name(name), init(init), limit_type(limit_type), limits(limits){
+
+    msgs_collection.initialize(task);
+
     cout << "Init relaxation: " << name << endl;
 }
 

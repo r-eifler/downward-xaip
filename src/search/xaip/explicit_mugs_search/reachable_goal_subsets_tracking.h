@@ -14,6 +14,7 @@ namespace reachable_goal_subsets_tracking {
 class ReachableGoalSubsetsTracking : public PruningMethod {
 
     MSGSCollection current_msgs;
+    bool initialized = false;
 
     bool prune(const State &state, int remaining_cost) override;
     void prune(const State &, std::vector<OperatorID> &) override {};

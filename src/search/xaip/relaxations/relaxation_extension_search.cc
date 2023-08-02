@@ -386,8 +386,7 @@ bool RelaxationExtensionSearch::next_relaxed_task() {
     }
 
     // update MSGS of finished iteration
-    MSGSCollection msgs = pruning_method->get_msgs();
-    relaxedTask->add_msgs(msgs);
+    relaxedTask->add_msgs(pruning_method->get_msgs());
     relaxedTask->print();
     statistics.print_detailed_statistics();
 
@@ -401,15 +400,12 @@ bool RelaxationExtensionSearch::next_relaxed_task() {
     relaxedTask = taskRelaxationTracker->next_relaxed_task();
     cout << "Current task: " << relaxedTask->get_name() << endl;
 
-    MSGSCollection init_msgs;
-    init_msgs.initialize(msgs);
     for (RelaxedTask* t : relaxedTask->get_lower_cover()){
-        MSGSCollection t_msgs = t->get_msgs();
-        for(GoalSubset gs : t_msgs)
-            init_msgs.add(gs);
+        relaxedTask->add_msgs(t->get_msgs());
     }
-    pruning_method->init_msgs(init_msgs);
-    cout << "init #MSGS: " << init_msgs.size() << endl;
+
+    pruning_method->init_msgs(relaxedTask->get_msgs());
+    cout << "init #MSGS: " << relaxedTask->get_msgs().size() << endl;
 
     return init_with_frontier_states();
 }

@@ -46,12 +46,12 @@ void MSGSCollection::initialize(shared_ptr<AbstractTask> task_) {
         }
     }
 
-    cout << "#hard goals: " << hard_goal_list.size() << endl;
+    // cout << "#hard goals: " << hard_goal_list.size() << endl;
 
     //sort goal facts according to there variable id
     std::sort(hard_goal_list.begin(), hard_goal_list.end());
 
-    cout << "#soft goals: " << soft_goal_list.size() << endl;
+    // cout << "#soft goals: " << soft_goal_list.size() << endl;
 
     //sort goal facts according to there variable id
     std::sort(soft_goal_list.begin(), soft_goal_list.end());
@@ -61,25 +61,17 @@ void MSGSCollection::initialize(shared_ptr<AbstractTask> task_) {
         FactPair gp = soft_goal_list[i];
         string name = task_proxy.get_variables()[gp.var].get_fact(gp.value).get_name();
         soft_goal_fact_names.push_back(name);
-        cout << gp.var << " = " << gp.value  << "    -->  " << name << endl;
+        // cout << gp.var << " = " << gp.value  << "    -->  " << name << endl;
     }
 
-    overall_timer.reset();
-}
+    // init with empty set 
+    this->add(GoalSubset(soft_goal_list.size()));
 
-void MSGSCollection::initialize(MSGSCollection &base){
-    task = base.task;
-
-    soft_goal_list = base.soft_goal_list;
-    hard_goal_list = base.hard_goal_list;
-    all_goal_list = base.all_goal_list;
-
-    soft_goal_fact_names = base.soft_goal_fact_names;
-    
     overall_timer.reset();
 }
 
 void MSGSCollection::add_and_mimize(GoalSubset subset){
+    assert(soft_goal_list.size() == subset.size());
     this->add(subset);
     this->minimize_non_maximal_subsets();
 }
@@ -264,6 +256,8 @@ GoalSubsets MSGSCollection::get_mugs() const{
 }
 
 void MSGSCollection::print() const {
+
+    cout << "Print msgs collection: size: " << size() << endl; 
 
     utils::Timer hit_timer;
     GoalSubsets mugs = this->complement().minimal_hitting_sets();
