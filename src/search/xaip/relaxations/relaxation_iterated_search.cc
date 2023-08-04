@@ -49,12 +49,15 @@ shared_ptr<SearchEngine> RelaxationIteratedSearch::get_search_engine() {
     // pruning_method->init_msgs(relaxedTask->get_msgs());
     // pruning_method->set_abstract_task(tasks::g_root_task);
     
+    cout << "gen new engine" << endl;
 
     OptionParser parser(engine_configs[0], registry, predefinitions, false);
     shared_ptr<SearchEngine> engine(parser.start_parsing<shared_ptr<SearchEngine>>());
+
+    cout << "update pruning method" << endl;
     static_pointer_cast<eager_search::EagerSearch>(engine)->get_pruning_method()->init_msgs(relaxedTask->get_msgs());
 
-    cout << "Starting search: ";
+    cout << "Starting search log: ";
     kptree::print_tree_bracketed(engine_configs[0], cout);
     cout << endl;
 
@@ -82,6 +85,7 @@ SearchStatus RelaxationIteratedSearch::step() {
         return found_solution() ? SOLVED : FAILED;
     }
 
+    cout << "start search" << endl;
     current_search->search();
 
     relaxedTask->add_msgs(static_pointer_cast<eager_search::EagerSearch>(current_search)->get_pruning_method()->get_msgs());

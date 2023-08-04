@@ -36,6 +36,7 @@ MSGSCollection ReachableGoalSubsetsCegarPruning::get_msgs() const {
 }
 
 void ReachableGoalSubsetsCegarPruning::init_msgs(MSGSCollection subsets) {
+    cout << "init msgs: size: " << subsets.size() << endl;
     current_msgs = subsets;
 }
 

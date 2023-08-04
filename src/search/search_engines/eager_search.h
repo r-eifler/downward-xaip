@@ -46,7 +46,6 @@ public:
     }
 
     std::shared_ptr<PruningMethod> get_pruning_method(){
-        std::cout << "********** get pruning method ***************" << std::endl;
         return pruning_method;
     }
 

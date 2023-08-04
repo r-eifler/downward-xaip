@@ -257,8 +257,6 @@ GoalSubsets MSGSCollection::get_mugs() const{
 
 void MSGSCollection::print() const {
 
-    cout << "Print msgs collection: size: " << size() << endl; 
-
     utils::Timer hit_timer;
     GoalSubsets mugs = this->complement().minimal_hitting_sets();
     hit_timer.stop();
