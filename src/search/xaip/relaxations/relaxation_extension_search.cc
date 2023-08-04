@@ -330,6 +330,7 @@ SearchStatus RelaxationExtensionSearch::step() {
 
     const State &s = node->get_state();
     if (check_goal_and_set_plan(s)){
+        relaxedTask->propagate_solvable(relaxedTask->get_msgs());
         if (! next_relaxed_task()) {
             return SearchStatus::SOLVED;
         }

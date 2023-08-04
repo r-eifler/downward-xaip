@@ -66,12 +66,6 @@ shared_ptr<SearchEngine> RelaxationIteratedSearch::get_search_engine() {
 
 shared_ptr<SearchEngine> RelaxationIteratedSearch::create_phase() {
 
-    // propagate solvable in case the current task was solved
-    if (relaxedTask && relaxedTask->get_solvable()){
-        cout << relaxedTask->get_name() << endl;
-        relaxedTask->propagate_solvable(relaxedTask->get_msgs());
-    }
-
     if (taskRelaxationTracker->has_next_relaxed_task()) {
         return get_search_engine();
     } else {
@@ -93,7 +87,6 @@ SearchStatus RelaxationIteratedSearch::step() {
 
 
     if (current_search->found_solution()){
-        cout << "solved Iteration: " << relaxedTask->get_name() << endl;
         relaxedTask->propagate_solvable(relaxedTask->get_msgs());
     }
 

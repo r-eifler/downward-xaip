@@ -34,7 +34,10 @@ bool RelaxedTask::sat_limits(const State &state){
 }
 
 void RelaxedTask::propagate_solvable(MSGSCollection goal_subsets){
-    // TODO remove overhead from calling the same task multiple times
+    if (solvable){
+        return;
+    }
+    cout << "solved Iteration: " << this->get_name() << endl;
     solvable = true;
     msgs_collection = goal_subsets;
     // mugs should be automatically empty

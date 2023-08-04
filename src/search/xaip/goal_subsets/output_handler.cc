@@ -65,7 +65,7 @@ void OutputHandler:: output_one(ofstream& outfile, std::vector<std::vector<std::
 }
 
 void OutputHandler::output_relaxations(){
-    cout << "---------------- Print OutputHandler to FILE ----------------" << endl;
+    cout << "---------------- Print MUGS to FILE ----------------" << endl;
     ofstream outfile;
     outfile.open(this->file_name);
     outfile << "{\"relaxations\": [\n";
@@ -75,7 +75,7 @@ void OutputHandler::output_relaxations(){
         vector<vector<string>> mugs_facts_names = this->generate_string(index);
         string name = this->iteration_names[index];
 
-        outfile << "{\"name\": \"" << name << "\", \"OutputHandler\": [\n";
+        outfile << "{\"name\": \"" << name << "\", \"MUGS\": [\n";
         output_one(outfile, mugs_facts_names);
         outfile << "\n]}";
         if(index < this->goal_subsets_list.size() - 1){
