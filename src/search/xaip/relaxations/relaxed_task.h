@@ -22,6 +22,7 @@ private:
     std::unordered_set<StateID> frontier;
     MSGSCollection msgs_collection;
     bool solvable = false;
+    int expanded_states = 0;
 
 public:
     RelaxedTask(std::shared_ptr<AbstractTask> task, int id, std::string name, std::vector<FactPair> init, std::string limit_type, std::vector<FactPair> limits);
@@ -39,6 +40,9 @@ public:
 
     std::unordered_set<StateID> get_frontier(){return frontier;}
     void add_frontier_state(StateID id){frontier.insert(id);}
+
+    void set_num_expanded_states(int num) {this->expanded_states = num;}
+    int get_num_expanded_states() {return this->expanded_states;}
 
     MSGSCollection get_msgs() const {return msgs_collection;}
     void add_msgs(MSGSCollection msgs_collection){this->msgs_collection.add_and_mimize(msgs_collection);}

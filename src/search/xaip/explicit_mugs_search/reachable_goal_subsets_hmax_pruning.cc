@@ -38,7 +38,6 @@ MSGSCollection ReachableGoalSubsetsHMaxPruning::get_msgs() const {
 }
 
 void ReachableGoalSubsetsHMaxPruning::init_msgs(MSGSCollection subsets) {
-    cout << "init msgs with size: " << subsets.size() << endl;
     msgs_initialized = true;
     current_msgs = subsets;
 }

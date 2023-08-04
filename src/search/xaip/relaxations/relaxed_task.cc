@@ -70,6 +70,7 @@ std::set<RelaxedTask*> RelaxedTask::get_lower_bound(){
 void RelaxedTask::print() {
     cout << "-----------------------------------------------------" << endl;
     cout << "RESULTS: " << this->name << endl;
+    cout << "Relaxed Task Expanded States: " << this->expanded_states << endl;
     msgs_collection.print();
     cout << "-----------------------------------------------------" << endl;
 }

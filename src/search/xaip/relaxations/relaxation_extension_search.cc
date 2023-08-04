@@ -120,7 +120,7 @@ void RelaxationExtensionSearch::initialize() {
 void RelaxationExtensionSearch::print_statistics() const {
     statistics.print_detailed_statistics();
     search_space.print_statistics();
-    pruning_method->print_statistics();
+    // pruning_method->print_statistics();
 
     int num_goal_facts = task_proxy.get_goals().size();
     std::vector<std::string> goal_fact_names;
@@ -387,8 +387,15 @@ bool RelaxationExtensionSearch::next_relaxed_task() {
 
     // update MSGS of finished iteration
     relaxedTask->add_msgs(pruning_method->get_msgs());
+    if (previous_relaxedTask){
+        relaxedTask->set_num_expanded_states(statistics.get_expanded() - previous_relaxedTask->get_num_expanded_states());
+    } 
+    else {
+        relaxedTask->set_num_expanded_states(statistics.get_expanded());
+    }
     relaxedTask->print();
     statistics.print_detailed_statistics();
+
 
 
     cout << "##############################################################################" << endl;
@@ -397,6 +404,7 @@ bool RelaxationExtensionSearch::next_relaxed_task() {
         return false;
     }
 
+    previous_relaxedTask = relaxedTask;
     relaxedTask = taskRelaxationTracker->next_relaxed_task();
     cout << "Current task: " << relaxedTask->get_name() << endl;
 
