@@ -725,6 +725,9 @@ def main():
     sas_task = pddl_to_sas(task, xpp)
 
     # TODO what is this doing?
+    # change actions are only in the model to prevent the preprocessor from
+    # revmovin the open and close time variables
+    # however they should not be in the final task
     filtered_operator = list(filter(lambda o: not o.name.startswith('(change_'), sas_task.operators))
     sas_task.operators = filtered_operator
 
