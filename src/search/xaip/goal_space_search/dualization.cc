@@ -49,11 +49,12 @@ DualizationSearch::DualizationSearch(const Options &opts, options::Registry &reg
     }
     
     //sort goal facts according to there variable id
+    soft_goal_fact_names = std::vector<std::string>(soft_goal_list.size());
     std::sort(soft_goal_list.begin(), soft_goal_list.end());
 
      for(uint i = 0; i < soft_goal_list.size(); i++){
         FactPair gp = soft_goal_list[i];
-        soft_goal_fact_names.push_back(task_proxy.get_variables()[gp.var].get_fact(gp.value).get_name());
+        soft_goal_fact_names[i] = task_proxy.get_variables()[gp.var].get_fact(gp.value).get_name();
     }
 
     //init with empty set;
