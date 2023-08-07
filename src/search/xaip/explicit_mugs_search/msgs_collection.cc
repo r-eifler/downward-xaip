@@ -56,7 +56,7 @@ void MSGSCollection::initialize(shared_ptr<AbstractTask> task_) {
         FactPair gp = soft_goal_list[i];
         string name = task_proxy.get_variables()[gp.var].get_fact(gp.value).get_name();
         soft_goal_fact_names[i] = name;
-        // cout << gp.var << " = " << gp.value  << "    -->  " << name << endl;
+        cout << gp.var << " = " << gp.value  << "    -->  id: " << i << " " << name << endl;
     }
 
     overall_timer.reset();
@@ -253,8 +253,8 @@ void MSGSCollection::print() const {
         cout << "\t" << taskproxy.get_variables()[g.var].get_fact(g.value).get_name() << endl;
     }
     cout << "#soft goals: " << soft_goal_list.size() << endl;
-    for(FactPair g : soft_goal_list){
-        cout << "\t" << taskproxy.get_variables()[g.var].get_fact(g.value).get_name() << endl;
+    for(uint i = 0; i < soft_goal_fact_names.size(); i++){
+        cout << "\t" << i << ": " << soft_goal_fact_names[i] << endl;
     }
 
     cout << "*********************************"  << endl;
