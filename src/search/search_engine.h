@@ -51,12 +51,14 @@ protected:
     OperatorCost cost_type;
     bool is_unit_cost;
     double max_time;
+    bool osp;
 
     virtual void initialize() {}
     virtual SearchStatus step() = 0;
 
     void set_plan(const Plan &plan);
     bool check_goal_and_set_plan(const State &state);
+    void set_osp_plan(const State &state);
     int get_adjusted_cost(const OperatorProxy &op) const;
 public:
     SearchEngine(const options::Options &opts);

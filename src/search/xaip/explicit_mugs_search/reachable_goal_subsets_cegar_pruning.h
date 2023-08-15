@@ -27,6 +27,8 @@ class ReachableGoalSubsetsCegarPruning : public PruningMethod {
 public:
     explicit ReachableGoalSubsetsCegarPruning(const options::Options &opts);
     virtual void initialize(const std::shared_ptr<AbstractTask> &) override;
+    StateID get_cardinally_best_state() override {return current_msgs.get_cardinally_best_state();}
+    int get_max_solved_soft_goals() override {return current_msgs.get_max_solved_soft_goals();}
     virtual void print_statistics() const override;
 };
 

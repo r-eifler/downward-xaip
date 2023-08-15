@@ -141,6 +141,13 @@ vector<FactPair> MSGSCollection::get_goal_facts() {
     return all_goal_list;
 }
 
+void MSGSCollection::update_best_state(StateID id, int num_solved_soft_goals) {
+    if (num_solved_soft_goals >= max_num_solved_soft_goals){
+        best_state = id;
+        max_num_solved_soft_goals = num_solved_soft_goals;
+    }
+}
+
 
 bool MSGSCollection::prune(const State &state, vector<int> costs, int remaining_cost){
 
@@ -170,6 +177,7 @@ bool MSGSCollection::prune(const State &state, vector<int> costs, int remaining_
         }
         else{
             GoalSubset satisfied_goals = get_satisfied_all_goals(state);
+            update_best_state(state.get_id(), satisfied_goals.count());
             assert(reachable_goals.is_superset_of(satisfied_goals));
             // cout << "satisfied goals: " << endl;
             // satisfied_goals.print();
@@ -186,8 +194,8 @@ bool MSGSCollection::prune(const State &state, vector<int> costs, int remaining_
         GoalSubset satisfied_hard_goals = get_satisfied_hard_goals(state);
         GoalSubset satisfied_soft_goals = get_satisfied_soft_goals(state);
 
-        GoalSubset reachable_hard_goals = get_reachable_soft_goals(reachable_goals);
-        GoalSubset reachable_soft_goals = get_reachable_hard_goals(reachable_goals);
+        GoalSubset reachable_hard_goals = get_reachable_hard_goals(reachable_goals);
+        GoalSubset reachable_soft_goals = get_reachable_soft_goals(reachable_goals);
 
         bool superset_alreday_readched = this->contains_superset(reachable_soft_goals);
 
@@ -198,6 +206,7 @@ bool MSGSCollection::prune(const State &state, vector<int> costs, int remaining_
             return true;
         }
         else{
+            update_best_state(state.get_id(), satisfied_soft_goals.count());
             if(satisfied_hard_goals.all() && !contains_superset(satisfied_soft_goals)){
                 this->add_and_mimize(satisfied_soft_goals);
                 // cout<< "add new goal subset" << endl;
@@ -214,6 +223,7 @@ bool MSGSCollection::track(const State &state){
 
     if(hard_goal_list.size() == 0){
         GoalSubset satisfied_goals = get_satisfied_all_goals(state);
+        update_best_state(state.get_id(), satisfied_goals.count());
         // cout << "satisfied goals: " << endl;
         // satisfied_goals.print();
         if(!contains_superset(satisfied_goals)){
@@ -228,6 +238,7 @@ bool MSGSCollection::track(const State &state){
         GoalSubset satisfied_soft_goals = get_satisfied_soft_goals(state);
 
         if(satisfied_hard_goals.all() && !contains_superset(satisfied_soft_goals)){
+             update_best_state(state.get_id(), satisfied_soft_goals.count());
             this->add_and_mimize(satisfied_soft_goals);
             // cout<< "add new goal subset" << endl;
             return true;

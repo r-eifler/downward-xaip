@@ -2,6 +2,7 @@
 #define PRUNING_METHOD_H
 
 #include "operator_id.h"
+#include "state_id.h"
 
 #include "../utils/logging.h"
 #include "../utils/timer.h"
@@ -43,6 +44,8 @@ public:
     virtual void initialize(const std::shared_ptr<AbstractTask> &task);
     void prune_operators(const State &state, std::vector<OperatorID> &op_ids);
     bool prune_state(const State &state, int remaining_cost);
+    virtual StateID get_cardinally_best_state();
+    virtual int get_max_solved_soft_goals() {return 0;}
     virtual void print_statistics() const;
 };
 

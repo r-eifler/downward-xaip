@@ -56,7 +56,8 @@ SearchEngine::SearchEngine(const Options &opts)
       statistics(log),
       cost_type(opts.get<OperatorCost>("cost_type")),
       is_unit_cost(task_properties::is_unit_cost(task_proxy)),
-      max_time(opts.get<double>("max_time")) {
+      max_time(opts.get<double>("max_time")),
+      osp(opts.get<bool>("osp")) {
     if (opts.get<int>("bound") < 0) {
         cerr << "error: negative cost bound " << opts.get<int>("bound") << endl;
         utils::exit_with(ExitCode::SEARCH_INPUT_ERROR);
@@ -115,6 +116,12 @@ bool SearchEngine::check_goal_and_set_plan(const State &state) {
     return false;
 }
 
+void SearchEngine::set_osp_plan(const State &state) {
+    Plan plan;
+    search_space.trace_path(state, plan);
+    set_plan(plan);
+}
+
 void SearchEngine::save_plan_if_necessary() {
     if (found_solution()) {
         plan_manager.save_plan(get_plan(), task_proxy);
@@ -154,6 +161,11 @@ void SearchEngine::add_options_to_parser(OptionParser &parser) {
         "experiments. Timed-out searches are treated as failed searches, "
         "just like incomplete search algorithms that exhaust their search space.",
         "infinity");
+    parser.add_option<bool>(
+        "osp",
+        "if task is not solvable, output plan to state with the most solved goal facts",
+        "false"
+    );
     utils::add_log_options_to_parser(parser);
 }
 

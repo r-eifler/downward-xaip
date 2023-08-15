@@ -28,6 +28,9 @@ private:
     int num_visited_states_since_last_added;
     int num_pruned_states = 0;
 
+    StateID best_state = StateID::no_state;
+    int max_num_solved_soft_goals = 0;
+
 protected:
 
     goalsubset::GoalSubset get_satisfied_soft_goals(const State &state);
@@ -40,6 +43,7 @@ protected:
     void add_and_mimize(goalsubset::GoalSubset subset);
     bool contains_superset(goalsubset::GoalSubset subset);
     bool contains_strict_superset(goalsubset::GoalSubset subset);
+    void update_best_state(StateID id, int num_solved_soft_goals);
 
 public:
     explicit MSGSCollection();
@@ -49,6 +53,8 @@ public:
 
     bool prune(const State &state, std::vector<int> costs, int remaining_cost);
     bool track(const State &state);
+    StateID get_cardinally_best_state() {return best_state;}
+    int get_max_solved_soft_goals() {return max_num_solved_soft_goals;}
 
     void print() const;
 };

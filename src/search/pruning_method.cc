@@ -69,6 +69,11 @@ bool PruningMethod::prune(const State &, int){
     return false;
 }
 
+StateID PruningMethod::get_cardinally_best_state(){
+    cout << "OSP cardinally best state not implemented" << endl;
+    return StateID::no_state;
+}
+
 void PruningMethod::print_statistics() const {
     if (log.is_at_least_normal()) {
         log << "total successors before pruning: "
