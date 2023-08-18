@@ -47,6 +47,7 @@ public:
     MSGSCollection get_msgs() const {return msgs_collection;}
     void add_msgs(MSGSCollection msgs_collection){this->msgs_collection.add_and_mimize(msgs_collection);}
 
+    std::vector<std::vector<std::string>> get_mugs_string();
 
     void set_solvable(bool s){solvable = s;}
     bool get_solvable(){return solvable;}

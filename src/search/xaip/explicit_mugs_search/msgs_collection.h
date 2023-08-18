@@ -54,6 +54,8 @@ public:
     GoalSubsets get_mugs() const;
 
     void print() const;
+    std::vector<std::vector<std::string>> generate_msgs_string();
+    std::vector<std::vector<std::string>> generate_mugs_string();
 };
 
 

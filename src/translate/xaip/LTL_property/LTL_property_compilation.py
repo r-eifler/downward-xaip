@@ -258,7 +258,7 @@ def addWorldSyncvar(sas_task, properties):
     sas_task.init.values.append(1)
     
     #all automatas need to be executed one last time at the end
-    sync_end_goal = GoalProperty('final_automata_sync', sync_var_domain[-1])
+    sync_end_goal = GoalProperty('final_automata_sync', sync_var_domain[0])
     # sync_end_goal.var_id = world_sync_var
     # sync_end_goal.var_sat_goal_value = sync_var_domain[-1]
 

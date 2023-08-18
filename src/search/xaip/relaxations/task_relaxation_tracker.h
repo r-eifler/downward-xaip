@@ -28,6 +28,7 @@ public:
     bool has_next_relaxed_task();
     RelaxedTask* next_relaxed_task();
     RelaxedTask* current_relaxed_task();
+    void results_to_file();
 };
 
 

@@ -1,4 +1,5 @@
 #include "task_relaxation_tracker.h"
+#include "../goal_subsets/output_handler.h"
 
 
 using namespace std;
@@ -48,5 +49,13 @@ RelaxedTask* TaskRelaxationTracker::next_relaxed_task(){
 
 RelaxedTask* TaskRelaxationTracker::current_relaxed_task(){
     return relaxed_tasks[current_index];
+}
+
+void TaskRelaxationTracker::results_to_file(){
+    OutputHandler output_handler = OutputHandler("relaxation_mugs.json", true);
+    for(RelaxedTask* task: relaxed_tasks){
+        output_handler.add_collection(task->get_name(), task->get_mugs_string());
+    }
+    output_handler.output();
 }
 

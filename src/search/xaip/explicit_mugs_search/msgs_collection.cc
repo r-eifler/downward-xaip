@@ -201,8 +201,8 @@ bool MSGSCollection::prune(const State &state, vector<int> costs, int remaining_
         GoalSubset satisfied_hard_goals = get_satisfied_hard_goals(state);
         GoalSubset satisfied_soft_goals = get_satisfied_soft_goals(state);
 
-        GoalSubset reachable_hard_goals = get_reachable_soft_goals(reachable_goals);
-        GoalSubset reachable_soft_goals = get_reachable_hard_goals(reachable_goals);
+        GoalSubset reachable_hard_goals = get_reachable_hard_goals(reachable_goals);
+        GoalSubset reachable_soft_goals = get_reachable_soft_goals(reachable_goals);
 
         bool superset_alreday_readched = this->contains_superset(reachable_soft_goals);
 
@@ -244,7 +244,6 @@ bool MSGSCollection::track(const State &state){
 
         if(satisfied_hard_goals.all() && !contains_superset(satisfied_soft_goals)){
             this->add_and_mimize(satisfied_soft_goals);
-            // cout<< "add new goal subset" << endl;
             return true;
         }
         return false;
@@ -279,7 +278,7 @@ void MSGSCollection::print() const {
     cout << "*********************************"  << endl;
     cout << "#MSGS: " << this->size() << endl;
     cout << "*********************************"  << endl;
-    if(this->size() > 100){
+    if(this->size() > 150){
         cout << "Too many msgs to print!" << endl;
     }
     else{
@@ -289,20 +288,29 @@ void MSGSCollection::print() const {
     cout << "*********************************"  << endl;
     cout << "#MUGS: " << mugs.size() << endl;
     cout << "*********************************"  << endl;
-    if(mugs.size() > 100){
+    if(mugs.size() > 150){
         cout << "Too many mugs to print!" << endl;
     }
     else{
         mugs.print_subsets();
     }
     cout << "*********************************"  << endl;
-    if(mugs.size() > 100){
+    if(mugs.size() > 150){
         cout << "Too many mugs to print!" << endl;
     }
     else{
         mugs.print(soft_goal_fact_names);
     }
     cout << "*********************************"  << endl;
+}
+
+
+vector<vector<string>> MSGSCollection::generate_msgs_string() {
+    return GoalSubsets::generate_string(soft_goal_fact_names);
+}
+
+vector<vector<string>> MSGSCollection::generate_mugs_string() {
+    return get_mugs().generate_string(soft_goal_fact_names);
 }
 
 

@@ -77,3 +77,8 @@ void RelaxedTask::print() {
     msgs_collection.print();
     cout << "-----------------------------------------------------" << endl;
 }
+
+
+std::vector<std::vector<std::string>> RelaxedTask::get_mugs_string(){
+    return msgs_collection.generate_mugs_string();
+}
