@@ -54,6 +54,7 @@ public:
 
     bool sat_limits(const State &state);
     void propagate_solvable(MSGSCollection goal_subsets);
+    void propagate_solvable();
 
     void print();
 

@@ -33,6 +33,18 @@ bool RelaxedTask::sat_limits(const State &state){
     return true;
 }
 
+void RelaxedTask::propagate_solvable(){
+    if (!solvable){
+        return;
+    }
+    cout << "solved Iteration: " << this->get_name() << endl;
+    solvable = true;
+    // mugs should be automatically empty
+    for (RelaxedTask* rtc : upper_cover){
+        rtc->propagate_solvable(msgs_collection);
+    }
+}
+
 void RelaxedTask::propagate_solvable(MSGSCollection goal_subsets){
     if (solvable){
         return;

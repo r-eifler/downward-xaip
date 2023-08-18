@@ -317,7 +317,7 @@ SearchStatus RelaxationExtensionSearch::step() {
 
     const State &s = node->get_state();
     if (check_goal_and_set_plan(s)){
-        relaxedTask->propagate_solvable(relaxedTask->get_msgs());
+        relaxedTask->set_solvable(true);
         if (! next_relaxed_task()) {
             return SearchStatus::SOLVED;
         }
@@ -383,6 +383,8 @@ bool RelaxationExtensionSearch::next_relaxed_task() {
     }
     relaxedTask->print();
     statistics.print_detailed_statistics();
+
+    relaxedTask->propagate_solvable();
 
 
 

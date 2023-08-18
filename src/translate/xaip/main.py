@@ -117,8 +117,9 @@ class XPPFramework:
         final_syn_goal = LTL_property.compileLTLProperties(False, self.sas_task,
                                           self.EXPSET.get_ltl_properties(),
                                           self.EXPSET.action_sets)
-        self.EXPSET.add_goal_property(final_syn_goal)
-        self.EXPSET.add_hard_goal(Goal(final_syn_goal.name))
+        if final_syn_goal:
+            self.EXPSET.add_goal_property(final_syn_goal)
+            self.EXPSET.add_hard_goal(Goal(final_syn_goal.name))
 
         G_property.compileGoalProperties(self.sas_task, self.EXPSET.get_goal_properties())
 
