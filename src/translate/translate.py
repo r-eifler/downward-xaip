@@ -520,7 +520,7 @@ def unsolvable_sas_task(msg):
     print("%s! Generating unsolvable task..." % msg)
     return trivial_task(solvable=False)
 
-def pddl_to_sas(task, xpp):
+def pddl_to_sas(task, xpp=None):
     with timers.timing("Instantiating", block=True):
         (relaxed_reachable, atoms, actions, goal_list, axioms,
          reachable_action_params) = instantiate.explore(task)
@@ -536,7 +536,7 @@ def pddl_to_sas(task, xpp):
         assert isinstance(item, pddl.Literal)
         
     # extend atoms with atoms used in the relaxations
-    add_reachable_facts = xpp.get_needed_facts()
+    add_reachable_facts = xpp.get_needed_facts()  if xpp else []
     for f in add_reachable_facts:
         atoms.add(pddl.Atom(f.pred, f.args))
 
@@ -583,7 +583,7 @@ def pddl_to_sas(task, xpp):
           added_implied_precondition_counter)
     
     # determine which variables should not be simplified
-    skip_simplification = xpp.get_needed_values(sas_task)
+    skip_simplification = xpp.get_needed_values(sas_task)  if xpp else []
     print("Skip simplification (filter_unreachable_propositions) for: ")
     print(skip_simplification)
 
@@ -597,7 +597,7 @@ def pddl_to_sas(task, xpp):
                 return solvable_sas_task("Simplified to empty goal")
 
     # determine which variables should not be simplified
-    skip_simplification = xpp.get_needed_values(sas_task)
+    skip_simplification = xpp.get_needed_values(sas_task) if xpp else []
     print("Skip simplification (find_and_apply_variable_order) reordering for: ")
     print(skip_simplification)
     if options.reorder_variables or options.filter_unimportant_vars:
@@ -718,48 +718,57 @@ def main():
     # print("Write FDR json file")
     # file = open("fdr.json", "w")
     # task.to_json(file)
+    
+    if options.explanation_settings:
 
-    xpp = xaip.XPPFramework(options, task)
+        xpp = xaip.XPPFramework(options, task)
 
-    sas_task = pddl_to_sas(task, xpp)
+        sas_task = pddl_to_sas(task, xpp)
 
-    # change actions are only in the model to prevent the preprocessor from
-    # removing the open and close time variables
-    # however they should not be in the final task
-    filtered_operator = list(filter(lambda o: not o.name.startswith('(change_'), sas_task.operators))
-    sas_task.operators = filtered_operator
+        # change actions are only in the model to prevent the preprocessor from
+        # removing the open and close time variables
+        # however they should not be in the final task
+        filtered_operator = list(filter(lambda o: not o.name.startswith('(change_'), sas_task.operators))
+        sas_task.operators = filtered_operator
 
-    xpp.sas_task = sas_task
+        xpp.sas_task = sas_task
 
-    # print("-------------------- Variables --------------------")
-    # for v in sas_task.variables.value_names:
-    #     print(v)
+        # print("-------------------- Variables --------------------")
+        # for v in sas_task.variables.value_names:
+        #     print(v)
 
-    # print("-------------------- Operators --------------------")
-    # for o in sas_task.operators:
-    #    print(o.name)
+        # print("-------------------- Operators --------------------")
+        # for o in sas_task.operators:
+        #    print(o.name)
 
-    dump_statistics(sas_task)
+        dump_statistics(sas_task)
 
-    #compile plan properties and relaxed tasks
-    xpp.run()
+        #compile plan properties and relaxed tasks
+        xpp.run()
 
-    #take a look
-    # print("-------------- Properties compiled ----------------------")
-    # for v in sas_task.variables.value_names:
-    #     print(v)
-    #
-    # print("Operators:")
-    # for o in sas_task.operators:
-    #     print(o.name)
-    #     print(o.pre_post)
-        # print(o.cost)
+        #take a look
+        # print("-------------- Properties compiled ----------------------")
+        # for v in sas_task.variables.value_names:
+        #     print(v)
+        #
+        # print("Operators:")
+        # for o in sas_task.operators:
+        #     print(o.name)
+        #     print(o.pre_post)
+            # print(o.cost)
 
-    # print("Init:")
-    # print(sas_task.init.values)
+        # print("Init:")
+        # print(sas_task.init.values)
 
-    #print("Goal:")
-    #print(sas_task.goal.pairs)
+        print("Goal:")
+        print(sas_task.goal.pairs)
+        print("Hard Goal:")
+        print(sas_task.hard_goal.pairs)
+        print("Soft Goal:")
+        print(sas_task.soft_goal.pairs)
+    else:
+        sas_task = pddl_to_sas(task)
+        dump_statistics(sas_task)
 
     with timers.timing("Writing output"):
         with open(options.sas_file, "w") as output_file:

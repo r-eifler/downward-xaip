@@ -6,7 +6,7 @@ from . import LTL_property
 from . import G_property
 from .parser import parse
 from .general import ExplanationSetting
-from .general.special_goals import set_goals
+from .general.special_goals import Goal, set_goals
 from .depper_why_questions import RelaxationCompilation
 
 
@@ -114,9 +114,11 @@ class XPPFramework:
 
 
         # TODO self.options.only_add_LTL_prop_to_SAS necessary
-        LTL_property.compileLTLProperties(False, self.sas_task,
+        final_syn_goal = LTL_property.compileLTLProperties(False, self.sas_task,
                                           self.EXPSET.get_ltl_properties(),
                                           self.EXPSET.action_sets)
+        self.EXPSET.add_goal_property(final_syn_goal)
+        self.EXPSET.add_hard_goal(Goal(final_syn_goal.name))
 
         G_property.compileGoalProperties(self.sas_task, self.EXPSET.get_goal_properties())
 

@@ -1,5 +1,6 @@
 from sas_tasks import *
 import xaip.logic.logic_formula as logic_formula
+from xaip.G_property.goal_property import GoalProperty
 from .automata import State
 import os
 import copy
@@ -104,7 +105,7 @@ def automataTransitionOperators(automata, sas_task, actionSets):
             #print("Var: " + str(automata.accept_var) + " Source: " + str(t.source.accepting) + " -> " + str(t.target.accepting))
 
             #transition name:
-            t_name = automata.name + ": " + t.name
+            t_name = "("+ automata.name + ": " + t.name + ")"
             #encode the guard of the transition in the precondition of the action
             if not t.guard.isTrue():
                 # returns a disjunction of pre_post, such that every pre_post belongs to one action
@@ -253,12 +254,15 @@ def addWorldSyncvar(sas_task, properties):
     sas_task.variables.ranges.append(len(sync_var_domain))
     sas_task.variables.axiom_layers.append(-1)
 
-    #initially we are in a wold state
-    #sas_task.init.values.append(0)
     #initially we evaluate the first automaton in the initial state
     sas_task.init.values.append(1)
+    
+    #all automatas need to be executed one last time at the end
+    sync_end_goal = GoalProperty('final_automata_sync', sync_var_domain[-1])
+    # sync_end_goal.var_id = world_sync_var
+    # sync_end_goal.var_sat_goal_value = sync_var_domain[-1]
 
-    return world_sync_var
+    return world_sync_var, sync_end_goal
 
 def add_sync_conditions(sas_task, operators, properties, world_sync_var):
 
@@ -296,6 +300,7 @@ def compileLTLProperties(only_add_to_SAS, sas_task, properties, actionSets):
         for i, p in enumerate(properties):
             name, f = p.SAS_repr(actionSets)
             sas_task.addLTLProperty(name, f)
+        return []
     else:
         # generate automaton representation for each ltl property
         for prop in properties:
@@ -305,7 +310,7 @@ def compileLTLProperties(only_add_to_SAS, sas_task, properties, actionSets):
         print("Encode LTL properties into task.")
 
         #each automata and the world itself have a synchronization variable to constrain the execution order
-        world_sync_var = addWorldSyncvar(sas_task, properties)
+        world_sync_var, final_automata_sync_goal = addWorldSyncvar(sas_task, properties)
 
         for i, p  in enumerate(properties):
             automata = p.automata
@@ -323,6 +328,9 @@ def compileLTLProperties(only_add_to_SAS, sas_task, properties, actionSets):
                 sas_task.operators.append(o)
 
         print("Number of auxiliary variables: " + str(len(auxillary_vars)))
+        
+        
+        return final_automata_sync_goal
 
 
 

@@ -239,6 +239,7 @@ def _set_components_and_inputs(parser, args):
     # swallow any that are provided. This is undocumented to avoid
     # cluttering the driver's --help output.
     if first == "translate":
+        args.explanation_settings = None
         if "--help" in args.translate_options or "-h" in args.translate_options:
             args.translate_inputs = []
         elif num_files == 1:

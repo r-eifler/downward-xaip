@@ -55,8 +55,10 @@ def run_translate(args):
         args.translate_memory_limit, args.overall_memory_limit)
     translate = get_executable(args.build, REL_TRANSLATE_PATH)
     assert sys.executable, "Path to interpreter could not be found"
-    cmd = [sys.executable] + [translate] + args.translate_inputs + [args.explanation_settings] + args.translate_options
-
+    if args.explanation_settings:
+        cmd = [sys.executable] + [translate] + args.translate_inputs + [args.explanation_settings] + args.translate_options
+    else:
+        cmd = [sys.executable] + [translate] + args.translate_inputs + args.translate_options
     stderr, returncode = call.get_error_output_and_returncode(
         "translator",
         cmd,

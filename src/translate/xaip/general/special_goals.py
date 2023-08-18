@@ -44,9 +44,11 @@ class Goal:
 # the soft or in the hard goals
 def set_goals(sas_task, EXPSET, options):
     print("****************************************************************************")
+    # if there are hard goals then they acan be necessary for the LTLf compilation
+    # so they need to stay hardgoals
+    
     if EXPSET.has_hard_goals() and EXPSET.has_soft_goals():
-        print("hard AND soft goals are specified")
-        print("properties can defined as hard or soft goals are not considered")
+        print("hard AND soft goals are specified (goals not specified as hard or soft goals are not considered)")
         # add hard goals
         for hg in EXPSET.hard_goals:
             sas_task.addHardGoalFact(hg.get_sas_fact(sas_task, EXPSET))
@@ -57,10 +59,34 @@ def set_goals(sas_task, EXPSET, options):
 
         # make goals consistent with hard + soft goals
         sas_task.goal.reset_facts([g.get_sas_fact(sas_task, EXPSET) for g in EXPSET.hard_goals + EXPSET.soft_goals])
+        return
+    
+    if EXPSET.has_hard_goals():
+        print("hard goals are specified but not soft goals -> original goal facts and all properties are soft goals")
+        
+        # add original goals as soft goals
+        for gf in sas_task.goal.pairs:
+            sas_task.addSoftGoalFact(gf)
+        
+        # add hard goals
+        hard_goal_names = []
+        for hg in EXPSET.hard_goals:
+            hard_goal_names.append(hg.var_name)
+            pair = hg.get_sas_fact(sas_task, EXPSET)
+            sas_task.addHardGoalFact(pair)
+            sas_task.goal.pairs.append(pair)
 
+        # add properties as soft goal
+        for pg in (EXPSET.get_action_set_properties() + EXPSET.get_ltl_properties() + EXPSET.get_goal_properties()):
+            if pg.name in hard_goal_names:
+                continue
+            pair = Goal(pg.name).get_sas_fact(sas_task, EXPSET)
+            sas_task.addSoftGoalFact(pair)
+            sas_task.goal.pairs.append(pair)
+        return
 
     else:
-        print("original goal facts and all properties are soft goals")
+        print("No hard and no soft goals -> original goal facts and all properties are soft goals")
         for gf in sas_task.goal.pairs:
             sas_task.addSoftGoalFact(gf)
 
