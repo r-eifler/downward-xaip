@@ -706,13 +706,12 @@ def main():
     with timers.timing("Normalizing task"):
         normalize.normalize(task)
 
-    # TODO do we need this?
-    # if options.generate_relaxed_task:
-    #     # Remove delete effects.
-    #     for action in task.actions:
-    #         for index, effect in reversed(list(enumerate(action.effects))):
-    #             if effect.literal.negated:
-    #                 del action.effects[index]
+    if options.generate_relaxed_task:
+        # Remove delete effects.
+        for action in task.actions:
+            for index, effect in reversed(list(enumerate(action.effects))):
+                if effect.literal.negated:
+                    del action.effects[index]
 
     # TODO add this as option
     # print("#########################################################")
@@ -724,9 +723,8 @@ def main():
 
     sas_task = pddl_to_sas(task, xpp)
 
-    # TODO what is this doing?
     # change actions are only in the model to prevent the preprocessor from
-    # revmovin the open and close time variables
+    # removing the open and close time variables
     # however they should not be in the final task
     filtered_operator = list(filter(lambda o: not o.name.startswith('(change_'), sas_task.operators))
     sas_task.operators = filtered_operator
