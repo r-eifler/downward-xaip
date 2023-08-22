@@ -16,7 +16,6 @@ protected:
 
     GoalSubsetHashSet subsets;
 
-    std::vector<std::vector<std::string>> generate_string(std::vector<std::string> goal_facts_names) const;
     void print_subsets(std::vector<std::vector<std::string>> facts_names) const;
     std::string to_json(std::vector<std::vector<std::string>> facts_names);
 
@@ -36,10 +35,12 @@ public:
     void add(goalsubset::GoalSubset subset);
     bool contains(goalsubset::GoalSubset subset);
     void add(GoalSubsetHashSet subsets);
+    void add(GoalSubsets subsets);
 
     void print(std::vector<std::string> goal_facts_names) const;
     void print_subsets() const;
     void to_file(std::vector<std::string> goal_facts_names, std::string file_name = "mugs.json");
+    std::vector<std::vector<std::string>> generate_string(std::vector<std::string> goal_facts_names) const;
 
     void minimize_non_minimal_subsets();
     void minimize_non_maximal_subsets();

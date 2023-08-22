@@ -477,6 +477,7 @@ fast_downward_plugin(
         xaip/goal_space_search/plugin_wgss
         xaip/goal_space_search/plugin_sgss
         xaip/goal_space_search/dualization
+        xaip/goal_subsets/output_handler
         xaip/explicit_mugs_search/msgs_collection
         xaip/explicit_mugs_search/iterated_mugs_search
         xaip/explicit_mugs_search/osp_max_heuristic
@@ -486,6 +487,11 @@ fast_downward_plugin(
         xaip/explicit_mugs_search/reachable_goal_subsets_max_heuristic
         xaip/explicit_mugs_search/reachable_goal_subsets_tracking
         xaip/explicit_mugs_search/dfs_search
+        xaip/relaxations/relaxed_task
+        xaip/relaxations/task_relaxation_tracker
+        xaip/relaxations/relaxation_iterated_search
+        xaip/relaxations/modified_init_task
+        xaip/relaxations/relaxation_extension_search
     DEPENDS MAX_HEURISTIC
 )
 

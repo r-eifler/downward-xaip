@@ -30,6 +30,9 @@ public:
     StateID get_cardinally_best_state() override {return current_msgs.get_cardinally_best_state();}
     int get_max_solved_soft_goals() override {return current_msgs.get_max_solved_soft_goals();}
     virtual void print_statistics() const override;
+    
+    virtual MSGSCollection get_msgs() const override;
+    virtual void init_msgs(MSGSCollection goals) override;
 };
 
 }

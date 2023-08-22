@@ -45,6 +45,10 @@ public:
         this->pruning_method = pruning_method;
     }
 
+    std::shared_ptr<PruningMethod> get_pruning_method(){
+        return pruning_method;
+    }
+
     virtual void print_statistics() const override;
 
     void dump_search_space() const;

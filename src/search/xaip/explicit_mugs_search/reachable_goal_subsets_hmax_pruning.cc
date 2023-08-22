@@ -24,11 +24,22 @@ void ReachableGoalSubsetsHMaxPruning::initialize(const shared_ptr<AbstractTask> 
     PruningMethod::initialize(task);
 
     max_heuristic = static_pointer_cast<max_heuristic::HSPMaxHeuristic>(h);
+    log << "initialize pruning method: reachable goal subset pruning: heuristic" << endl;
 
-    current_msgs = MSGSCollection();
-    current_msgs.initialize(task);
+    if (! msgs_initialized){
+        current_msgs = MSGSCollection();
+        current_msgs.initialize(task);
+        log << "initialize pruning method: reachable goal subset pruning: msgs" << endl;
+    }
+}
 
-    log << "initialize pruning method: reachable goal subset pruning" << endl;
+MSGSCollection ReachableGoalSubsetsHMaxPruning::get_msgs() const {
+    return current_msgs;
+}
+
+void ReachableGoalSubsetsHMaxPruning::init_msgs(MSGSCollection subsets) {
+    msgs_initialized = true;
+    current_msgs = subsets;
 }
 
 

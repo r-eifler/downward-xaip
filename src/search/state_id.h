@@ -39,7 +39,20 @@ public:
     std::size_t operator()(StateID const id) const{
         return id.value;
     }
+
+    size_t hash() const {
+        return value;
+    }
 };
+
+namespace std {
+template<>
+struct hash<StateID> {
+    size_t operator()(StateID id) const {
+        return id.hash();
+    }
+};
+}
 
 
 #endif

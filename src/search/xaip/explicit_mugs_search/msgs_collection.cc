@@ -46,7 +46,12 @@ void MSGSCollection::initialize(shared_ptr<AbstractTask> task_) {
         }
     }
 
-    cout << "#soft goals: " << soft_goal_list.size() << endl;
+    // cout << "#hard goals: " << hard_goal_list.size() << endl;
+
+    //sort goal facts according to there variable id
+    std::sort(hard_goal_list.begin(), hard_goal_list.end());
+
+    // cout << "#soft goals: " << soft_goal_list.size() << endl;
 
     //sort goal facts according to there variable id
     std::sort(soft_goal_list.begin(), soft_goal_list.end());
@@ -59,12 +64,22 @@ void MSGSCollection::initialize(shared_ptr<AbstractTask> task_) {
         cout << gp.var << " = " << gp.value  << "    -->  id: " << i << " " << name << endl;
     }
 
+    // init with empty set 
+    this->add(GoalSubset(soft_goal_list.size()));
+
     overall_timer.reset();
 }
 
 void MSGSCollection::add_and_mimize(GoalSubset subset){
+    assert(soft_goal_list.size() == subset.size());
     this->add(subset);
     this->minimize_non_maximal_subsets();
+}
+
+void MSGSCollection::add_and_mimize(GoalSubsets subsets) {
+    for (GoalSubset gs : subsets){
+        add_and_mimize(gs);
+    }
 }
 
 bool MSGSCollection::contains_superset(GoalSubset subset){
@@ -240,11 +255,14 @@ bool MSGSCollection::track(const State &state){
         if(satisfied_hard_goals.all() && !contains_superset(satisfied_soft_goals)){
              update_best_state(state.get_id(), satisfied_soft_goals.count());
             this->add_and_mimize(satisfied_soft_goals);
-            // cout<< "add new goal subset" << endl;
             return true;
         }
         return false;
     }
+}
+
+GoalSubsets MSGSCollection::get_mugs() const{
+    return this->complement().minimal_hitting_sets();
 }
 
 void MSGSCollection::print() const {
@@ -271,7 +289,7 @@ void MSGSCollection::print() const {
     cout << "*********************************"  << endl;
     cout << "#MSGS: " << this->size() << endl;
     cout << "*********************************"  << endl;
-    if(this->size() > 100){
+    if(this->size() > 150){
         cout << "Too many msgs to print!" << endl;
     }
     else{
@@ -281,20 +299,29 @@ void MSGSCollection::print() const {
     cout << "*********************************"  << endl;
     cout << "#MUGS: " << mugs.size() << endl;
     cout << "*********************************"  << endl;
-    if(mugs.size() > 100){
+    if(mugs.size() > 150){
         cout << "Too many mugs to print!" << endl;
     }
     else{
         mugs.print_subsets();
     }
     cout << "*********************************"  << endl;
-    if(mugs.size() > 100){
+    if(mugs.size() > 150){
         cout << "Too many mugs to print!" << endl;
     }
     else{
         mugs.print(soft_goal_fact_names);
     }
     cout << "*********************************"  << endl;
+}
+
+
+vector<vector<string>> MSGSCollection::generate_msgs_string() {
+    return GoalSubsets::generate_string(soft_goal_fact_names);
+}
+
+vector<vector<string>> MSGSCollection::generate_mugs_string() {
+    return get_mugs().generate_string(soft_goal_fact_names);
 }
 
 

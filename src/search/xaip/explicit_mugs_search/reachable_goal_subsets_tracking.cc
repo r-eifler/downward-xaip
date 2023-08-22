@@ -15,12 +15,16 @@ ReachableGoalSubsetsTracking::ReachableGoalSubsetsTracking(const Options &opts)
 }
 
 void ReachableGoalSubsetsTracking::initialize(const shared_ptr<AbstractTask> &task) {
+    if (initialized)
+        return;
+
     PruningMethod::initialize(task);
 
     current_msgs = MSGSCollection();
     current_msgs.initialize(task);
 
     log << "initialize pruning method: reachable goal subset tracking" << endl;
+    initialized = true;
 }
 
 
@@ -33,6 +37,14 @@ bool ReachableGoalSubsetsTracking::prune(const State &state, int){
 
 void ReachableGoalSubsetsTracking::print_statistics() const {
     current_msgs.print();
+}
+
+MSGSCollection ReachableGoalSubsetsTracking::get_msgs() const {
+    return current_msgs;
+}
+
+void ReachableGoalSubsetsTracking::init_msgs(MSGSCollection subsets) {
+    current_msgs = subsets;
 }
 
 

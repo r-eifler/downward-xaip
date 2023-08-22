@@ -11,7 +11,7 @@
 #include <unordered_set>
 
 
-class MSGSCollection : GoalSubsets{
+class MSGSCollection : public GoalSubsets{
 
 private: 
 
@@ -50,13 +50,18 @@ public:
     void initialize(std::shared_ptr<AbstractTask> task);
 
     std::vector<FactPair> get_goal_facts();
+    void add_and_mimize(GoalSubsets subsets);
 
     bool prune(const State &state, std::vector<int> costs, int remaining_cost);
     bool track(const State &state);
     StateID get_cardinally_best_state() {return best_state;}
     int get_max_solved_soft_goals() {return max_num_solved_soft_goals;}
 
+    GoalSubsets get_mugs() const;
+
     void print() const;
+    std::vector<std::vector<std::string>> generate_msgs_string();
+    std::vector<std::vector<std::string>> generate_mugs_string();
 };
 
 

@@ -7,6 +7,8 @@
 #include "../utils/logging.h"
 #include "../utils/timer.h"
 
+#include "xaip/explicit_mugs_search/msgs_collection.h"
+
 #include <memory>
 #include <vector>
 
@@ -47,6 +49,11 @@ public:
     virtual StateID get_cardinally_best_state();
     virtual int get_max_solved_soft_goals() {return 0;}
     virtual void print_statistics() const;
+
+    virtual void set_abstract_task(std::shared_ptr<AbstractTask> task);
+
+    virtual MSGSCollection get_msgs() const;
+    virtual void init_msgs(MSGSCollection collection);
 };
 
 extern void add_pruning_options_to_parser(options::OptionParser &parser);

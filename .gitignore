@@ -7,3 +7,7 @@ __pycache__/
 /experiments/issue*/data/
 /misc/.tox/
 /misc/autodoc/downward-xmlrpc.secret
+.idea/
+.vscode
+fdr.json
+out.log

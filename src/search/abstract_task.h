@@ -43,6 +43,24 @@ struct FactPair {
     static const FactPair no_fact;
 };
 
+struct RelaxedTaskDefinition {
+    int id;
+    std::string name;
+    std::vector<FactPair> init;
+    std::string limit_type;
+    std::vector<FactPair> limits;
+    std::vector<int> lower_cover;
+    std::vector<int> upper_cover;
+
+    RelaxedTaskDefinition(){}
+
+    RelaxedTaskDefinition(int id, std::string name, std::vector<FactPair> init, std::string limit_type,
+                 std::vector<FactPair> limits, std::vector<int> lower_cover, std::vector<int> upper_cover)
+            : id(id), name(name), init(init), limit_type(limit_type), limits(limits), lower_cover(lower_cover) ,
+            upper_cover(upper_cover){
+    }
+};
+
 std::ostream &operator<<(std::ostream &os, const FactPair &fact_pair);
 
 namespace utils {
@@ -96,6 +114,8 @@ public:
 
     virtual int get_num_soft_goals() const = 0;
     virtual FactPair get_soft_goal_fact(int index) const = 0;
+
+    virtual std::vector<RelaxedTaskDefinition> get_relaxed_task_definitions() const = 0;
 
     virtual std::vector<int> get_initial_state_values() const = 0;
     /*

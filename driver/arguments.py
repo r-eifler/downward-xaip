@@ -239,6 +239,7 @@ def _set_components_and_inputs(parser, args):
     # swallow any that are provided. This is undocumented to avoid
     # cluttering the driver's --help output.
     if first == "translate":
+        args.explanation_settings = None
         if "--help" in args.translate_options or "-h" in args.translate_options:
             args.translate_inputs = []
         elif num_files == 1:
@@ -246,10 +247,28 @@ def _set_components_and_inputs(parser, args):
             domain_file = util.find_domain_filename(task_file)
             args.translate_inputs = [domain_file, task_file]
         elif num_files == 2:
-            args.translate_inputs = args.filenames
+            if 'domain' in args.filenames[0]:
+                domain_file = args.filenames[0]
+                task_file = args.filenames[1]
+                args.translate_inputs = [domain_file, task_file]
+                print("1 translate input (domain, problem): " + str(args.translate_inputs))
+            else: 
+                task_file, = args.filenames[0]
+                domain_file = util.find_domain_filename(task_file)
+                args.translate_inputs = [domain_file, task_file]
+                args.explanation_settings = args.filenames[1]
+                print("2 translate input (domain, problem): " + str(args.translate_inputs))
+                print("Explanation Settings : " + str(args.explanation_settings))
+        elif num_files == 3:
+            domain_file = args.filenames[0]
+            task_file = args.filenames[1]
+            args.translate_inputs = [domain_file, task_file]
+            args.explanation_settings = args.filenames[2]
+            print("3 translate input (domain, problem): " + str(args.translate_inputs))
+            print("Explanation Settings : " + str(args.explanation_settings))
         else:
             print_usage_and_exit_with_driver_input_error(
-                parser, "translator needs one or two input files")
+                parser, "translator needs one, two or three input files")
     elif first == "search":
         if "--help" in args.search_options:
             args.search_input = None

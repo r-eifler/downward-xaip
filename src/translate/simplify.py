@@ -476,14 +476,20 @@ class VarValueRenaming:
                 new_pairs.append((new_var_no, new_value))
         pairs[:] = new_pairs
 
-def build_renaming(dtgs):
+def build_renaming(dtgs, skip=[]):
     renaming = VarValueRenaming()
-    for dtg in dtgs:
-        renaming.register_variable(dtg.size, dtg.init, dtg.reachable())
+    for i, dtg in enumerate(dtgs):
+        if i in skip:
+            new_reachable = dtg.reachable()
+            for v in skip[i]:
+                new_reachable.add(v)
+            renaming.register_variable(dtg.size, dtg.init, new_reachable)
+        else:
+            renaming.register_variable(dtg.size, dtg.init, dtg.reachable())
     return renaming
 
 
-def filter_unreachable_propositions(sas_task):
+def filter_unreachable_propositions(sas_task, skip=[]):
     """We remove unreachable propositions and then prune variables
     with only one value.
 
@@ -510,7 +516,7 @@ def filter_unreachable_propositions(sas_task):
     if DEBUG:
         sas_task.validate()
     dtgs = build_dtgs(sas_task)
-    renaming = build_renaming(dtgs)
+    renaming = build_renaming(dtgs, skip=skip)
     # apply_to_task may raise Impossible if the goal is detected as
     # unreachable or TriviallySolvable if it has no goal. We let the
     # exceptions propagate to the caller.

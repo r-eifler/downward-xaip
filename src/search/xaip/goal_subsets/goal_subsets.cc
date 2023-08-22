@@ -28,6 +28,12 @@ void GoalSubsets::add(GoalSubsetHashSet subsets) {
     }
 }
 
+void GoalSubsets::add(GoalSubsets subsets) {
+    for(GoalSubset set : subsets){
+        this->subsets.insert(set);
+    }
+}
+
 
 vector<vector<string>> GoalSubsets::generate_string(vector<string> goal_facts_names) const{
     vector<vector<string>> facts_names;
