@@ -748,14 +748,15 @@ def main():
 
         #take a look
         # print("-------------- Properties compiled ----------------------")
-        # for v in sas_task.variables.value_names:
+        # for i, v in enumerate(sas_task.variables.value_names):
+        #     print(str(i) + ': ' + str(len(v)))
         #     print(v)
         #
         # print("Operators:")
         # for o in sas_task.operators:
         #     print(o.name)
         #     print(o.pre_post)
-            # print(o.cost)
+        #     print(o.cost)
 
         # print("Init:")
         # print(sas_task.init.values)
