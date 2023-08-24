@@ -145,7 +145,7 @@ GoalSubset MSGSCollection::get_reachable_soft_goals(GoalSubset reachable_goals){
 }
 
 GoalSubset MSGSCollection::get_reachable_hard_goals(GoalSubset reachable_goals){
-    GoalSubset hard_goals = GoalSubset(soft_goal_list.size());
+    GoalSubset hard_goals = GoalSubset(hard_goal_list.size());
     for(size_t i = 0; i < hard_goal_list.size(); i++){
         hard_goals.set(i, reachable_goals.contains(i));
     }
