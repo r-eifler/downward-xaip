@@ -123,6 +123,8 @@ class SASTask:
         for mutex in self.mutexes:
             task_size += mutex.get_encoding_size()
         task_size += self.goal.get_encoding_size()
+        task_size += self.hard_goal.get_encoding_size()
+        task_size += self.soft_goal.get_encoding_size()
         for op in self.operators:
             task_size += op.get_encoding_size()
         for axiom in self.axioms:

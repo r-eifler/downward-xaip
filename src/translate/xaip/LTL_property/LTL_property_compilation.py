@@ -104,8 +104,6 @@ def automataTransitionOperators(automata, sas_task, actionSets):
             pre_post.append((automata.accept_var, int(t.source.accepting), int(t.target.accepting), []))
             #print("Var: " + str(automata.accept_var) + " Source: " + str(t.source.accepting) + " -> " + str(t.target.accepting))
 
-            #transition name:
-            t_name = "("+ automata.name + ": " + t.name + ")"
             #encode the guard of the transition in the precondition of the action
             if not t.guard.isTrue():
                 # returns a disjunction of pre_post, such that every pre_post belongs to one action
@@ -119,7 +117,7 @@ def automataTransitionOperators(automata, sas_task, actionSets):
                 #print("Simplified: ")
                 #print(clauses)
 
-                for clause in clauses:
+                for index, clause in enumerate(clauses):
                     con = []
                     # for every literal find the corresponding variable
                     for l in clause:
@@ -152,12 +150,16 @@ def automataTransitionOperators(automata, sas_task, actionSets):
                         for var, value in new_values:
                             con.append((var, value, value, []))
 
+                    #transition name:
+                    t_name = "("+ automata.name + ": " + str(index) + ' ' + t.name + ")"
                     # combine the conditions of the guard with the state transition and accepting condition
                     final_pre_post = pre_post + con     # TODO check if this is still correct
                     #print(final_pre_post)
                     op = SASOperator(t_name,[], final_pre_post, 0)
                     new_operators.append(op)
             else:
+                #transition name:
+                t_name = "("+ automata.name + ": " + t.name + ")"
                 # if the guard is true no other conditions are necessary
                 #print("Guard True")
                 new_operators.append(SASOperator(t_name,[], pre_post, 0))
