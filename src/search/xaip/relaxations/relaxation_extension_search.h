@@ -33,8 +33,9 @@ class RelaxationExtensionSearch : public SearchEngine {
 
     TaskRelaxationTracker* taskRelaxationTracker;
     RelaxedTask* relaxedTask;
-    RelaxedTask* previous_relaxedTask;
     std::vector<StateID> pending_initial_states;
+
+    int expanded_states_up_to_prev_task = 0;
 
     void start_f_value_statistics(EvaluationContext &eval_context);
     void update_f_value_statistics(EvaluationContext &eval_context);

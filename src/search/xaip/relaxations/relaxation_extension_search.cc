@@ -375,12 +375,10 @@ bool RelaxationExtensionSearch::next_relaxed_task() {
 
     // update MSGS of finished iteration
     relaxedTask->add_msgs(pruning_method->get_msgs());
-    if (previous_relaxedTask){
-        relaxedTask->set_num_expanded_states(statistics.get_expanded() - previous_relaxedTask->get_num_expanded_states());
-    } 
-    else {
-        relaxedTask->set_num_expanded_states(statistics.get_expanded());
-    }
+
+    relaxedTask->set_num_expanded_states(statistics.get_expanded() - expanded_states_up_to_prev_task);
+    expanded_states_up_to_prev_task = statistics.get_expanded();
+
     relaxedTask->print();
     statistics.print_detailed_statistics();
 
@@ -394,7 +392,6 @@ bool RelaxationExtensionSearch::next_relaxed_task() {
         return false;
     }
 
-    previous_relaxedTask = relaxedTask;
     relaxedTask = taskRelaxationTracker->next_relaxed_task();
     cout << "Current task: " << relaxedTask->get_name() << endl;
 
