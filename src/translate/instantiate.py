@@ -102,9 +102,14 @@ def instantiate(task, model):
             sorted(instantiated_axioms), reachable_action_parameters)
 
 
-def explore(task):
-    prog = pddl_to_prolog.translate(task)
+def explore(task, xpp):
+    prog = pddl_to_prolog.translate(task, xpp)
     model = build_model.compute_model(prog)
+    # print('------------------- compute_model finished -------------------------')
+    # for atom in model:
+    #     if isinstance(atom.predicate, pddl.Action):
+    #         print(atom)
+    # print('------------------- compute_model finished -------------------------')
     with timers.timing("Completing instantiation"):
         return instantiate(task, model)
 

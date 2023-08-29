@@ -439,7 +439,6 @@ def translate_task(strips_to_sas, ranges, translation_key,
     with timers.timing("Processing axioms", block=True):
         axioms, axiom_layer_dict = axiom_rules.handle_axioms(actions, axioms, goals,
                                                              options.layer_strategy)
-
     if options.dump_task:
         # Remove init facts that don't occur in strips_to_sas: they're constant.
         nonconstant_init = filter(strips_to_sas.get, init)
@@ -523,7 +522,7 @@ def unsolvable_sas_task(msg):
 def pddl_to_sas(task, xpp=None):
     with timers.timing("Instantiating", block=True):
         (relaxed_reachable, atoms, actions, goal_list, axioms,
-         reachable_action_params) = instantiate.explore(task)
+         reachable_action_params) = instantiate.explore(task, xpp)
 
     # still want to explore the MUGS
     # if not relaxed_reachable:

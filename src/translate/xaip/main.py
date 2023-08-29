@@ -24,6 +24,14 @@ class PredFact:
 
     def __repr__(self):
         return self.pred + '(' + ','.join(self.args) + ')'
+    
+    def __eq__(self, other: object) -> bool:
+        if isinstance(other, PredFact):
+            return self.pred == other.pred and self.args == other.args
+        return False
+    
+    def __hash__(self):
+        return hash(''.join([self.pred] + self.args))
 
 
 class XPPFramework:
@@ -78,6 +86,14 @@ class XPPFramework:
         if self.options.compile_relaxed_tasks:
             print("Compile relaxed tasks operators into planning task")
             relaxation_compilation.compile_tasks_part_two()
+            
+    def get_additional_init_facts(self):
+        add_facts = set()
+        for relaxed_task in self.EXPSET.get_relaxed_tasks():
+            for f in relaxed_task.get_init_fact_names() + relaxed_task.get_limits_fact_names():
+                add_facts.add(PredFact.parse(f))
+        return add_facts
+            
 
     def get_needed_facts(self):
         needed_facts = set()
