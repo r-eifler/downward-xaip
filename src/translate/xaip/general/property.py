@@ -1,7 +1,7 @@
 
 class PlanProperty:
 
-    def __init__(self, name, formula):
+    def __init__(self, name, formula, weaker=[], stronger=[]):
         self.name = name
         self.formula = formula
         self.actionSets = []
@@ -10,6 +10,9 @@ class PlanProperty:
         # id of the sat variable in the SAS encoding
         self.var_id = None
         self.var_sat_goal_value = 1 # 1 means prop has to be satisfied
+        # names of plan properties that are weaker/stronger
+        self.weaker = weaker
+        self.stronger = stronger
 
     def add_action_set(self, s):
         self.actionSets.append(s)
@@ -19,6 +22,12 @@ class PlanProperty:
 
     def add_constant(self, c):
         self.constants.append(c)
+        
+    def add_weaker(self, name):
+        self.weaker.append(name)
+        
+    def add_stronger(self, name):
+        self.stronger.append(name)
 
     def update_action_set_name(self, oldName, newName):
         constant_map = {oldName: newName}

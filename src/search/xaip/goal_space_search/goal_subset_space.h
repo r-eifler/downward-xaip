@@ -7,6 +7,7 @@
 #include <vector>
 #include <iostream>
 #include <unordered_set>
+#include <unordered_map>
 #include "../goal_subsets/goal_subset.h"
 #include "../goal_subsets/goal_subsets.h"
 #include "../task_proxy.h"
@@ -117,8 +118,8 @@ public:
     std::vector<FactPair>  get_goals(const std::vector<FactPair>& all_goals) const;
     void print(const std::vector<FactPair>& all_goals);
     void print();
-    std::vector<GoalSpaceNode*> weaken() const;
-    std::vector<GoalSpaceNode*> strengthen() const;
+    std::vector<GoalSpaceNode*> weaken(std::unordered_map<int, goalsubset::GoalSubset>* next_weaker) const;
+    std::vector<GoalSpaceNode*> strengthen(std::unordered_map<int, goalsubset::GoalSubset>* next_stronger, goalsubset::GoalSubset weakest,  std::unordered_map<int, goalsubset::GoalSubset*>* connected_soft_goals) const;
 
 };
 
@@ -150,14 +151,22 @@ protected:
     // already generated subsets
     std::unordered_set<GoalSpaceNode*, MyNodeHashFunction, MyNodeEqualFunction> generated;
 
-    // root node of the goal subset space
-    GoalSpaceNode* root;
     GoalSpaceNode* current_node;
 
     std::vector<FactPair> soft_goal_list;
     std::vector<FactPair> hard_goal_list;
 
     std::vector<std::string> soft_goal_fact_names;
+
+    std::unordered_map<int, goalsubset::GoalSubset> next_weaker;
+    std::unordered_map<int, goalsubset::GoalSubset> next_stronger;
+    std::unordered_map<int, goalsubset::GoalSubset*> connected_soft_goals;
+    goalsubset::GoalSubset strongest;
+    goalsubset::GoalSubset weakest;
+
+    void init_soft_goal_relations();
+
+    void init_root_node();
 
     GoalSubsets generate_MUGS();
     GoalSubsets generate_MSGS();
@@ -168,10 +177,6 @@ public:
 
     bool continue_search(){
         return ! open_list.empty();
-    }
-
-    GoalSpaceNode* get_root() const {
-        return root;
     }
 
     GoalSpaceNode* get_current_node(){

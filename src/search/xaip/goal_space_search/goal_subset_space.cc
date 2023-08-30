@@ -6,6 +6,13 @@
 #include "../utils/system.h"
 
 #include <boost/dynamic_bitset.hpp>
+#include <boost/config.hpp>
+#include <boost/graph/adjacency_list.hpp>
+#include <boost/graph/strong_components.hpp>
+#include <iostream>
+#include <vector>
+
+using boost::make_iterator_range;
 
 using namespace std;
 using namespace options;
@@ -36,8 +43,29 @@ void printList(vector<FactPair> list){
     cout << endl;
 }
 
-vector<GoalSpaceNode*> GoalSpaceNode::weaken() const {
-    vector<GoalSubset> new_subsets = goals.weaken();
+vector<GoalSpaceNode*> GoalSpaceNode::weaken(std::unordered_map<int, goalsubset::GoalSubset>* next_weaker) const {
+    vector<GoalSubset> new_subsets;
+
+    for (long unsigned int i = 0; i < goals.size(); i++){
+        if(goals.contains(i)){
+            GoalSubset weaker_subset = goals.clone();
+            weaker_subset.remove(i);
+            new_subsets.push_back(GoalSubset(weaker_subset));
+            GoalSubset weaker_goals = (*next_weaker)[i];
+            if (! weaker_goals.is_empty()){
+                for (long unsigned int j = 0; j < weaker_goals.size(); j++){
+                    if(weaker_goals.contains(j)){
+                        GoalSubset weaker_subset = goals.clone();
+                        weaker_subset.remove(i);
+                        weaker_subset.add(j);
+                        new_subsets.push_back(GoalSubset(weaker_subset));
+                    }
+                }
+            }
+        }
+    }
+
+    
     vector<GoalSpaceNode*> new_nodes;
     for(GoalSubset subset : new_subsets){
         new_nodes.push_back(new GoalSpaceNode(subset));
@@ -45,8 +73,33 @@ vector<GoalSpaceNode*> GoalSpaceNode::weaken() const {
     return new_nodes;
 }
 
-vector<GoalSpaceNode*> GoalSpaceNode::strengthen() const{
-    vector<GoalSubset> new_subsets = goals.strengthen();
+vector<GoalSpaceNode*> GoalSpaceNode::strengthen(std::unordered_map<int, goalsubset::GoalSubset>* next_stronger, 
+    goalsubset::GoalSubset weakest, std::unordered_map<int, goalsubset::GoalSubset*>* connected_soft_goals) const{
+    vector<GoalSubset> new_subsets;
+
+    for (long unsigned int i = 0; i < goals.size(); i++){
+        if(!goals.contains(i)){
+            if (weakest.contains(i) && ((*connected_soft_goals)[i])->set_intersection(goals).is_empty()){
+                GoalSubset stronger_subset = goals.clone();
+                stronger_subset.add(i);
+                new_subsets.push_back(GoalSubset(stronger_subset));
+            }
+        }
+        else{
+            GoalSubset stronger_goals = (*next_stronger)[i];
+            if (! stronger_goals.is_empty()){
+                for (long unsigned int j = 0; j < stronger_goals.size(); j++){
+                    if(stronger_goals.contains(j)){
+                        GoalSubset stronger_subset = goals.clone();
+                        stronger_subset.remove(i);
+                        stronger_subset.add(j);
+                        new_subsets.push_back(GoalSubset(stronger_subset));
+                    }
+                }
+            }
+        }
+    }
+
     vector<GoalSpaceNode*> new_nodes;
     for(GoalSubset subset : new_subsets){
         new_nodes.push_back(new GoalSpaceNode(subset));
@@ -81,6 +134,7 @@ GoalSubsetSpace::GoalSubsetSpace(GoalsProxy goals, bool all_soft_goals, bool wea
 
     TaskProxy task_proxy = TaskProxy(*tasks::g_root_task.get());
 
+    // init goal list
     if(all_soft_goals){
         for(uint i = 0; i < goals.size(); i++){
             soft_goal_list.push_back(goals[i].get_pair());
@@ -104,32 +158,119 @@ GoalSubsetSpace::GoalSubsetSpace(GoalsProxy goals, bool all_soft_goals, bool wea
     for(uint i = 0; i < soft_goal_list.size(); i++){
         FactPair gp = soft_goal_list[i];
         soft_goal_fact_names[i] = task_proxy.get_variables()[gp.var].get_fact(gp.value).get_name();
+        cout << soft_goal_fact_names[i] << endl;
     }
 
-    boost::dynamic_bitset<> init_goals = weaken ? 
-        boost::dynamic_bitset<>(soft_goal_list.size(), (1U << soft_goal_list.size()) - 1) : 
-        boost::dynamic_bitset<>(soft_goal_list.size(), 0);
-    root = new GoalSpaceNode(GoalSubset(init_goals));
-    current_node = root;
-    open_list.push_back(root); 
-    generated.insert(root);
+    // init soft goal graph
+   this->init_soft_goal_relations();
+
+
+    // gen first nodes
+    this->init_root_node();
+    
+}
+
+void GoalSubsetSpace::init_soft_goal_relations(){
+
+    typedef boost::adjacency_list<boost::vecS, boost::listS, boost::directedS,
+            boost::property<boost::vertex_index_t, int>> Graph;
+
+    Graph soft_goal_graph(soft_goal_list.size());
+    auto idmap = get(boost::vertex_index, soft_goal_graph);
+    {
+        // initialize idmap
+        int id = 0;
+        for (auto& v : make_iterator_range(vertices(soft_goal_graph)))
+            idmap[v] = id++;
+    }
+
+    for(uint j = 0; j < soft_goal_list.size(); j++){
+        next_weaker[j] = GoalSubset(soft_goal_list.size());
+        next_stronger[j] = GoalSubset(soft_goal_list.size());
+    }
+
+    TaskProxy task_proxy = TaskProxy(*tasks::g_root_task.get());
+    SoftGoalGraphProxy soft_goal_graph_proxy = task_proxy.get_soft_goal_graph();
+    for (uint i = 0; i < soft_goal_graph_proxy.size(); i++){
+        FactProxy source_proxy = soft_goal_graph_proxy[i].first;
+        FactProxy target_proxy = soft_goal_graph_proxy[i].second;
+        uint source_index = 0;
+        uint target_index = 0;
+        for(uint j = 0; j < soft_goal_list.size(); j++){
+            if(soft_goal_list[j].value == source_proxy.get_pair().value && soft_goal_list[j].var == source_proxy.get_pair().var){
+                source_index = j;
+            }
+            if(soft_goal_list[j].value == target_proxy.get_pair().value && soft_goal_list[j].var == target_proxy.get_pair().var){
+                target_index = j;
+            }
+        }
+        next_weaker[source_index].add(target_index);
+        next_stronger[target_index].add(source_index);
+        boost::add_edge(vertex(source_index, soft_goal_graph), vertex(target_index, soft_goal_graph), soft_goal_graph);
+        boost::add_edge(vertex(target_index, soft_goal_graph), vertex(source_index, soft_goal_graph), soft_goal_graph);
+    }
+
+    // get weakest and strongest soft goals 
+    weakest = GoalSubset(soft_goal_list.size());
+    strongest = GoalSubset(soft_goal_list.size());
+    for(uint j = 0; j < soft_goal_list.size(); j++){
+        if (next_weaker[j].is_empty()){
+            weakest.add(j);
+        }
+        if (next_stronger[j].is_empty()){
+            strongest.add(j);
+        }
+    }
+
+    // strongly connected componenets
+    std::vector<int> c(num_vertices(soft_goal_graph));
+
+    int num = strong_components(
+        soft_goal_graph, make_iterator_property_map(c.begin(), idmap, c[0]));
+
+    std::unordered_map<int, goalsubset::GoalSubset*> strongly_connected_componenets;
+    for (int i = 0; i < num; i++){
+        strongly_connected_componenets[i] = new GoalSubset(soft_goal_list.size());
+    }
+    for (uint i = 0; i < c.size(); i++){
+        strongly_connected_componenets[c[i]]->add(i);
+        connected_soft_goals[i] = strongly_connected_componenets[c[i]];
+    }
+}
+
+void GoalSubsetSpace::init_root_node(){
+    if (weaken){
+        GoalSpaceNode* root = new GoalSpaceNode(strongest);
+        current_node = root;
+        open_list.push_back(root); 
+        generated.insert(root);
+    }
+    else {
+        for (GoalSubset gs : weakest.singelten_subsets()){
+            gs.print();
+            GoalSpaceNode* node = new GoalSpaceNode(gs);
+            current_node = node;
+            open_list.push_back(node); 
+            generated.insert(node);
+        }
+    }
 
     cout << "Initial goal subset: " << endl;
     current_node->print();
 }
 
- void GoalSubsetSpace::current_goals_solved(bool solved, bool propagate){
-        if (solved)
-            current_node->solved(propagate);
-        else
-            current_node->not_solved(propagate);
-    }
+void GoalSubsetSpace::current_goals_solved(bool solved, bool propagate){
+    if (solved)
+        current_node->solved(propagate);
+    else
+        current_node->not_solved(propagate);
+}
 
 
 void GoalSubsetSpace::expand(){
     // cout << "------------ EXPAND ------------" << endl;
 
-    vector<GoalSpaceNode*> new_nodes = weaken ? current_node->weaken() : current_node->strengthen();
+    vector<GoalSpaceNode*> new_nodes = weaken ? current_node->weaken(&next_weaker) : current_node->strengthen(&next_stronger, weakest, &connected_soft_goals);
     
     // cout << "generated:"  << endl;
     // for (GoalSpaceNode* node : generated){

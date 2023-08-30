@@ -104,6 +104,14 @@ int DelegatingTask::get_num_soft_goals() const {
     return parent->get_num_soft_goals();
 }
 
+int DelegatingTask::get_num_soft_goal_graph_edges() const {
+    return parent->get_num_soft_goal_graph_edges();
+}    
+
+pair<FactPair,FactPair> DelegatingTask::get_soft_goal_graph_edge(int index) const{
+    return parent->get_soft_goal_graph_edge(index);
+}
+
 FactPair DelegatingTask::get_soft_goal_fact(int index) const {
     return parent->get_soft_goal_fact(index);
 }
@@ -111,6 +119,7 @@ FactPair DelegatingTask::get_soft_goal_fact(int index) const {
 FactPair DelegatingTask::get_goal_fact(int index) const {
     return parent->get_goal_fact(index);
 }
+
 
 vector<RelaxedTaskDefinition> DelegatingTask::get_relaxed_task_definitions() const {
     return parent->get_relaxed_task_definitions();

@@ -60,6 +60,9 @@ public:
     virtual int get_num_soft_goals() const override;
     virtual FactPair get_soft_goal_fact(int index) const override;
 
+    virtual int get_num_soft_goal_graph_edges() const override;
+    virtual std::pair<FactPair,FactPair> get_soft_goal_graph_edge(int index) const override;
+
     virtual std::vector<RelaxedTaskDefinition> get_relaxed_task_definitions() const override;
 
     virtual std::vector<int> get_initial_state_values() const override;

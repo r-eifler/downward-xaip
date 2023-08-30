@@ -22,6 +22,11 @@ GoalSubset::GoalSubset(size_t max_num_goals, size_t index){
 GoalSubset::GoalSubset(boost::dynamic_bitset<> goals): 
     goals(goals) {}
 
+
+GoalSubset GoalSubset::clone() const{
+    return GoalSubset(this->goals);
+}
+
 vector<GoalSubset> GoalSubset::strengthen() const{
     vector<GoalSubset> new_subsets;
 

@@ -115,6 +115,9 @@ public:
     virtual int get_num_soft_goals() const = 0;
     virtual FactPair get_soft_goal_fact(int index) const = 0;
 
+    virtual int get_num_soft_goal_graph_edges() const = 0;
+    virtual std::pair<FactPair,FactPair> get_soft_goal_graph_edge(int index) const = 0;
+
     virtual std::vector<RelaxedTaskDefinition> get_relaxed_task_definitions() const = 0;
 
     virtual std::vector<int> get_initial_state_values() const = 0;

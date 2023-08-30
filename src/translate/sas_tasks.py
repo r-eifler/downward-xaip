@@ -22,8 +22,9 @@ class SASTask:
         self.axioms = sorted(axioms, key=lambda axiom: (
             axiom.condition, axiom.effect))
         self.metric = metric
-        self.soft_goal = SASSoftGoal()
         self.hard_goal = SASHardGoal()
+        self.soft_goal = SASSoftGoal()
+        self.soft_goal_graph = SASGoalGraph()
         self.relaxed_tasks = []
         if DEBUG:
             self.validate()
@@ -33,6 +34,10 @@ class SASTask:
 
     def addSoftGoalFact(self, pair):
         self.soft_goal.add_goal_fact(pair)
+        
+    def addSoftGoalGraph(self, edges):
+        for s, t in edges:
+            self.soft_goal_graph.add_edge(s,t)
 
     def addRelaxedTask(self, t):
         self.relaxed_tasks.append(SASRelaxedTask(t.id, t.name, t.init, t.limit_type, t.limits, t.lower_cover, t.upper_cover))
@@ -107,6 +112,7 @@ class SASTask:
         self.goal.output(stream)
         self.hard_goal.output(stream)
         self.soft_goal.output(stream)
+        self.soft_goal_graph.output(stream)
         print(len(self.relaxed_tasks), file=stream)
         for t in self.relaxed_tasks:
             t.output(stream)
@@ -295,13 +301,39 @@ class SASSoftGoal(SASGoal):
     def __init__(self):
         super().__init__()
         self.goal_type = 'soft_goal'
-
-
+        
 class SASHardGoal(SASGoal):
 
     def __init__(self):
         super().__init__()
         self.goal_type = 'hard_goal'
+        
+class SASGoalGraph:
+    def __init__(self):
+        self.edges = []
+        
+    def __contains__(self, edge):
+        return edge in self.edges
+
+    def add_edge(self, source, target):
+        self.edges.append((source, target))
+        
+    def validate(self, variables):
+        pass
+
+    def dump(self):
+        for s, t in self.edges:
+            print("v%d: %d -> v%d: %d" % (s[0], s[1], t[0], t[1]))
+
+    def output(self, stream):
+        print("begin_soft_goal_graph" , file=stream)
+        print(len(self.edges), file=stream)
+        for s, t in self.edges:
+            print(s[0], s[1], t[0], t[1], file=stream)
+        print("end_soft_goal_graph", file=stream)
+
+    def get_encoding_size(self):
+        return len(self.edges)
 
 
 class SASOperator:

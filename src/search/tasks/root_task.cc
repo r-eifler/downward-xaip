@@ -63,6 +63,7 @@ class RootTask : public AbstractTask {
     vector<FactPair> goals;
     vector<FactPair> hard_goals;
     vector<FactPair> soft_goals;
+    vector<pair<FactPair,FactPair>> soft_goal_graph;
     vector<RelaxedTaskDefinition> relaxed_tasks;
 
     const ExplicitVariable &get_variable(int var) const;
@@ -110,6 +111,9 @@ public:
 
     virtual int get_num_soft_goals() const override;
     virtual FactPair get_soft_goal_fact(int index) const override;
+
+    virtual int get_num_soft_goal_graph_edges() const override;
+    virtual pair<FactPair,FactPair> get_soft_goal_graph_edge(int index) const override;
 
     virtual vector<RelaxedTaskDefinition> get_relaxed_task_definitions() const override;
 
@@ -171,6 +175,20 @@ vector<FactPair> read_facts(istream &in) {
         conditions.push_back(condition);
     }
     return conditions;
+}
+
+vector<pair<FactPair,FactPair>> read_fact_pairs(istream &in) {
+    int count;
+    in >> count;
+    vector<pair<FactPair,FactPair>> pairs;
+    pairs.reserve(count);
+    for (int i = 0; i < count; ++i) {
+        FactPair p1 = FactPair::no_fact;
+        FactPair p2 = FactPair::no_fact;
+        in >> p1.var >> p1.value >> p2.var >> p2.value;
+        pairs.push_back(make_pair(p1, p2));
+    }
+    return pairs;
 }
 
 vector<int> read_numbers(istream &in) {
@@ -349,6 +367,13 @@ vector<FactPair> read_soft_goal(istream &in) {
     return goals;
 }
 
+vector<pair<FactPair,FactPair>> read_soft_goal_graph(istream &in) {
+    check_magic(in, "begin_soft_goal_graph");
+    vector<pair<FactPair,FactPair>> edges = read_fact_pairs(in);
+    check_magic(in, "end_soft_goal_graph");
+    return edges;
+}
+
 RelaxedTaskDefinition read_relaxed_task(istream &in) {
     check_magic(in, "begin_relaxed_task");
     int id;
@@ -413,6 +438,7 @@ RootTask::RootTask(istream &in) {
     goals = read_goal(in);
     hard_goals = read_hard_goal(in);
     soft_goals = read_soft_goal(in);
+    soft_goal_graph =  read_soft_goal_graph(in);
     relaxed_tasks = read_relaxed_tasks(in);
 
     check_facts(goals, variables);
@@ -566,6 +592,14 @@ int RootTask::get_num_soft_goals() const {
 
 FactPair RootTask::get_soft_goal_fact(int index) const {
     return soft_goals[index];
+}
+
+int RootTask::get_num_soft_goal_graph_edges() const{
+    return soft_goal_graph.size();
+}
+
+pair<FactPair,FactPair> RootTask::get_soft_goal_graph_edge(int index) const{
+    return soft_goal_graph[index];
 }
 
 vector<RelaxedTaskDefinition> RootTask::get_relaxed_task_definitions() const {

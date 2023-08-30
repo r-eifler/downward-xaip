@@ -6,8 +6,8 @@ import os
 
 class LTLProperty(PlanProperty):
 
-    def __init__(self, name, formula, constants):
-        super().__init__(name, formula)
+    def __init__(self, name, formula, constants, weaker=[], stronger=[]):
+        super().__init__(name, formula, weaker, stronger)
         self.constants = constants
 
         # automaton representation
@@ -63,7 +63,13 @@ class LTLProperty(PlanProperty):
     @staticmethod
     def fromJSON(json, typeObjectMap):
         (formula, rest, constants) = logic_formula.parseFormula(json['formula'])
-        new_property = LTLProperty(json['name'], formula, constants)
+        weaker = []
+        stronger = []
+        if 'weaker' in json:
+            weaker = json['weaker']
+        if 'stronger' in json:
+            stronger = json['stronger']
+        new_property = LTLProperty(json['name'], formula, constants, weaker, stronger)
         for actionSets_json in json['actionSets']:
             new_property.add_action_set(ActionSet.fromJSON(actionSets_json, typeObjectMap, True))
         return new_property

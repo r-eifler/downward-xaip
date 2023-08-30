@@ -28,6 +28,7 @@ class FactsProxy;
 class GoalsProxy;
 class HardGoalsProxy;
 class SoftGoalsProxy;
+class SoftGoalgraphProxy;
 class RelaxedTasksProxy;
 class OperatorProxy;
 class OperatorsProxy;
@@ -585,6 +586,29 @@ public:
     }
 };
 
+class SoftGoalGraphProxy {
+protected:
+    const AbstractTask *task;
+public:
+    using ItemType = FactProxy;
+    explicit SoftGoalGraphProxy(const AbstractTask &task)
+        : task(&task) {}
+    virtual ~SoftGoalGraphProxy() = default;
+
+    std::size_t size() const{
+        return task->get_num_soft_goal_graph_edges();
+    }
+
+    std::pair<FactProxy,FactProxy> operator[](std::size_t index){
+        std::pair<FactPair, FactPair> edge = task->get_soft_goal_graph_edge(index);
+        return std::make_pair(FactProxy(*task, edge.first), FactProxy(*task, edge.second));
+    };
+
+    bool empty() const {
+        return size() == 0;
+    }
+};
+
 class RelaxedTasksProxy {
     const AbstractTask *task;
 public:
@@ -735,6 +759,10 @@ public:
 
     SoftGoalsProxy get_soft_goals() const {
         return SoftGoalsProxy(*task);
+    }
+
+    SoftGoalGraphProxy get_soft_goal_graph() const {
+        return SoftGoalGraphProxy(*task);
     }
 
     State create_state(std::vector<int> &&state_values) const {

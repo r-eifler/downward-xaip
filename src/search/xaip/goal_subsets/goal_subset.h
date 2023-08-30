@@ -5,6 +5,7 @@
 #include <boost/dynamic_bitset.hpp>
 #include <vector>
 #include <iostream>
+#include <unordered_map>
 
 using ulong = unsigned long;
 
@@ -30,6 +31,10 @@ class GoalSubset {
 
     void add(size_t index) {
         goals[index] = true;
+    };
+
+    void remove(size_t index) {
+        goals[index] = false;
     };
 
     bool is_subset_of(GoalSubset set) const{
@@ -80,6 +85,11 @@ class GoalSubset {
         goals[index] = value; 
     }
 
+    void set_all() { 
+        for (uint i = 0; i < goals.size(); i++)
+            goals[i] = true; 
+    }
+
     bool operator==(const GoalSubset &other) const{ 
         return goals == other.goals;
     }
@@ -100,6 +110,7 @@ class GoalSubset {
         return goals.all();
     }
 
+    GoalSubset clone() const;
     std::vector<GoalSubset> weaken() const;
     std::vector<GoalSubset> strengthen() const;
 
