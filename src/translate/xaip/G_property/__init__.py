@@ -1,1 +1,0 @@
-from .goal_property_compilation import compileGoalProperties
