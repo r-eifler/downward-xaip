@@ -1,1 +1,0 @@
-from  .entailCompilation import addEntailmentsToTask
