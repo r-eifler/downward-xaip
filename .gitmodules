@@ -1,0 +1,3 @@
+[submodule "src/translate/xaip"]
+	path = src/translate/xaip
+	url = git@github.com:r-eifler/xaip-FD-translate.git
