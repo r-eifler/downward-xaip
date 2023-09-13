@@ -222,7 +222,7 @@ GoalSubsets GoalSubsets::cross_product(GoalSubsets sets) const{
 }
 
 
-GoalSubsets GoalSubsets::minimal_hitting_sets(){
+GoalSubsets GoalSubsets::minimal_hitting_sets(vector<GoalSubset> stronger_subsets){
 
     GoalSubsets hitting_set = GoalSubsets();
 
@@ -245,6 +245,35 @@ GoalSubsets GoalSubsets::minimal_hitting_sets(){
         hitting_set = hitting_set.cross_product(singeltons);
         hitting_set.minimize_non_minimal_subsets();
         it++;
-    } 
-    return hitting_set;
+    }
+    // hitting_set.print_subsets();
+    // cout << "--------------------------" << endl;
+    GoalSubsets intermediate_sets = GoalSubsets();
+    for(GoalSubset hit_set: hitting_set){
+        for(size_t i = 0; i < hit_set.size(); i++){
+            if(hit_set.contains(i)){
+                hit_set.in_place_or(stronger_subsets[i]);
+                // gs.add(i);
+            }
+        }
+        intermediate_sets.add(hit_set);
+    }
+    // intermediate_sets.print_subsets();
+    // cout << "--------------------------" << endl;
+    intermediate_sets.minimize_non_minimal_subsets();
+    // intermediate_sets.print_subsets();
+    // cout << "--------------------------" << endl;
+    GoalSubsets final_set = GoalSubsets();
+    for(GoalSubset inter_set: intermediate_sets){
+        for(size_t i = 0; i < inter_set.size(); i++){
+            if(inter_set.contains(i)){
+                inter_set.remove_goals_in(stronger_subsets[i]);
+                inter_set.add(i);
+            }
+        }
+        final_set.add(inter_set);
+    }
+    // final_set.print_subsets();
+    // cout << "--------------------------" << endl;
+    return final_set;
 }

@@ -155,21 +155,21 @@ SearchStatus DualizationSearch::step() {
     // satisfiable_set.print();
     // cout << "------------------------------------" << endl;
 
-    comp_current_MSGS.add(satisfiable_set.complement());
+    // comp_current_MSGS.add(satisfiable_set.complement());
 
-    candidates_MUGS = comp_current_MSGS.minimal_hitting_sets();
+    // candidates_MUGS = comp_current_MSGS.minimal_hitting_sets();
 
-    satisfiable_set = GoalSubset(); //TODO an max num goals;
+    // satisfiable_set = GoalSubset(); //TODO an max num goals;
 
-    for(GoalSubset test : candidates_MUGS.minus(current_MUGS)){
-        if(call_search_engine(test)){
-            satisfiable_set = test;
-            break;
-        }
-        else{
-            current_MUGS.add(test);
-        }
-    }
+    // for(GoalSubset test : candidates_MUGS.minus(current_MUGS)){
+    //     if(call_search_engine(test)){
+    //         satisfiable_set = test;
+    //         break;
+    //     }
+    //     else{
+    //         current_MUGS.add(test);
+    //     }
+    // }
 
     // cout << "----------------------------------------------------------------------------" << endl;
     return !satisfiable_set.is_empty() ? IN_PROGRESS : FINISHED;

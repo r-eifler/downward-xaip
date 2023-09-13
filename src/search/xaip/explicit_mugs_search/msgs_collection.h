@@ -31,7 +31,12 @@ private:
     StateID best_state = StateID::no_state;
     int max_num_solved_soft_goals = 0;
 
+    std::vector<goalsubset::GoalSubset> stronger_soft_goals;
+    std::vector<goalsubset::GoalSubset> weaker_soft_goals;
+
 protected:
+
+    void init_soft_goal_relations();
 
     goalsubset::GoalSubset get_satisfied_soft_goals(const State &state);
     goalsubset::GoalSubset get_satisfied_hard_goals(const State &state);

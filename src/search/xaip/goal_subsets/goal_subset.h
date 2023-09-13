@@ -37,6 +37,22 @@ class GoalSubset {
         goals[index] = false;
     };
 
+    void in_place_or(GoalSubset g) {
+        for(long unsigned int i = 0; i < goals.size(); i++){
+            if(g.contains(i)){
+                this->add(i);
+            }
+        }
+    };
+
+    void remove_goals_in(GoalSubset g) {
+        for(long unsigned int i = 0; i < goals.size(); i++){
+            if(g.contains(i)){
+                this->remove(i);
+            }
+        }
+    };
+
     bool is_subset_of(GoalSubset set) const{
         if(goals.size() != set.size()){
             return false;

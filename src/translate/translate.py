@@ -750,7 +750,7 @@ def main():
         # for i, v in enumerate(sas_task.variables.value_names):
         #     print(str(i) + ': ' + str(len(v)))
         #     print(v)
-        #
+        
         # print("Operators:")
         # for o in sas_task.operators:
         #     print(o.name)
@@ -760,12 +760,12 @@ def main():
         # print("Init:")
         # print(sas_task.init.values)
 
-        print("Goal:")
-        print(sas_task.goal.pairs)
-        print("Hard Goal:")
-        print(sas_task.hard_goal.pairs)
-        print("Soft Goal:")
-        print(sas_task.soft_goal.pairs)
+        # print("Goal:")
+        # print(sas_task.goal.pairs)
+        # print("Hard Goal:")
+        # print(sas_task.hard_goal.pairs)
+        # print("Soft Goal:")
+        # print(sas_task.soft_goal.pairs)
     else:
         sas_task = pddl_to_sas(task)
         dump_statistics(sas_task)

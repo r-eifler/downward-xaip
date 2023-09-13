@@ -47,7 +47,7 @@ public:
     GoalSubsets cross_product(GoalSubsets sets) const;
     GoalSubsets complement() const;
     GoalSubsets minus(GoalSubsets sets) const;
-    GoalSubsets minimal_hitting_sets();
+    GoalSubsets minimal_hitting_sets(std::vector<goalsubset::GoalSubset> stronger_subsets);
 };
 
 

@@ -5,6 +5,9 @@
 #include <fstream>
 #include <bitset>
 
+#include <boost/graph/adjacency_list.hpp>
+#include <boost/graph/depth_first_search.hpp>
+
 using namespace std;
 using namespace goalsubset;
 
@@ -50,11 +53,8 @@ void MSGSCollection::initialize(shared_ptr<AbstractTask> task_) {
 
     //sort goal facts according to there variable id
     std::sort(hard_goal_list.begin(), hard_goal_list.end());
-
-    // cout << "#soft goals: " << soft_goal_list.size() << endl;
-
-    //sort goal facts according to there variable id
     std::sort(soft_goal_list.begin(), soft_goal_list.end());
+    std::sort(all_goal_list.begin(), all_goal_list.end());
 
     soft_goal_fact_names = std::vector<std::string>(soft_goal_list.size());
     for(uint i = 0; i < soft_goal_list.size(); i++){
@@ -67,7 +67,90 @@ void MSGSCollection::initialize(shared_ptr<AbstractTask> task_) {
     // init with empty set 
     this->add(GoalSubset(soft_goal_list.size()));
 
+    // init stronger soft goal 
+    this->init_soft_goal_relations();
+
     overall_timer.reset();
+}
+
+void MSGSCollection::init_soft_goal_relations(){
+    cout << "###############################################" << endl;
+
+    for(uint i = 0; i < soft_goal_list.size(); i++){
+        stronger_soft_goals.push_back(GoalSubset(soft_goal_list.size()));
+        weaker_soft_goals.push_back(GoalSubset(soft_goal_list.size()));
+    }
+    TaskProxy task_proxy = TaskProxy(*tasks::g_root_task.get());
+    SoftGoalGraphProxy soft_goal_graph_proxy = task_proxy.get_soft_goal_graph();
+    if(soft_goal_graph_proxy.size() == 0){
+        return;
+    }
+
+    typedef boost::adjacency_list<boost::listS, boost::vecS, boost::directedS> MyGraph;
+    typedef boost::graph_traits<MyGraph>::vertex_descriptor MyVertex;
+
+    class MyVisitor : public boost::default_dfs_visitor
+    {
+        MyVertex init = 0;
+        vector<GoalSubset>* collected_soft_goals;
+
+        public:
+            MyVisitor(vector<GoalSubset>* collected_soft_goals) {
+                this->collected_soft_goals = collected_soft_goals;
+            }
+
+            void discover_vertex(MyVertex v, const MyGraph& g) const
+            {
+                // cout << "State: " <<  v << endl;
+                (*collected_soft_goals)[init].add(v);
+                return;
+            }
+
+            void start_vertex(MyVertex v, const MyGraph& g)
+            {
+                // cout << "Start State: " <<  v << endl;
+                init = v;
+                return;
+            }
+    };
+
+    MyGraph g_weaker;
+    MyGraph g_stronger;
+
+    for (uint i = 0; i < soft_goal_graph_proxy.size(); i++){
+        FactProxy source_proxy = soft_goal_graph_proxy[i].first;
+        FactProxy target_proxy = soft_goal_graph_proxy[i].second;
+        uint source_index = 0;
+        uint target_index = 0;
+        for(uint j = 0; j < soft_goal_list.size(); j++){
+            if(soft_goal_list[j].value == source_proxy.get_pair().value && soft_goal_list[j].var == source_proxy.get_pair().var){
+                source_index = j;
+            }
+            if(soft_goal_list[j].value == target_proxy.get_pair().value && soft_goal_list[j].var == target_proxy.get_pair().var){
+                target_index = j;
+            }
+        }
+        // edges are from stronger to weaker, here we need weaker to stronger
+        boost::add_edge(source_index, target_index, g_weaker);
+        boost::add_edge(target_index, source_index, g_stronger);
+        cout << "add edge: " << target_index << " " << source_index << endl;
+    }
+
+    MyVisitor vis_stronger(&stronger_soft_goals);
+    MyVisitor vis_weaker(&weaker_soft_goals);
+    cout << "#################### DFS ###########################" << endl;
+
+    for(uint i = 0; i < soft_goal_list.size(); i++){
+        // cout << "Start: " << i << endl;
+	    boost::depth_first_search(g_weaker, boost::visitor(vis_weaker).root_vertex(i));
+        boost::depth_first_search(g_stronger, boost::visitor(vis_stronger).root_vertex(i));
+    }
+
+    // for(uint i = 0; i < soft_goal_list.size(); i++){
+    //     cout << i << endl;
+    //     stronger_soft_goals[i].print();
+    //     weaker_soft_goals[i].print();
+    // }
 }
 
 void MSGSCollection::add_and_mimize(GoalSubset subset){
@@ -90,6 +173,7 @@ bool MSGSCollection::contains_superset(GoalSubset subset){
     }
     return false;
 }
+
 
 bool MSGSCollection::contains_strict_superset(GoalSubset subset){
     for(GoalSubset s : subsets){
@@ -173,6 +257,10 @@ bool MSGSCollection::prune(const State &state, vector<int> costs, int remaining_
     // cout<< "-------------- CURRENT MSGS ------------------" << endl;
     // this->print_subsets();
     // cout<< "-------------- CURRENT MSGS ------------------" << endl;
+    // for(size_t i = 0; i < state.size(); i++){
+    //     cout << i << " = " << state[i].get_value() << endl;
+    // }
+
 
     GoalSubset reachable_goals = GoalSubset(all_goal_list.size());
     for(size_t i = 0; i < all_goal_list.size(); i++){
@@ -180,10 +268,15 @@ bool MSGSCollection::prune(const State &state, vector<int> costs, int remaining_
         reachable_goals.set(i, costs[i] != -1 && costs[i] < remaining_cost); 
     }
 
-    // cout << "reachable goals: " << endl;
+    // cout << "reachable goals: ";
     // reachable_goals.print();
 
     if(hard_goal_list.size() == 0){
+        for(size_t i = 0; i < reachable_goals.size(); i++){
+            if(reachable_goals.contains(i)){
+                reachable_goals.in_place_or(weaker_soft_goals[i]);
+            }
+        }
         if(this->contains_superset(reachable_goals)){
             // cout<< "contains superset" << endl;
             num_pruned_states += 1;
@@ -192,11 +285,17 @@ bool MSGSCollection::prune(const State &state, vector<int> costs, int remaining_
         }
         else{
             GoalSubset satisfied_goals = get_satisfied_all_goals(state);
+            for(size_t i = 0; i < satisfied_goals.size(); i++){
+                if(satisfied_goals.contains(i)){
+                    satisfied_goals.in_place_or(weaker_soft_goals[i]);
+                }
+            }
             update_best_state(state.get_id(), satisfied_goals.count());
             assert(reachable_goals.is_superset_of(satisfied_goals));
-            // cout << "satisfied goals: " << endl;
+            // cout << "satisfied goals: ";
             // satisfied_goals.print();
             if(!contains_superset(satisfied_goals)){
+                // cout << "--> add_and_mimize";
                 this->add_and_mimize(satisfied_goals);
                 // cout << "Num states since last add new goal subset: " << num_visited_states_since_last_added << endl;
                 num_visited_states_since_last_added = 0;
@@ -212,9 +311,22 @@ bool MSGSCollection::prune(const State &state, vector<int> costs, int remaining_
         GoalSubset reachable_hard_goals = get_reachable_hard_goals(reachable_goals);
         GoalSubset reachable_soft_goals = get_reachable_soft_goals(reachable_goals);
 
+        for(size_t i = 0; i < reachable_soft_goals.size(); i++){
+            if(reachable_soft_goals.contains(i)){
+                reachable_soft_goals.in_place_or(weaker_soft_goals[i]);
+            }
+        }
+        for(size_t i = 0; i < satisfied_soft_goals.size(); i++){
+            if(satisfied_soft_goals.contains(i)){
+                satisfied_soft_goals.in_place_or(weaker_soft_goals[i]);
+            }
+        }
+        // for(size_t i = 0; i < soft_goal_fact_names.size(); i++){
+        //     cout << i << " " << soft_goal_fact_names[i] << ": " << reachable_soft_goals.contains(i) << endl;
+        // }
+
         bool superset_alreday_readched = this->contains_superset(reachable_soft_goals);
 
-        //TODO does it make sense to check whether a superset of soft goals is reachable?
         if(! reachable_hard_goals.all() || superset_alreday_readched){
             // cout<< "contains superset" << endl;
             num_pruned_states += 1;
@@ -262,13 +374,27 @@ bool MSGSCollection::track(const State &state){
 }
 
 GoalSubsets MSGSCollection::get_mugs() const{
-    return this->complement().minimal_hitting_sets();
+    GoalSubsets complement = this->complement();
+    // GoalSubsets reduced_complements;
+    // for(GoalSubset gs : complement){
+    //     cout << "--------------" << endl;
+    //     gs.print();
+    //     for(size_t i = 0; i < gs.size(); i++){
+    //         if(gs.contains(i)){
+    //             gs.in_place_or(weaker_soft_goals[i]);
+    //             // gs.add(i);
+    //         }
+    //     }
+    //     gs.print();
+    //     reduced_complements.add(gs);
+    // }
+    return complement.minimal_hitting_sets(weaker_soft_goals);
 }
 
 void MSGSCollection::print() const {
 
     utils::Timer hit_timer;
-    GoalSubsets mugs = this->complement().minimal_hitting_sets();
+    GoalSubsets mugs = get_mugs();
     hit_timer.stop();
 
     cout << "HIT computation: " << hit_timer << endl;
