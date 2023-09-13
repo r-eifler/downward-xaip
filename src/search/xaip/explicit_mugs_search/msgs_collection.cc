@@ -11,6 +11,10 @@
 using namespace std;
 using namespace goalsubset;
 
+MSGSCollection::MSGSCollection(bool use_subset_dominance) {
+    this->use_subset_dominance = use_subset_dominance;
+}
+
 MSGSCollection::MSGSCollection() {}
 
 void MSGSCollection::initialize(shared_ptr<AbstractTask> task_) {
@@ -82,7 +86,7 @@ void MSGSCollection::init_soft_goal_relations(){
     }
     TaskProxy task_proxy = TaskProxy(*tasks::g_root_task.get());
     SoftGoalGraphProxy soft_goal_graph_proxy = task_proxy.get_soft_goal_graph();
-    if(soft_goal_graph_proxy.size() == 0){
+    if(soft_goal_graph_proxy.size() == 0 || ! use_subset_dominance){
         return;
     }
 
@@ -272,9 +276,11 @@ bool MSGSCollection::prune(const State &state, vector<int> costs, int remaining_
     // reachable_goals.print();
 
     if(hard_goal_list.size() == 0){
-        for(size_t i = 0; i < reachable_goals.size(); i++){
-            if(reachable_goals.contains(i)){
-                reachable_goals.in_place_or(weaker_soft_goals[i]);
+        if (use_subset_dominance){
+            for(size_t i = 0; i < reachable_goals.size(); i++){
+                if(reachable_goals.contains(i)){
+                    reachable_goals.in_place_or(weaker_soft_goals[i]);
+                }
             }
         }
         if(this->contains_superset(reachable_goals)){
@@ -285,9 +291,11 @@ bool MSGSCollection::prune(const State &state, vector<int> costs, int remaining_
         }
         else{
             GoalSubset satisfied_goals = get_satisfied_all_goals(state);
-            for(size_t i = 0; i < satisfied_goals.size(); i++){
-                if(satisfied_goals.contains(i)){
-                    satisfied_goals.in_place_or(weaker_soft_goals[i]);
+            if (use_subset_dominance){
+                for(size_t i = 0; i < satisfied_goals.size(); i++){
+                    if(satisfied_goals.contains(i)){
+                        satisfied_goals.in_place_or(weaker_soft_goals[i]);
+                    }
                 }
             }
             update_best_state(state.get_id(), satisfied_goals.count());
@@ -311,14 +319,16 @@ bool MSGSCollection::prune(const State &state, vector<int> costs, int remaining_
         GoalSubset reachable_hard_goals = get_reachable_hard_goals(reachable_goals);
         GoalSubset reachable_soft_goals = get_reachable_soft_goals(reachable_goals);
 
-        for(size_t i = 0; i < reachable_soft_goals.size(); i++){
-            if(reachable_soft_goals.contains(i)){
-                reachable_soft_goals.in_place_or(weaker_soft_goals[i]);
+        if (use_subset_dominance){
+            for(size_t i = 0; i < reachable_soft_goals.size(); i++){
+                if(reachable_soft_goals.contains(i)){
+                    reachable_soft_goals.in_place_or(weaker_soft_goals[i]);
+                }
             }
-        }
-        for(size_t i = 0; i < satisfied_soft_goals.size(); i++){
-            if(satisfied_soft_goals.contains(i)){
-                satisfied_soft_goals.in_place_or(weaker_soft_goals[i]);
+            for(size_t i = 0; i < satisfied_soft_goals.size(); i++){
+                if(satisfied_soft_goals.contains(i)){
+                    satisfied_soft_goals.in_place_or(weaker_soft_goals[i]);
+                }
             }
         }
         // for(size_t i = 0; i < soft_goal_fact_names.size(); i++){
@@ -375,20 +385,10 @@ bool MSGSCollection::track(const State &state){
 
 GoalSubsets MSGSCollection::get_mugs() const{
     GoalSubsets complement = this->complement();
-    // GoalSubsets reduced_complements;
-    // for(GoalSubset gs : complement){
-    //     cout << "--------------" << endl;
-    //     gs.print();
-    //     for(size_t i = 0; i < gs.size(); i++){
-    //         if(gs.contains(i)){
-    //             gs.in_place_or(weaker_soft_goals[i]);
-    //             // gs.add(i);
-    //         }
-    //     }
-    //     gs.print();
-    //     reduced_complements.add(gs);
-    // }
-    return complement.minimal_hitting_sets(weaker_soft_goals);
+    if (use_subset_dominance){
+        return complement.minimal_hitting_sets(weaker_soft_goals);
+    }
+    return complement.minimal_hitting_sets();
 }
 
 void MSGSCollection::print() const {

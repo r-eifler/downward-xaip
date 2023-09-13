@@ -21,7 +21,7 @@ ReachableGoalSubsetMaxHeuristic::ReachableGoalSubsetMaxHeuristic(const Options &
       cost_bound(opts.get<int>("cost_bound")),
       is_cost_bounded(cost_bound > 0){
 
-    current_msgs = MSGSCollection();
+    current_msgs = MSGSCollection(false);
     current_msgs.initialize(task);
 
     if (log.is_at_least_normal()) {

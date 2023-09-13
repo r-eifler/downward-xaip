@@ -9,6 +9,7 @@ using namespace goalsubset;
 namespace reachable_goal_subsets_hmax_pruning {
 ReachableGoalSubsetsHMaxPruning::ReachableGoalSubsetsHMaxPruning(const Options &opts)
     : PruningMethod(opts),
+    use_subset_dominance(opts.get<bool>("use_dominance")),
     h(opts.get<shared_ptr<Evaluator>>("h", nullptr)){
 
     log << "--> reachable goal subset pruning" << endl;
@@ -27,7 +28,7 @@ void ReachableGoalSubsetsHMaxPruning::initialize(const shared_ptr<AbstractTask> 
     log << "initialize pruning method: reachable goal subset pruning: heuristic" << endl;
 
     if (! msgs_initialized){
-        current_msgs = MSGSCollection();
+        current_msgs = MSGSCollection(use_subset_dominance);
         current_msgs.initialize(task);
         log << "initialize pruning method: reachable goal subset pruning: msgs" << endl;
     }
@@ -71,6 +72,11 @@ static shared_ptr<PruningMethod> _parse(OptionParser &parser) {
     parser.add_option<shared_ptr<Evaluator>>(
         "h",
         "add max heuristic");
+
+    parser.add_option<bool>(
+        "use_dominance",
+        "use soft goal dominance relation if defined",
+        "false");
 
     Options opts = parser.parse();
     if (parser.dry_run()) {

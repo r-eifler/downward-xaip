@@ -25,7 +25,7 @@ void ReachableGoalSubsetsCegarPruning::initialize(const shared_ptr<AbstractTask>
 
     cegar_heuristic = static_pointer_cast<cegar::AdditiveCartesianHeuristic>(h);
 
-    current_msgs = MSGSCollection();
+    current_msgs = MSGSCollection(false);
     current_msgs.initialize(task);
 
     log << "initialize pruning method: reachable goal subset pruning" << endl;

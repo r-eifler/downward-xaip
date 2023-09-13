@@ -222,7 +222,35 @@ GoalSubsets GoalSubsets::cross_product(GoalSubsets sets) const{
 }
 
 
-GoalSubsets GoalSubsets::minimal_hitting_sets(vector<GoalSubset> stronger_subsets){
+GoalSubsets GoalSubsets::minimal_hitting_sets(){
+
+    GoalSubsets hitting_set = GoalSubsets();
+
+    auto it = subsets.begin();
+
+    for(GoalSubset sing : it->singelten_subsets()){
+        hitting_set.add(sing);
+    }
+
+    it++;
+
+    while(it != subsets.end()){
+        GoalSubset set = *it;
+        
+        GoalSubsets singeltons = GoalSubsets();
+        for(GoalSubset sing : set.singelten_subsets()){
+            singeltons.add(sing);
+        }
+
+        hitting_set = hitting_set.cross_product(singeltons);
+        hitting_set.minimize_non_minimal_subsets();
+        it++;
+    }
+    return hitting_set;
+}
+
+
+GoalSubsets GoalSubsets::minimal_hitting_sets(vector<GoalSubset> weaker_soft_goals){
 
     GoalSubsets hitting_set = GoalSubsets();
 
@@ -252,7 +280,7 @@ GoalSubsets GoalSubsets::minimal_hitting_sets(vector<GoalSubset> stronger_subset
     for(GoalSubset hit_set: hitting_set){
         for(size_t i = 0; i < hit_set.size(); i++){
             if(hit_set.contains(i)){
-                hit_set.in_place_or(stronger_subsets[i]);
+                hit_set.in_place_or(weaker_soft_goals[i]);
                 // gs.add(i);
             }
         }
@@ -267,7 +295,7 @@ GoalSubsets GoalSubsets::minimal_hitting_sets(vector<GoalSubset> stronger_subset
     for(GoalSubset inter_set: intermediate_sets){
         for(size_t i = 0; i < inter_set.size(); i++){
             if(inter_set.contains(i)){
-                inter_set.remove_goals_in(stronger_subsets[i]);
+                inter_set.remove_goals_in(weaker_soft_goals[i]);
                 inter_set.add(i);
             }
         }

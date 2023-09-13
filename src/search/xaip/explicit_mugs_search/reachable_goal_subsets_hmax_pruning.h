@@ -13,6 +13,8 @@ namespace reachable_goal_subsets_hmax_pruning {
 
 class ReachableGoalSubsetsHMaxPruning : public PruningMethod {
 
+    bool use_subset_dominance = false;
+
     std::shared_ptr<Evaluator> h;
 
     std::shared_ptr<max_heuristic::HSPMaxHeuristic> max_heuristic;

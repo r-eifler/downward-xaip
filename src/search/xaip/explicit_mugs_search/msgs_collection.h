@@ -15,6 +15,8 @@ class MSGSCollection : public GoalSubsets{
 
 private: 
 
+    bool use_subset_dominance = false;
+
     std::shared_ptr<AbstractTask> task;
 
     std::vector<FactPair> soft_goal_list;
@@ -51,6 +53,7 @@ protected:
     void update_best_state(StateID id, int num_solved_soft_goals);
 
 public:
+    explicit MSGSCollection(bool use_subset_dominance);
     explicit MSGSCollection();
     void initialize(std::shared_ptr<AbstractTask> task);
 
