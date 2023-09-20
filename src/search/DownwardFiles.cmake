@@ -486,6 +486,7 @@ fast_downward_plugin(
         xaip/explicit_mugs_search/reachable_goal_subsets_cegar_pruning
         xaip/explicit_mugs_search/reachable_goal_subsets_max_heuristic
         xaip/explicit_mugs_search/reachable_goal_subsets_tracking
+        xaip/explicit_mugs_search/new_goal_subset_heuristic
         xaip/explicit_mugs_search/dfs_search
         xaip/relaxations/relaxed_task
         xaip/relaxations/task_relaxation_tracker

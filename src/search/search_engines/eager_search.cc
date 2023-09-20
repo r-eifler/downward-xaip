@@ -28,6 +28,7 @@ EagerSearch::EagerSearch(const Options &opts)
       f_evaluator(opts.get<shared_ptr<Evaluator>>("f_eval", nullptr)),
       preferred_operator_evaluators(opts.get_list<shared_ptr<Evaluator>>("preferred")),
       lazy_evaluator(opts.get<shared_ptr<Evaluator>>("lazy_evaluator", nullptr)),
+      eval(opts.get<shared_ptr<Evaluator>>("eval", nullptr)),
       pruning_method(opts.get<shared_ptr<PruningMethod>>("pruning")) {
     if (lazy_evaluator && !lazy_evaluator->does_cache_estimates()) {
         cerr << "lazy_evaluator must cache its estimates" << endl;
@@ -109,6 +110,7 @@ void EagerSearch::print_statistics() const {
     statistics.print_detailed_statistics();
     search_space.print_statistics();
     pruning_method->print_statistics();
+    eval->print_statistics();
 }
 
 SearchStatus EagerSearch::step() {
@@ -241,6 +243,10 @@ SearchStatus EagerSearch::step() {
                 statistics.inc_dead_ends();
                 continue;
             }
+            if(eval_context.get_evaluator_value_or_infinity(eval.get()) + (node->get_real_g() + op.get_cost()) >= bound){
+                continue;
+            }
+
             if (pruning_method->prune_state(succ_state, bound - (node->get_real_g() + op.get_cost()))){
                 continue;
             }
