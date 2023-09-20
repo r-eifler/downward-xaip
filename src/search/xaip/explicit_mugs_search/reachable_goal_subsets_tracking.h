@@ -13,6 +13,8 @@ namespace reachable_goal_subsets_tracking {
 
 class ReachableGoalSubsetsTracking : public PruningMethod {
 
+    bool use_subset_dominance = false;
+
     MSGSCollection current_msgs;
     bool initialized = false;
 

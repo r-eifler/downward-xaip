@@ -8,7 +8,8 @@ using namespace goalsubset;
 
 namespace reachable_goal_subsets_tracking {
 ReachableGoalSubsetsTracking::ReachableGoalSubsetsTracking(const Options &opts)
-    : PruningMethod(opts){
+    : PruningMethod(opts),
+    use_subset_dominance(opts.get<bool>("use_dominance")){
 
     log << "--> reachable goal subset tracking" << endl;
     
@@ -20,7 +21,7 @@ void ReachableGoalSubsetsTracking::initialize(const shared_ptr<AbstractTask> &ta
 
     PruningMethod::initialize(task);
 
-    current_msgs = MSGSCollection(false);
+    current_msgs = MSGSCollection(use_subset_dominance);
     current_msgs.initialize(task);
 
     log << "initialize pruning method: reachable goal subset tracking" << endl;
@@ -53,6 +54,11 @@ static shared_ptr<PruningMethod> _parse(OptionParser &parser) {
         "reachable goal subsets",
         "States are pruned if no subset of goals already seen is reachable");
     add_pruning_options_to_parser(parser);
+
+    parser.add_option<bool>(
+        "use_dominance",
+        "use soft goal dominance relation if defined",
+        "false");
 
     Options opts = parser.parse();
     if (parser.dry_run()) {
