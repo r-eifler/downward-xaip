@@ -146,6 +146,21 @@ void AdditiveHeuristic::compute_heuristic_for_cegar(const State &state) {
     compute_heuristic(state);
 }
 
+vector<int> AdditiveHeuristic::get_heuristic_values(const State &state, vector<FactPair> facts){
+
+    setup_exploration_queue();
+    setup_exploration_queue_state(state);
+    relaxed_exploration();
+
+    vector<int> costs;
+    for(FactPair fp : facts){
+        const Proposition* prop = get_proposition(get_prop_id(fp.var, fp.value));
+        costs.push_back(prop->cost);
+        // cout << "h(" << fp.var << " = " << fp.value << ") = " << prop->cost << endl; 
+    }
+    return costs;
+}
+
 static shared_ptr<Heuristic> _parse(OptionParser &parser) {
     parser.document_synopsis("Additive heuristic", "");
     parser.document_language_support("action costs", "supported");

@@ -1,6 +1,6 @@
 #include "new_goal_subset_heuristic.h"
 
-#include <algorithm>
+#include "msgs_evaluation_context.h"
 
 #include "../option_parser.h"
 #include "../plugin.h"
@@ -13,13 +13,13 @@ NewGoalSubsetHeuristic::NewGoalSubsetHeuristic(const Options &opts)
     : Heuristic(opts),
     h(opts.get<shared_ptr<Evaluator>>("h", nullptr)){
 
-    log << "--> new goal subset heuristic with cartesian abstractions" << endl;
+    log << "--> new goal subset heuristic" << endl;
     if(initialized){
         return;
     }
     initialized = true;
 
-    cegar_heuristic = static_pointer_cast<cegar::AdditiveCartesianHeuristic>(h);
+    goals_heuristic = dynamic_pointer_cast<Heuristic>(h);
 
 
     soft_goal_list = vector<FactPair>();
@@ -54,36 +54,84 @@ NewGoalSubsetHeuristic::NewGoalSubsetHeuristic(const Options &opts)
     std::sort(soft_goal_list.begin(), soft_goal_list.end());
 
 
-    current_msgs = MSGSCollection();
-    current_msgs.initialize(task);
-
-    log << "initialize heuristic: new goal subset heuristic with cartesian abstractions" << endl;
+    log << "initialize heuristic: new goal subset heuristic" << endl;
 }
 
 GoalSubsets NewGoalSubsetHeuristic::get_msgs() const {
-    return current_msgs;
+    return GoalSubsets();
 }
 
-void NewGoalSubsetHeuristic::init_msgs(MSGSCollection subsets) {
-    cout << "init msgs: size: " << subsets.size() << endl;
-    current_msgs = subsets;
+void NewGoalSubsetHeuristic::init_msgs(MSGSCollection) {
+}
+
+int NewGoalSubsetHeuristic::min(int x, int y){
+    if(x == -1){
+        return y;
+    }
+    if(y == -1){
+        return x;
+    }
+    if(x < y){
+        return x;
+    }
+    else{
+        return y;
+    }
 }
 
 
-int NewGoalSubsetHeuristic::compute_heuristic(const State &state){
+int NewGoalSubsetHeuristic::max(int x, int y){
+    if(x == -1){
+        return x;
+    }
+    if(y == -1){
+        return y;
+    }
+    if(x > y){
+        return x;
+    }
+    else{
+        return y;
+    }
+}
 
-    //TODO handle infiniy (-1) correctely
 
-    // cout << "---------------------------------------------------------------" << endl;
-    // cout << "prune state remaining cost: "  << remaining_cost << endl;
-    // cout << "-------------------" << endl;
-    // for(size_t i = 0; i < state.size(); i++)
-    //     cout << state[i].get_variable().get_id() << " = " << state[i].get_value()  << "    -->  " << state[i].get_name() << endl;
-    // cout << "-------------------" << endl;
+EvaluationResult NewGoalSubsetHeuristic::compute_result(EvaluationContext &eval_context) {
+    EvaluationResult result;
 
-    current_msgs.track(state);
+    MSGSEvaluationContext* msgs_eval_context = dynamic_cast<MSGSEvaluationContext*>(&eval_context);
 
-    vector<int> costs = cegar_heuristic->get_heuristic_values(state, all_goal_list);
+    const State &state = msgs_eval_context->get_state();
+    MSGSCollection* current_msgs = msgs_eval_context->get_msgs_collection();
+    // cout << "Size current MUGS: " << current_msgs->size() << endl;
+
+    int heuristic = NO_VALUE;
+
+    if (cache_evaluator_values &&
+        heuristic_cache[state].h != NO_VALUE && !heuristic_cache[state].dirty) {
+        heuristic = heuristic_cache[state].h;
+        result.set_count_evaluation(false);
+    } else {
+        heuristic = compute_heuristic(state, current_msgs);
+        if (cache_evaluator_values) {
+            heuristic_cache[state] = HEntry(heuristic, false);
+        }
+        result.set_count_evaluation(true);
+    }
+
+    assert(heuristic == DEAD_END || heuristic >= 0);
+
+    if (heuristic == DEAD_END) {
+        heuristic = EvaluationResult::INFTY;
+    }
+
+    result.set_evaluator_value(heuristic);
+    return result;
+}
+
+int NewGoalSubsetHeuristic::compute_heuristic(const State &state, MSGSCollection* current_msgs){
+
+    vector<int> costs = goals_heuristic->get_heuristic_values(state, all_goal_list);
     // costs contains the heuristic estimate of all goal fact in the order in
     // all_goal_list (first hard goals, then soft goals)
 
@@ -97,37 +145,55 @@ int NewGoalSubsetHeuristic::compute_heuristic(const State &state){
         max_hard_goal = max(costs[i], max_hard_goal);
     }
 
-    int max_soft_goal = 0;
-    for(GoalSubset gs : current_msgs){
-
+    int max_get_superset = 0;
+    for(GoalSubset gs : (*current_msgs)){
         //max unsat
-        int max_unsat = 0;
-        for(size_t i = 0; i < soft_goal_list.size(); i++){
-            FactPair g = soft_goal_list[i];
-            if(gs.contains(i) && state[g.var].get_value() != g.value){
-                max_unsat = max(max_unsat, costs[hard_goal_list.size() + i]);
-            }
-        }
+        // int max_unsat = 0;
+        // for(size_t i = 0; i < soft_goal_list.size(); i++){
+        //     FactPair g = soft_goal_list[i];
+        //     if(gs.contains(i) && state[g.var].get_value() != g.value){
+        //         max_unsat = max(max_unsat, costs[hard_goal_list.size() + i]);
+        //     }
+        // }
 
         //min to sat
-        int min_to_sat = 2147483647; //max int value
+        int min_to_sat = -1; // infinity
         for(size_t i = 0; i < soft_goal_list.size(); i++){
             if(! gs.contains(i)){
                 min_to_sat =min(min_to_sat, costs[hard_goal_list.size() + i]);
             }
         }
 
-        max_soft_goal = max(max(max_soft_goal, max_unsat), min_to_sat);
+        // cout << "subset: ";
+        // gs.print();
+        // cout << "h=" << min_to_sat << endl;
+        max_get_superset = max(min_to_sat, max_get_superset);
 
     }
 
-    return max(max_hard_goal, max_soft_goal);
+    int res = max(max_hard_goal, max_get_superset);
+    // cout << "res: " << res << endl;
+
+    // current_msgs.track(state);
+
+    return res;
+}
+
+
+
+int NewGoalSubsetHeuristic::compute_heuristic(const State &state){
+
+    vector<int> costs = goals_heuristic->get_heuristic_values(state, all_goal_list);
+    int res = 0;
+    for(size_t i = 0; i < costs.size(); i++){
+        res = max(res,costs[i]);
+    }
+    return res;
 }
 
 
 void NewGoalSubsetHeuristic::print_statistics() const {
     cout << "##############################################################" << endl;
-    current_msgs.print();
 }
 
 

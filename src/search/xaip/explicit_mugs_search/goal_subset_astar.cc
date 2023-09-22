@@ -1,6 +1,5 @@
-#include "eager_search.h"
+#include "goal_subset_astar.h"
 
-#include "../evaluation_context.h"
 #include "../evaluator.h"
 #include "../open_list_factory.h"
 #include "../option_parser.h"
@@ -11,6 +10,11 @@
 
 #include "../utils/logging.h"
 
+#include "../../search_engines/search_common.h"
+
+#include "../../option_parser.h"
+#include "../../plugin.h"
+
 #include <cassert>
 #include <cstdlib>
 #include <memory>
@@ -19,8 +23,8 @@
 
 using namespace std;
 
-namespace eager_search {
-EagerSearch::EagerSearch(const Options &opts)
+namespace goal_subset_astar {
+GoalSubsetAStar::GoalSubsetAStar(const Options &opts)
     : SearchEngine(opts),
       reopen_closed_nodes(opts.get<bool>("reopen_closed")),
       open_list(opts.get<shared_ptr<OpenListFactory>>("open")->
@@ -36,12 +40,15 @@ EagerSearch::EagerSearch(const Options &opts)
     }
 }
 
-void EagerSearch::initialize() {
+void GoalSubsetAStar::initialize() {
     log << "Conducting best first search"
         << (reopen_closed_nodes ? " with" : " without")
         << " reopening closed nodes, (real) bound = " << bound
         << endl;
     assert(open_list);
+
+    current_msgs = MSGSCollection();
+    current_msgs.initialize(task);
 
     set<Evaluator *> evals;
     open_list->get_path_dependent_evaluators(evals);
@@ -80,19 +87,22 @@ void EagerSearch::initialize() {
         evaluator->notify_initial_state(initial_state);
     }
 
+    current_msgs.track(initial_state);
     pruning_method->prune_state(initial_state, bound);
 
+    cout << "check initial state " << endl;
     /*
       Note: we consider the initial state as reached by a preferred
       operator.
     */
-    EvaluationContext eval_context(initial_state, 0, true, &statistics);
+    MSGSEvaluationContext eval_context(initial_state, 0, true, &statistics, &current_msgs);
 
     statistics.inc_evaluated_states();
 
     if (open_list->is_dead_end(eval_context)) {
         log << "Initial state is a dead end." << endl;
     } else {
+        cout << "initial state no deadend" << endl;
         if (search_progress.check_progress(eval_context))
             statistics.print_checkpoint_line(0);
         start_f_value_statistics(eval_context);
@@ -106,14 +116,14 @@ void EagerSearch::initialize() {
 
 }
 
-void EagerSearch::print_statistics() const {
+void GoalSubsetAStar::print_statistics() const {
     statistics.print_detailed_statistics();
     search_space.print_statistics();
-    pruning_method->print_statistics();
-    eval->print_statistics();
+    current_msgs.print();
 }
 
-SearchStatus EagerSearch::step() {
+SearchStatus GoalSubsetAStar::step() {
+    // cout << "===================== STEP =====================" << endl;
     tl::optional<SearchNode> node;
     while (true) {
         if (open_list->empty()) {
@@ -132,17 +142,20 @@ SearchStatus EagerSearch::step() {
             return FAILED;
         }
         StateID id = open_list->remove_min();
+        // cout << "Parent State: " << id << endl;
         State s = state_registry.lookup_state(id);
         node.emplace(search_space.get_node(s));
 
         if (node->is_closed())
             continue;
 
+        current_msgs.track(s);
+
         /*
           We can pass calculate_preferred=false here since preferred
           operators are computed when the state is expanded.
         */
-        EvaluationContext eval_context(s, node->get_g(), false, &statistics);
+        MSGSEvaluationContext eval_context(s, node->get_g(), false, &statistics, &current_msgs);
 
         if (lazy_evaluator) {
             /*
@@ -198,7 +211,7 @@ SearchStatus EagerSearch::step() {
     pruning_method->prune_operators(s, applicable_ops);
 
     // This evaluates the expanded state (again) to get preferred ops
-    EvaluationContext eval_context(s, node->get_g(), false, &statistics, true);
+    MSGSEvaluationContext eval_context(s, node->get_g(), false, &statistics, &current_msgs, true);
     ordered_set::OrderedSet<OperatorID> preferred_operators;
     for (const shared_ptr<Evaluator> &preferred_operator_evaluator : preferred_operator_evaluators) {
         collect_preferred_operators(eval_context,
@@ -207,10 +220,14 @@ SearchStatus EagerSearch::step() {
     }
 
     for (OperatorID op_id : applicable_ops) {
+        // cout << "****************** EXPAND *****************" << endl;
         OperatorProxy op = task_proxy.get_operators()[op_id];
-        if ((node->get_real_g() + op.get_cost()) >= bound)
+        // cout << "g = " << (node->get_real_g() + op.get_cost()) << endl;
+        if ((node->get_real_g() + op.get_cost()) >= bound){
             continue;
+        }
         State succ_state = state_registry.get_successor_state(s, op);
+        // cout << "Succ State: " << succ_state.get_id() << endl;
         statistics.inc_generated();
         bool is_preferred = preferred_operators.contains(op_id);
 
@@ -221,8 +238,9 @@ SearchStatus EagerSearch::step() {
         }
 
         // Previously encountered dead end. Don't re-evaluate.
-        if (succ_node.is_dead_end())
+        if (succ_node.is_dead_end()){
             continue;
+        }
 
         if (succ_node.is_new()) {
             // We have not seen this state before.
@@ -233,8 +251,8 @@ SearchStatus EagerSearch::step() {
             // TODO: Make this less fragile.
             int succ_g = node->get_g() + get_adjusted_cost(op);
 
-            EvaluationContext succ_eval_context(
-                succ_state, succ_g, is_preferred, &statistics);
+            MSGSEvaluationContext succ_eval_context(
+                succ_state, succ_g, is_preferred, &statistics, &current_msgs);
             statistics.inc_evaluated_states();
 
             if (open_list->is_dead_end(succ_eval_context)) {
@@ -242,6 +260,14 @@ SearchStatus EagerSearch::step() {
                 statistics.inc_dead_ends();
                 continue;
             }
+
+            int succ_estimate = succ_eval_context.get_evaluator_value_or_infinity(eval.get());
+            // cout << "prune test: " << succ_estimate << " or " << succ_estimate << " + " <<  (node->get_real_g() + op.get_cost()) << " = " << estimate + (node->get_real_g() + op.get_cost())  << endl;
+            if(succ_estimate == - 1 or succ_estimate + (node->get_real_g() + op.get_cost()) >= bound){
+                // cout << "prune: " << succ_estimate << " or " << succ_estimate << " + " <<  (node->get_real_g() + op.get_cost()) << " = " << estimate + (node->get_real_g() + op.get_cost())  << endl;
+                continue;
+            }
+
             if (pruning_method->prune_state(succ_state, bound - (node->get_real_g() + op.get_cost()))){
                 continue;
             }
@@ -253,6 +279,7 @@ SearchStatus EagerSearch::step() {
                 reward_progress();
             }
         } else if (succ_node.get_g() > node->get_g() + get_adjusted_cost(op)) {
+            // cout << "---> new cheapest path" << endl;
             // We found a new cheapest path to an open or closed state.
             if (reopen_closed_nodes) {
                 if (succ_node.is_closed()) {
@@ -267,8 +294,8 @@ SearchStatus EagerSearch::step() {
                 }
                 succ_node.reopen(*node, op, get_adjusted_cost(op));
 
-                EvaluationContext succ_eval_context(
-                    succ_state, succ_node.get_g(), is_preferred, &statistics);
+                MSGSEvaluationContext succ_eval_context(
+                    succ_state, succ_node.get_g(), is_preferred, &statistics, &current_msgs);
 
                 /*
                   Note: our old code used to retrieve the h value from
@@ -300,17 +327,17 @@ SearchStatus EagerSearch::step() {
     return IN_PROGRESS;
 }
 
-void EagerSearch::reward_progress() {
+void GoalSubsetAStar::reward_progress() {
     // Boost the "preferred operator" open lists somewhat whenever
     // one of the heuristics finds a state with a new best h value.
     open_list->boost_preferred();
 }
 
-void EagerSearch::dump_search_space() const {
+void GoalSubsetAStar::dump_search_space() const {
     search_space.dump(task_proxy);
 }
 
-void EagerSearch::start_f_value_statistics(EvaluationContext &eval_context) {
+void GoalSubsetAStar::start_f_value_statistics(MSGSEvaluationContext &eval_context) {
     if (f_evaluator) {
         int f_value = eval_context.get_evaluator_value(f_evaluator.get());
         statistics.report_f_value_progress(f_value);
@@ -319,7 +346,7 @@ void EagerSearch::start_f_value_statistics(EvaluationContext &eval_context) {
 
 /* TODO: HACK! This is very inefficient for simply looking up an h value.
    Also, if h values are not saved it would recompute h for each and every state. */
-void EagerSearch::update_f_value_statistics(EvaluationContext &eval_context) {
+void GoalSubsetAStar::update_f_value_statistics(MSGSEvaluationContext &eval_context) {
     if (f_evaluator) {
         int f_value = eval_context.get_evaluator_value(f_evaluator.get());
         statistics.report_f_value_progress(f_value);
@@ -330,4 +357,50 @@ void add_options_to_parser(OptionParser &parser) {
     SearchEngine::add_pruning_option(parser);
     SearchEngine::add_options_to_parser(parser);
 }
+
+static shared_ptr<SearchEngine> _parse(OptionParser &parser) {
+    parser.document_synopsis(
+        "A* search (eager)",
+        "A* is a special case of eager best first search that uses g+h "
+        "as f-function. "
+        "We break ties using the evaluator. Closed nodes are re-opened.");
+    parser.document_note(
+        "lazy_evaluator",
+        "When a state s is taken out of the open list, the lazy evaluator h "
+        "re-evaluates s. If h(s) changes (for example because h is path-dependent), "
+        "s is not expanded, but instead reinserted into the open list. "
+        "This option is currently only present for the A* algorithm.");
+    parser.document_note(
+        "Equivalent statements using general eager search",
+        "\n```\n--search astar(evaluator)\n```\n"
+        "is equivalent to\n"
+        "```\n--evaluator h=evaluator\n"
+        "--search eager(tiebreaking([sum([g(), h]), h], unsafe_pruning=false),\n"
+        "               reopen_closed=true, f_eval=sum([g(), h]))\n"
+        "```\n", true);
+    parser.add_option<shared_ptr<Evaluator>>("eval", "evaluator for h-value");
+    parser.add_option<shared_ptr<Evaluator>>(
+        "lazy_evaluator",
+        "An evaluator that re-evaluates a state before it is expanded.",
+        OptionParser::NONE);
+
+    add_options_to_parser(parser);
+    Options opts = parser.parse();
+
+    shared_ptr<GoalSubsetAStar> engine;
+    if (!parser.dry_run()) {
+        auto temp = search_common::create_astar_open_list_factory_and_f_eval(opts);
+        opts.set("open", temp.first);
+        opts.set("f_eval", temp.second);
+        opts.set("reopen_closed", true);
+        vector<shared_ptr<Evaluator>> preferred_list;
+        opts.set("preferred", preferred_list);
+        engine = make_shared<GoalSubsetAStar>(opts);
+    }
+
+    return engine;
+}
+
+static Plugin<SearchEngine> _plugin("gsastar", _parse);
+
 }

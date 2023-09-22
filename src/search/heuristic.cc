@@ -144,3 +144,12 @@ void Heuristic::print_mugs() const{
 void Heuristic::print_mugs(GoalSubsets msgs) const{
     std::cout << "Number of msgs" << msgs.size() << std::endl;
 }
+
+vector<int> Heuristic::get_heuristic_values(const State &, vector<FactPair> facts){
+
+    vector<int> costs;
+    for(size_t i = 0; i < facts.size(); i++){
+        costs.push_back(0);
+    }
+    return costs;
+}
