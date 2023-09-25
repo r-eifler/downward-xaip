@@ -23,7 +23,7 @@ public:
         const options::Options &opts,
         std::vector<std::unique_ptr<PotentialFunction>> &&functions);
     ~PotentialGoalsHeuristic() = default;
-    virtual std::vector<int> get_heuristic_values(const State &ancestor_state, std::vector<FactPair>) override;
+    std::vector<int> get_heuristic_values(const State &ancestor_state, std::vector<FactPair> goals) override;
 };
 }
 

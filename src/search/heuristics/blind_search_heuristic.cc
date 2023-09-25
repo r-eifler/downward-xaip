@@ -32,6 +32,14 @@ int BlindSearchHeuristic::compute_heuristic(const State &ancestor_state) {
         return min_operator_cost;
 }
 
+vector<int> BlindSearchHeuristic::get_heuristic_values(const State &, std::vector<FactPair> facts) {
+    vector<int> result;
+    for (size_t i = 0; i < facts.size(); i++) {
+        result.push_back(0);
+    }
+    return result;
+}
+
 static shared_ptr<Heuristic> _parse(OptionParser &parser) {
     parser.document_synopsis("Blind heuristic",
                              "Returns cost of cheapest action for "
