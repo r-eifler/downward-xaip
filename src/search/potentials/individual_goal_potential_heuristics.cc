@@ -7,6 +7,9 @@
 #include "../plugin.h"
 #include "../tasks/modified_goals_task.h"
 #include "../lp/lp_solver.h"
+#include "../utils/rng.h"
+#include "../utils/rng_options.h"
+#include "potential_max_heuristic.h"
 
 #include <memory>
 #include <vector>
@@ -15,12 +18,36 @@ using namespace std;
 
 namespace potentials {
 
+static void filter_dead_ends(PotentialOptimizer &optimizer, vector<State> &samples) {
+    assert(!optimizer.potentials_are_bounded());
+    vector<State> non_dead_end_samples;
+    for (const State &sample : samples) {
+        optimizer.optimize_for_state(sample);
+        if (optimizer.has_optimal_solution())
+            non_dead_end_samples.push_back(sample);
+    }
+    swap(samples, non_dead_end_samples);
+}
+
+static void optimize_for_samples(
+    PotentialOptimizer &optimizer,
+    int num_samples,
+    utils::RandomNumberGenerator &rng) {
+    vector<State> samples = sample_without_dead_end_detection(
+        optimizer, num_samples, rng);
+    if (!optimizer.potentials_are_bounded()) {
+        filter_dead_ends(optimizer, samples);
+    }
+    optimizer.optimize_for_samples(samples);
+}
+
 static vector<unique_ptr<PotentialFunction>> create_goal_potential_functions(
     const Options &opts) {
-    vector<unique_ptr<PotentialFunction>> functions;
 
     const shared_ptr<AbstractTask> task = opts.get<shared_ptr<AbstractTask>>("transform");
     TaskProxy task_proxy(*task);
+
+    vector<unique_ptr<PotentialFunction>> functions;
 
     for(size_t i = 0; i < task_proxy.get_goals().size(); i++){
         FactPair selected_goal = task_proxy.get_goals()[i].get_pair();
@@ -29,10 +56,11 @@ static vector<unique_ptr<PotentialFunction>> create_goal_potential_functions(
 
         PotentialOptimizer optimizer(subtask, lp::LPSolverType::CPLEX, opts.get<double>("max_potential"));
 
-        optimizer.optimize_for_state(task_proxy.get_initial_state());
+        shared_ptr<utils::RandomNumberGenerator> rng(utils::parse_rng_from_options(opts));
+        optimize_for_samples(optimizer, opts.get<int>("num_samples"), *rng);
         functions.push_back(optimizer.get_potential_function());
-
     }
+    cout << "#functons: " << functions.size() << endl;
     return functions;
 }
 
@@ -41,7 +69,13 @@ static shared_ptr<Heuristic> _parse(OptionParser &parser) {
         "Sample-based potential heuristics",
         "Maximum over multiple potential heuristics optimized for samples. " +
         get_admissible_potentials_reference());
+    parser.add_option<int>(
+        "num_samples",
+        "Number of states to sample",
+        "1000",
+        Bounds("0", "infinity"));
 
+    utils::add_rng_options(parser);
     prepare_parser_for_admissible_potentials(parser);
 
     Options opts = parser.parse();
