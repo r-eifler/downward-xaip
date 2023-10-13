@@ -8,6 +8,7 @@ namespace policy_pruning_method {
 class PolicyPruningMethod : public PruningMethod {
 
     int port;
+    bool project_resources = true;
     policy::PolicyClient policy_client;
 
     double T = 0.0;

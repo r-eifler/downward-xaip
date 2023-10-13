@@ -21,11 +21,16 @@ private:
     int sockfd;
     struct sockaddr_in servaddr; 
 
+    bool project_resources = true;
+
     std::shared_ptr<AbstractTask> task;
+
+    void send_state(const State & state);
+    std::vector<double> process_reponse(std::vector<OperatorID> & operator_ids);
     
 
 public:
-    explicit PolicyClient(const int port);
+    explicit PolicyClient(const int port, bool project_resoruces);
 
     void initialize(const std::shared_ptr<AbstractTask> &task);
 

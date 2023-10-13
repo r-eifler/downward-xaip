@@ -11,7 +11,8 @@ namespace policy_pruning_method {
 PolicyPruningMethod::PolicyPruningMethod(const Options &opts)
     : PruningMethod(opts), 
     port(opts.get<int>("port")),
-    policy_client(PolicyClient(port)) {
+    project_resources(opts.get<bool>("project_resources")),
+    policy_client(PolicyClient(port, project_resources)) {
 }
 
 void PolicyPruningMethod::initialize(const shared_ptr<AbstractTask> &task) {
@@ -51,6 +52,10 @@ static shared_ptr<PruningMethod> _parse(OptionParser &parser) {
         "port for policy server",
         "8888",
         Bounds("0", "infinity"));
+    parser.add_option<bool>(
+        "project_resources",
+        "project to a task without encoded resources before sending",
+        "true");
     add_pruning_options_to_parser(parser);
 
     Options opts = parser.parse();
