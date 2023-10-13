@@ -1,4 +1,4 @@
-#include "policy_pruning.h"
+#include "policy_confidence_pruning.h"
 
 #include "../option_parser.h"
 #include "../plugin.h"
@@ -8,19 +8,20 @@ using namespace policy;
 
 namespace policy_pruning_method {
 
-PolicyPruningMethod::PolicyPruningMethod(const Options &opts)
+PolicyConfidencePruningMethod::PolicyConfidencePruningMethod(const Options &opts)
     : PruningMethod(opts), 
     port(opts.get<int>("port")),
     project_resources(opts.get<bool>("project_resources")),
-    policy_client(PolicyClient(port, project_resources)) {
+    policy_client(PolicyClient(port, project_resources)),
+    T(opts.get<int>("threshold")) {
 }
 
-void PolicyPruningMethod::initialize(const shared_ptr<AbstractTask> &task) {
+void PolicyConfidencePruningMethod::initialize(const shared_ptr<AbstractTask> &task) {
     PruningMethod::initialize(task);
     policy_client.initialize(task);
 }
 
-void PolicyPruningMethod::prune(const State &state, std::vector<OperatorID> & op_ids) {
+void PolicyConfidencePruningMethod::prune(const State &state, std::vector<OperatorID> & op_ids) {
     vector<double> policy_values = policy_client.get_value(state, op_ids);
 
     double max = 0.0;
@@ -52,6 +53,11 @@ static shared_ptr<PruningMethod> _parse(OptionParser &parser) {
         "port for policy server",
         "8888",
         Bounds("0", "infinity"));
+    parser.add_option<int>(
+        "threshold",
+        "threshold for policy confidence",
+        "1",
+        Bounds("0", "1"));
     parser.add_option<bool>(
         "project_resources",
         "project to a task without encoded resources before sending",
@@ -63,8 +69,8 @@ static shared_ptr<PruningMethod> _parse(OptionParser &parser) {
         return nullptr;
     }
 
-    return make_shared<PolicyPruningMethod>(opts);
+    return make_shared<PolicyConfidencePruningMethod>(opts);
 }
 
-static Plugin<PruningMethod> _plugin("policy", _parse);
+static Plugin<PruningMethod> _plugin("policy_confidence", _parse);
 }

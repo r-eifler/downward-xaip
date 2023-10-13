@@ -52,6 +52,13 @@ public:
 
     virtual void set_abstract_task(std::shared_ptr<AbstractTask> task);
 
+    virtual void notify_initial_state(const State & /*initial_state*/) {}
+
+    virtual void notify_state_transition(
+        const State & /*parent_state*/,
+        OperatorID /*op_id*/,
+        const State & /*state*/) {}
+
     virtual MSGSCollection get_msgs() const;
     virtual void init_msgs(MSGSCollection collection);
 };

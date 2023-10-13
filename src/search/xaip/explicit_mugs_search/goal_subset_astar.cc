@@ -86,6 +86,7 @@ void GoalSubsetAStar::initialize() {
     for (Evaluator *evaluator : path_dependent_evaluators) {
         evaluator->notify_initial_state(initial_state);
     }
+    pruning_method->notify_initial_state(initial_state);
 
     current_msgs.track(initial_state);
     pruning_method->prune_state(initial_state, bound);
@@ -120,6 +121,7 @@ void GoalSubsetAStar::print_statistics() const {
     statistics.print_detailed_statistics();
     search_space.print_statistics();
     current_msgs.print();
+    pruning_method->print_statistics();
 }
 
 SearchStatus GoalSubsetAStar::step() {
@@ -236,6 +238,7 @@ SearchStatus GoalSubsetAStar::step() {
         for (Evaluator *evaluator : path_dependent_evaluators) {
             evaluator->notify_state_transition(s, op_id, succ_state);
         }
+        pruning_method->notify_state_transition(s, op_id, succ_state);
 
         // Previously encountered dead end. Don't re-evaluate.
         if (succ_node.is_dead_end()){

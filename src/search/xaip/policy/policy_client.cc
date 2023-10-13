@@ -50,7 +50,7 @@ void PolicyClient::send_state(const State & state) {
     }
     
     const string state_string = boost::algorithm::join(atoms, "|");
-    cout << "State: " << state_string << endl;
+    // cout << "State: " << state_string << endl;
     const char *state_data = state_string.c_str(); 
     
     sendto(sockfd, (const char *)state_data, strlen(state_data), MSG_CONFIRM, (const struct sockaddr *) &servaddr, sizeof(servaddr)); 
@@ -99,7 +99,7 @@ std::vector<double> PolicyClient::process_reponse(vector<OperatorID> & operator_
             }
 
             if(operator_name == name){
-                 cout << "Value: " << operator_name << " " << value << endl;
+                //  cout << "Value: " << operator_name << " " << value << endl;
                 policy_values.push_back(std::stod(value));
             }
         }
