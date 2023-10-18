@@ -51,7 +51,8 @@ enum class ExitCode {
     // 30-39: unrecoverable errors
     SEARCH_CRITICAL_ERROR = 32,
     SEARCH_INPUT_ERROR = 33,
-    SEARCH_UNSUPPORTED = 34
+    SEARCH_UNSUPPORTED = 34,
+    REMOTE_POLICY_ERROR = 35
 };
 
 NO_RETURN extern void exit_with(ExitCode returncode);

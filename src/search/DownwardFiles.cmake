@@ -504,6 +504,16 @@ fast_downward_plugin(
 )
 
 fast_downward_plugin(
+    NAME POLICIES
+    HELP "MUGS computation"
+    SOURCES
+        xaip/policy/policy_client
+        xaip/policy/policy_confidence_pruning
+        xaip/policy/policy_diverging_actions_pruning
+    DEPENDS MAX_HEURISTIC
+)
+
+fast_downward_plugin(
     NAME "CONFLICT_LEARNING"
     SOURCES
         conflict_driven_learning/hash_utils

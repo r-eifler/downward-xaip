@@ -1,4 +1,7 @@
-release = ["-DCMAKE_BUILD_TYPE=Release", "DPLUGIN_XAIP_ENABLED=TRUE"]
+release = [
+    "-DCMAKE_BUILD_TYPE=Release", 
+    "-DPLUGIN_XAIP_ENABLED=YES",
+    "-DPLUGIN_POLICIES_ENABLED=YES"]
 debug = ["-DCMAKE_BUILD_TYPE=Debug"]
 release_no_lp = ["-DCMAKE_BUILD_TYPE=Release", "-DUSE_LP=NO"]
 # USE_GLIBCXX_DEBUG is not compatible with USE_LP (see issue983).

@@ -9,6 +9,8 @@
 #include "algorithms/int_packer.h"
 #include "utils/collections.h"
 #include "utils/hash.h"
+#include "utils/logging.h"
+#include "utils/rng.h"
 #include "utils/system.h"
 
 #include <cassert>
@@ -32,6 +34,7 @@ class RelaxedTasksProxy;
 class OperatorProxy;
 class OperatorsProxy;
 class PreconditionsProxy;
+class PartialAssignment;
 class State;
 class StateRegistry;
 class TaskProxy;
@@ -250,24 +253,6 @@ public:
 };
 
 
-class ConditionsProxy {
-protected:
-    const AbstractTask *task;
-public:
-    using ItemType = FactProxy;
-    explicit ConditionsProxy(const AbstractTask &task)
-        : task(&task) {}
-    virtual ~ConditionsProxy() = default;
-
-    virtual std::size_t size() const = 0;
-    virtual FactProxy operator[](std::size_t index) const = 0;
-
-    bool empty() const {
-        return size() == 0;
-    }
-};
-
-
 class VariableProxy {
     const AbstractTask *task;
     int id;
@@ -344,6 +329,43 @@ public:
 
     FactsProxy get_facts() const {
         return FactsProxy(*task);
+    }
+};
+
+class ConditionsProxy {
+protected:
+    const AbstractTask *task;
+public:
+    using ItemType = FactProxy;
+    explicit ConditionsProxy(const AbstractTask &task)
+        : task(&task) {}
+    virtual ~ConditionsProxy() = default;
+
+    virtual std::size_t size() const = 0;
+    virtual FactProxy operator[](std::size_t index) const = 0;
+
+    bool empty() const {
+        return size() == 0;
+    }
+
+    template<typename T>
+    void dump_pddl(T &out = utils::g_log, const std::string &separator = "\n") const {
+        for (FactProxy fact : (*this)) {
+            std::string fact_name = fact.get_name();
+            if (fact_name != "<none of those>")
+                out << fact_name << separator;
+        }
+        out << std::flush;
+    }
+
+    template<typename T>
+    void dump_fdr(T &out = utils::g_log, const std::string &separator = "\n") const {
+        for (FactProxy fact : (*this)) {
+            VariableProxy var = fact.get_variable();
+            out << "  #" << var.get_id() << " [" << var.get_name() << "] -> "
+                << fact.get_value() << separator;
+        }
+        out << std::flush;
     }
 };
 
@@ -597,11 +619,55 @@ public:
     }
 };
 
-
+bool does_fire(const EffectProxy &effect, const PartialAssignment &assignment);
 bool does_fire(const EffectProxy &effect, const State &state);
 
 
-class State {
+class PartialAssignment {
+    friend class State;
+protected:
+
+    const AbstractTask *task;
+    //if values[i] == -1 => not assigned value.
+    mutable std::shared_ptr<std::vector<int>> values;
+    PartialAssignment(const AbstractTask &task);
+public:
+    using ItemType = FactProxy;
+    static const int UNASSIGNED;
+
+    PartialAssignment(const AbstractTask &task, std::vector<int> &&values);
+    PartialAssignment(const PartialAssignment &assignment, std::vector<int> &&values);
+    PartialAssignment();
+
+    virtual ~PartialAssignment() = default;
+//    PartialAssignment(const PartialAssignment &) = default;
+
+    bool assigned(std::size_t var_id) const;
+    bool assigned(const VariableProxy &var) const;
+
+    bool operator==(const PartialAssignment &other) const;
+    bool operator!=(const PartialAssignment &other) const;
+    virtual std::size_t size() const;
+
+    std::size_t assigned_size() const;
+
+    virtual FactProxy operator[](std::size_t var_id) const;
+    virtual FactProxy operator[](VariableProxy var) const;
+
+    inline TaskProxy get_task() const;
+
+    virtual const std::vector<int> &get_unpacked_values() const;
+    const std::vector<int> &get_values() const;
+    std::vector<FactPair> get_assigned_facts() const;
+
+    PartialAssignment get_partial_successor(OperatorProxy op) const;
+    bool violates_mutexes() const;
+    std::pair<bool, State> get_full_state(
+        bool check_mutexes, utils::RandomNumberGenerator &rng) const;
+};
+
+
+class State : public PartialAssignment {
     /*
       TODO: We want to try out two things:
         1. having StateID and num_variables next to each other, so that they
@@ -640,6 +706,8 @@ public:
           const PackedStateBin *buffer, std::vector<int> &&values);
     // Construct a state with only unpacked data.
     State(const AbstractTask &task, std::vector<int> &&values);
+    // Construct a dummy state
+    State();
 
     bool operator==(const State &other) const;
     bool operator!=(const State &other) const;
@@ -648,9 +716,9 @@ public:
        on a state that already has unpacked data has no effect. */
     void unpack() const;
 
-    std::size_t size() const;
-    FactProxy operator[](std::size_t var_id) const;
-    FactProxy operator[](VariableProxy var) const;
+    virtual std::size_t size() const override;
+    virtual FactProxy operator[](std::size_t var_id) const override;
+    virtual FactProxy operator[](VariableProxy var) const override;
 
     TaskProxy get_task() const;
 
@@ -664,7 +732,7 @@ public:
     /* Access the unpacked values. Accessing the unpacked values in a state
        that doesn't have them is an error. Use unpack() to ensure the data
        exists. */
-    const std::vector<int> &get_unpacked_values() const;
+    virtual const std::vector<int> &get_unpacked_values() const override;
 
     /* Access the packed values. Accessing packed values on states that do
        not have them (unregistered states) is an error. */
@@ -679,11 +747,26 @@ public:
       unpack() to ensure the data exists.
     */
     State get_unregistered_successor(const OperatorProxy &op) const;
+
+    friend std::ostream &operator<<(std::ostream &os, const State &s) {
+        os << "[";
+        bool first = true;
+        for (auto fact: s) {
+            if (first) {
+                first = false;
+            } else {
+                os << ", ";
+            }
+            os << fact.get_name();
+        }
+        os << "]";
+        return os;
+    }
 };
 
 
 namespace utils {
-inline void feed(HashState &hash_state, const State &state) {
+inline void feed(HashState &hash_state, const PartialAssignment &assignment) {
     /*
       Hashing a state without unpacked data will result in an error.
       We don't want to unpack states implicitly, so this rules out the option
@@ -693,12 +776,13 @@ inline void feed(HashState &hash_state, const State &state) {
       a performance error because it's much cheaper to hash the state IDs
       instead.
     */
-    feed(hash_state, state.get_unpacked_values());
+    feed(hash_state, assignment.get_values());
 }
 }
 
 
 class TaskProxy {
+protected:
     const AbstractTask *task;
 public:
     explicit TaskProxy(const AbstractTask &task)
@@ -779,36 +863,96 @@ public:
         // Create a copy of the state values for the new state.
         ancestor_state.unpack();
         std::vector<int> state_values = ancestor_state.get_unpacked_values();
-        task->convert_ancestor_state_values(
-            state_values, ancestor_task_proxy.task);
+        task->convert_ancestor_state_values(state_values, ancestor_task_proxy.task);
         return create_state(std::move(state_values));
     }
+
+    std::pair<bool, State> convert_to_full_state(
+        PartialAssignment &assignment,
+        bool check_mutexes, utils::RandomNumberGenerator &rng) const;
 
     const causal_graph::CausalGraph &get_causal_graph() const;
 };
 
 
-inline FactProxy::FactProxy(const AbstractTask &task, const FactPair &fact)
-    : task(&task), fact(fact) {
-    assert(fact.var >= 0 && fact.var < task.get_num_variables());
-    assert(fact.value >= 0 && fact.value < get_variable().get_domain_size());
+inline bool PartialAssignment::assigned(std::size_t var_id) const {
+    assert(var_id < size());
+    return (*values)[var_id] != PartialAssignment::UNASSIGNED;
 }
 
-inline FactProxy::FactProxy(const AbstractTask &task, int var_id, int value)
-    : FactProxy(task, FactPair(var_id, value)) {
+inline bool PartialAssignment::assigned(const VariableProxy &var) const {
+    return (*values)[var.get_id()] != PartialAssignment::UNASSIGNED;
 }
 
-
-inline VariableProxy FactProxy::get_variable() const {
-    return VariableProxy(*task, fact.var);
+inline bool PartialAssignment::operator==(const PartialAssignment &other) const {
+    assert(task == other.task);
+    return *values == *other.values;
 }
 
-inline bool does_fire(const EffectProxy &effect, const State &state) {
-    for (FactProxy condition : effect.get_conditions()) {
-        if (state[condition.get_variable()] != condition)
-            return false;
+inline bool PartialAssignment::operator!=(const PartialAssignment &other) const {
+    return !(*this == other);
+}
+
+inline std::size_t PartialAssignment::size() const {
+    return task->get_num_variables();
+}
+
+inline std::size_t PartialAssignment::assigned_size() const {
+    std::size_t size = 0;
+    for (std::size_t var = 0; var < (*this).size(); ++var) {
+        if ((*this).assigned(var)) {
+            ++size;
+        }
     }
-    return true;
+    return size;
+}
+
+inline FactProxy PartialAssignment::operator[](std::size_t var_id) const {
+    assert(var_id < size());
+    assert((*values)[var_id] != PartialAssignment::UNASSIGNED);
+    return FactProxy(*task, var_id, (*values)[var_id]);
+}
+
+inline FactProxy PartialAssignment::operator[](VariableProxy var) const {
+    return (*this)[var.get_id()];
+}
+
+inline TaskProxy PartialAssignment::get_task() const {
+    return TaskProxy(*task);
+}
+
+inline const std::vector<int> &PartialAssignment::get_unpacked_values() const {
+    return *values;
+}
+
+inline const std::vector<int> &PartialAssignment::get_values() const {
+    return get_unpacked_values();
+}
+
+inline std::vector<FactPair> PartialAssignment::get_assigned_facts() const {
+    std::vector<FactPair> facts;
+    for (unsigned int i = 0; i < size(); ++i) {
+        if (assigned(i)) {
+            facts.emplace_back(i, (*values)[i]);
+        }
+    }
+    return facts;
+}
+
+inline PartialAssignment PartialAssignment::get_partial_successor(OperatorProxy op) const {
+    if (task->get_num_axioms() > 0) {
+        ABORT("PartialAssignment::apply currently does not support axioms.");
+    }
+    assert(!op.is_axiom());
+    //assert(is_applicable(op, state));
+    std::vector<int> new_values = *values;
+    for (EffectProxy effect : op.get_effects()) {
+        if (does_fire(effect, *this)) {
+            FactProxy effect_fact = effect.get_fact();
+            new_values[effect_fact.get_variable().get_id()] = effect_fact.get_value();
+        }
+    }
+    return PartialAssignment(*task, std::move(new_values));
 }
 
 inline bool State::operator==(const State &other) const {
@@ -913,4 +1057,28 @@ inline const std::vector<int> &State::get_unpacked_values() const {
     }
     return *values;
 }
+
+inline FactProxy::FactProxy(const AbstractTask &task, const FactPair &fact)
+    : task(&task), fact(fact) {
+    assert(fact.var >= 0 && fact.var < task.get_num_variables());
+    assert(fact.value >= 0 && fact.value < get_variable().get_domain_size());
+}
+
+inline FactProxy::FactProxy(const AbstractTask &task, int var_id, int value)
+    : FactProxy(task, FactPair(var_id, value)) {
+}
+
+
+inline VariableProxy FactProxy::get_variable() const {
+    return VariableProxy(*task, fact.var);
+}
+
+inline bool does_fire(const EffectProxy &effect, const State &state) {
+    for (FactProxy condition : effect.get_conditions()) {
+        if (state[condition.get_variable()] != condition)
+            return false;
+    }
+    return true;
+}
+
 #endif

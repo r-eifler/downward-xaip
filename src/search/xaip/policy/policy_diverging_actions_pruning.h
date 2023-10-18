@@ -10,7 +10,7 @@
 namespace policy_pruning_method {
 class PolicyDivergingActionsPruningMethod : public PruningMethod {
 
-    int port;
+    std::string url;
     bool project_resources = true;
     policy::PolicyClient policy_client;
 

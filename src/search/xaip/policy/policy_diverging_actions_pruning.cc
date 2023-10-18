@@ -10,9 +10,9 @@ namespace policy_pruning_method {
 
 PolicyDivergingActionsPruningMethod::PolicyDivergingActionsPruningMethod(const Options &opts)
     : PruningMethod(opts), 
-    port(opts.get<int>("port")),
+    url(opts.get<string>("url")),
     project_resources(opts.get<bool>("project_resources")),
-    policy_client(PolicyClient(port, project_resources)),
+    policy_client(PolicyClient(url, project_resources)),
     max_diverging_actions(opts.get<int>("max_diverging_actions")) {
 }
 
@@ -55,7 +55,7 @@ void PolicyDivergingActionsPruningMethod::prune(const State &state, std::vector<
     }
 
     policy_evaluation_timer.resume();
-    vector<double> policy_values = policy_client.get_value(state, op_ids);
+    vector<double> policy_values; // = policy_client.get_value(state, op_ids);
     policy_evaluation_timer.stop();
     // cout << policy_values << endl;
 
@@ -96,10 +96,9 @@ void PolicyDivergingActionsPruningMethod::print_statistics() const {
 static shared_ptr<PruningMethod> _parse(OptionParser &parser) {
     parser.document_synopsis("TODO", "TODO");
     parser.add_option<int>(
-        "port",
-        "port for policy server",
-        "8888",
-        Bounds("0", "infinity"));
+        "url",
+        "url of policy server",
+        "localhost:8888");
     parser.add_option<int>(
         "max_diverging_actions",
         "maximal number of diverging actions",

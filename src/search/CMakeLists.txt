@@ -96,6 +96,20 @@ if(PLUGIN_LP_SOLVER_ENABLED AND USE_LP)
     endif()
 endif()
 
+if (DEFINED ENV{PHRM_ROOT})
+        set(PHRM_ROOT $ENV{PHRM_ROOT})
+    elseif (DEFINED ENV{PHEROMONE_ROOT})
+        set(PHRM_ROOT $ENV{PHEROMONE_ROOT})
+    else()
+        message(SEND_ERROR "Missing pheromone library."
+                "Set PRHM_ROOT or PHEROMONE_ROOT environment variable.")
+    endif()
+
+    find_package(PkgConfig REQUIRED)
+    pkg_check_modules(PHRM REQUIRED grpc++ protobuf)
+    include_directories(${PHRM_ROOT}/include)
+    target_link_libraries(downward ${PHRM_ROOT}/libpheromone.a ${PHRM_LIBRARIES})
+
 find_package(Boost REQUIRED)
 include_directories(${Boost_INCLUDE_DIRS})
 target_link_libraries(downward ${Boost_LIBRARIES})

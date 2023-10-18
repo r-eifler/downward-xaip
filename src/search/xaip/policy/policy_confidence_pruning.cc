@@ -10,9 +10,9 @@ namespace policy_pruning_method {
 
 PolicyConfidencePruningMethod::PolicyConfidencePruningMethod(const Options &opts)
     : PruningMethod(opts), 
-    port(opts.get<int>("port")),
+    url(opts.get<string>("url")),
     project_resources(opts.get<bool>("project_resources")),
-    policy_client(PolicyClient(port, project_resources)),
+    policy_client(PolicyClient(url, project_resources)),
     T(opts.get<int>("threshold")) {
 }
 
@@ -22,7 +22,7 @@ void PolicyConfidencePruningMethod::initialize(const shared_ptr<AbstractTask> &t
 }
 
 void PolicyConfidencePruningMethod::prune(const State &state, std::vector<OperatorID> & op_ids) {
-    vector<double> policy_values = policy_client.get_value(state, op_ids);
+    vector<double> policy_values; // = policy_client.get_value(state, op_ids);
 
     double max = 0.0;
     for(size_t i = 0; i < policy_values.size(); i++){
@@ -48,11 +48,10 @@ void PolicyConfidencePruningMethod::prune(const State &state, std::vector<Operat
 
 static shared_ptr<PruningMethod> _parse(OptionParser &parser) {
     parser.document_synopsis("TODO", "TODO");
-    parser.add_option<int>(
-        "port",
-        "port for policy server",
-        "8888",
-        Bounds("0", "infinity"));
+    parser.add_option<string>(
+        "url",
+        "url of the policy server",
+        "localhost:8888");
     parser.add_option<int>(
         "threshold",
         "threshold for policy confidence",
