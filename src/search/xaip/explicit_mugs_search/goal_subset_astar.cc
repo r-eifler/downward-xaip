@@ -91,7 +91,6 @@ void GoalSubsetAStar::initialize() {
     current_msgs.track(initial_state);
     pruning_method->prune_state(initial_state, bound);
 
-    cout << "check initial state " << endl;
     /*
       Note: we consider the initial state as reached by a preferred
       operator.
@@ -103,7 +102,6 @@ void GoalSubsetAStar::initialize() {
     if (open_list->is_dead_end(eval_context)) {
         log << "Initial state is a dead end." << endl;
     } else {
-        cout << "initial state no deadend" << endl;
         if (search_progress.check_progress(eval_context))
             statistics.print_checkpoint_line(0);
         start_f_value_statistics(eval_context);

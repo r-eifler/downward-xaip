@@ -70,7 +70,7 @@ class RootTask : public AbstractTask {
     const ExplicitOperator &get_operator_or_axiom(int index, bool is_axiom) const;
 
 public:
-    explicit RootTask(istream &in);
+    explicit RootTask(istream &in, bool is_osp_task);
 
     virtual int get_num_variables() const override;
     virtual string get_variable_name(int var) const override;
@@ -114,7 +114,7 @@ public:
     virtual vector<RelaxedTaskDefinition> get_relaxed_task_definitions() const override;
 
     virtual vector<int> get_initial_state_values() const override;
-    virtual void convert_ancestor_state_values(
+    virtual void convert_state_values(
         vector<int> &values,
         const AbstractTask *ancestor_task) const override;
 };
@@ -391,7 +391,7 @@ vector<ExplicitOperator> read_actions(
     return actions;
 }
 
-RootTask::RootTask(istream &in) {
+RootTask::RootTask(istream &in, bool is_osp_task) {
     read_and_verify_version(in);
     bool use_metric = read_metric(in);
     variables = read_variables(in);
@@ -411,9 +411,13 @@ RootTask::RootTask(istream &in) {
     }
 
     goals = read_goal(in);
-    hard_goals = read_hard_goal(in);
-    soft_goals = read_soft_goal(in);
-    relaxed_tasks = read_relaxed_tasks(in);
+    cout << "##########################" << endl;
+    cout << "Num goals: " << goals.size() << endl;
+    if(is_osp_task){
+        hard_goals = read_hard_goal(in);
+        soft_goals = read_soft_goal(in);
+        relaxed_tasks = read_relaxed_tasks(in);
+    }
 
     check_facts(goals, variables);
     operators = read_actions(in, false, use_metric, variables);
@@ -576,16 +580,23 @@ vector<int> RootTask::get_initial_state_values() const {
     return initial_state_values;
 }
 
-void RootTask::convert_ancestor_state_values(
+// void RootTask::convert_ancestor_state_values(
+//     vector<int> &, const AbstractTask *ancestor_task) const {
+//     if (this != ancestor_task) {
+//         ABORT("Invalid state conversion");
+//     }
+// }
+
+void RootTask::convert_state_values(
     vector<int> &, const AbstractTask *ancestor_task) const {
     if (this != ancestor_task) {
         ABORT("Invalid state conversion");
     }
 }
 
-void read_root_task(istream &in) {
+void read_root_task(istream &in, bool is_osp_task) {
     assert(!g_root_task);
-    g_root_task = make_shared<RootTask>(in);
+    g_root_task = make_shared<RootTask>(in, is_osp_task);
 }
 
 static shared_ptr<AbstractTask> _parse(OptionParser &parser) {

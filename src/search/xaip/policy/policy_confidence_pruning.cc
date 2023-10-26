@@ -51,7 +51,7 @@ static shared_ptr<PruningMethod> _parse(OptionParser &parser) {
     parser.add_option<string>(
         "url",
         "url of the policy server",
-        "localhost:8888");
+        "localhost:54321");
     parser.add_option<int>(
         "threshold",
         "threshold for policy confidence",

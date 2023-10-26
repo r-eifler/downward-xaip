@@ -71,12 +71,14 @@ State State::get_unregistered_successor(const OperatorProxy &op) const {
         AxiomEvaluator &axiom_evaluator = g_axiom_evaluators[TaskProxy(*task)];
         axiom_evaluator.evaluate(new_values);
     }
-    return State(*task, move(new_values));
+    return State(*task, std::move(new_values));
 }
+
 
 const causal_graph::CausalGraph &TaskProxy::get_causal_graph() const {
     return causal_graph::get_causal_graph(task);
 }
+
 
 
 bool contains_mutex_with_variable(

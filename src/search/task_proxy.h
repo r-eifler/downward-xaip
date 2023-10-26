@@ -692,7 +692,7 @@ class State : public PartialAssignment {
       const here to mean "const from the perspective of the state space
       semantics of the state".
     */
-    mutable std::shared_ptr<std::vector<int>> values;
+    // mutable std::shared_ptr<std::vector<int>> values;
     const int_packer::IntPacker *state_packer;
     int num_variables;
 public:
@@ -777,6 +777,18 @@ inline void feed(HashState &hash_state, const PartialAssignment &assignment) {
       instead.
     */
     feed(hash_state, assignment.get_values());
+}
+inline void feed(HashState &hash_state, const State &state) {
+    /*
+      Hashing a state without unpacked data will result in an error.
+      We don't want to unpack states implicitly, so this rules out the option
+      of unpacking the states here on demand. Mixing hashes from packed and
+      unpacked states would lead to logically equal states with different
+      hashes. Hashing packed (and therefore registered) states also seems like
+      a performance error because it's much cheaper to hash the state IDs
+      instead.
+    */
+    feed(hash_state, state.get_unpacked_values());
 }
 }
 
@@ -863,7 +875,8 @@ public:
         // Create a copy of the state values for the new state.
         ancestor_state.unpack();
         std::vector<int> state_values = ancestor_state.get_unpacked_values();
-        task->convert_ancestor_state_values(state_values, ancestor_task_proxy.task);
+        // task->convert_ancestor_state_values(state_values, ancestor_task_proxy.task);
+        task->convert_state_values(state_values, ancestor_task_proxy.task);
         return create_state(std::move(state_values));
     }
 

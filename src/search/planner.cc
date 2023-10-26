@@ -8,24 +8,25 @@
 #include "../utils/logging.h"
 #include "utils/system.h"
 #include "utils/timer.h"
-#ifdef DOWNWARD_PLUGIN_POLICY_TESTING
-#include "policy_testing/policies/remote_policy.h"
-#endif /* DOWNWARD_PLUGIN_POLICY_TESTING */
+// #ifdef DOWNWARD_PLUGIN_POLICY_TESTING
+#include "xaip/policy/policy_client.h"
+// #endif /* DOWNWARD_PLUGIN_POLICY_TESTING */
 
 #include <iostream>
 
 using namespace std;
+using namespace policy;
 using utils::ExitCode;
 
 int main(int argc, const char **argv) {
     utils::register_event_handlers();
         string input_file_override; // if set, read input from this file instead of from stdin
 
-#ifdef DOWNWARD_PLUGIN_POLICY_TESTING
+// #ifdef DOWNWARD_PLUGIN_POLICY_TESTING
     if (argc >= 3 && static_cast<string>(argv[1]) == "--remote-policy") {
         try {
-            policy_testing::RemotePolicy::establish_connection(static_cast<string>(argv[2]));
-        } catch (const policy_testing::RemotePolicyError &err) {
+            PolicyClient::establish_connection(static_cast<string>(argv[2]));
+        } catch (const RemotePolicyError &err) {
             err.print();
             utils::exit_with(ExitCode::REMOTE_POLICY_ERROR);
         }
@@ -40,7 +41,7 @@ int main(int argc, const char **argv) {
         }
         argc -= 2;
     }
-#endif /* DOWNWARD_PLUGIN_POLICY_TESTING */
+// #endif /* DOWNWARD_PLUGIN_POLICY_TESTING */
 
     if (argc < 2) {
         utils::g_log << usage(argv[0]) << endl;
@@ -49,31 +50,32 @@ int main(int argc, const char **argv) {
 
     bool unit_cost = false;
     if (static_cast<string>(argv[1]) != "--help") {
-        utils::g_log << "reading input..." << endl;
-#ifdef DOWNWARD_PLUGIN_POLICY_TESTING
-        if (!policy_testing::RemotePolicy::connection_established()) {
+// #ifdef DOWNWARD_PLUGIN_POLICY_TESTING
+        if (!PolicyClient::connection_established()) {
+             utils::g_log << "reading input from file" << endl;
             if (input_file_override.empty()) {
-                tasks::read_root_task(cin);
+                tasks::read_root_task(cin, true);
             } else {
                 std::ifstream file_stream(input_file_override);
                 if (!file_stream.is_open()) {
                     std::cerr << "Cannot open " << input_file_override << std::endl;
                 }
-                tasks::read_root_task(file_stream);
+                tasks::read_root_task(file_stream, true);
             }
         } else {
+            utils::g_log << "reading input from policy" << endl;
             try {
-                std::string task = policy_testing::RemotePolicy::input_fdr();
+                std::string task = PolicyClient::input_fdr();
                 std::istringstream strin(task);
-                tasks::read_root_task(strin);
-            } catch (const policy_testing::RemotePolicyError &err) {
+                tasks::read_root_task(strin, false);
+            } catch (const RemotePolicyError &err) {
                 err.print();
                 utils::exit_with(ExitCode::REMOTE_POLICY_ERROR);
             }
         }
-#else /* DOWNWARD_PLUGIN_POLICY_TESTING */
-        tasks::read_root_task(cin);
-#endif /* DOWNWARD_PLUGIN_POLICY_TESTING */
+// #else /* DOWNWARD_PLUGIN_POLICY_TESTING */
+        // tasks::read_root_task(cin, true);
+// #endif /* DOWNWARD_PLUGIN_POLICY_TESTING */
         utils::g_log << "done reading input!" << endl;
         TaskProxy task_proxy(*tasks::g_root_task);
         unit_cost = task_properties::is_unit_cost(task_proxy);
