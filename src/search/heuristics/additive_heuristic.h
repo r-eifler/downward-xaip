@@ -78,6 +78,8 @@ public:
     int get_cost_for_cegar(int var, int value) const {
         return get_proposition(var, value)->cost;
     }
+
+    std::vector<int> get_heuristic_values(const State &state, std::vector<FactPair> facts);
 };
 }
 

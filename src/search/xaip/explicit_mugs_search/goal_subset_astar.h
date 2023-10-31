@@ -1,8 +1,10 @@
-#ifndef SEARCH_ENGINES_EAGER_SEARCH_H
-#define SEARCH_ENGINES_EAGER_SEARCH_H
+#ifndef SEARCH_ENGINES_GOAL_SUBSET_ASTAR_SEARCH_H
+#define SEARCH_ENGINES_GOAL_SUBSET_ASTAR_SEARCH_H
 
 #include "../open_list.h"
 #include "../search_engine.h"
+#include "msgs_collection.h"
+#include "msgs_evaluation_context.h"
 
 #include <memory>
 #include <vector>
@@ -15,8 +17,8 @@ class OptionParser;
 class Options;
 }
 
-namespace eager_search {
-class EagerSearch : public SearchEngine {
+namespace goal_subset_astar {
+class GoalSubsetAStar : public SearchEngine {
     const bool reopen_closed_nodes;
 
     std::unique_ptr<StateOpenList> open_list;
@@ -29,8 +31,10 @@ class EagerSearch : public SearchEngine {
 
     std::shared_ptr<PruningMethod> pruning_method;
 
-    void start_f_value_statistics(EvaluationContext &eval_context);
-    void update_f_value_statistics(EvaluationContext &eval_context);
+    MSGSCollection current_msgs;
+
+    void start_f_value_statistics(MSGSEvaluationContext &eval_context);
+    void update_f_value_statistics(MSGSEvaluationContext &eval_context);
     void reward_progress();
 
 protected:
@@ -38,8 +42,8 @@ protected:
     virtual SearchStatus step() override;
 
 public:
-    explicit EagerSearch(const options::Options &opts);
-    virtual ~EagerSearch() = default;
+    explicit GoalSubsetAStar(const options::Options &opts);
+    virtual ~GoalSubsetAStar() = default;
 
     void set_pruning_method( std::shared_ptr<PruningMethod> pruning_method){
         std::cout << "********** set pruning method ***************" << std::endl;

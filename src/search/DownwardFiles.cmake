@@ -486,12 +486,22 @@ fast_downward_plugin(
         xaip/explicit_mugs_search/reachable_goal_subsets_cegar_pruning
         xaip/explicit_mugs_search/reachable_goal_subsets_max_heuristic
         xaip/explicit_mugs_search/reachable_goal_subsets_tracking
+        xaip/explicit_mugs_search/new_goal_subset_heuristic
         xaip/explicit_mugs_search/dfs_search
+        xaip/explicit_mugs_search/goal_subset_astar
+        xaip/explicit_mugs_search/msgs_evaluation_context
         xaip/relaxations/relaxed_task
         xaip/relaxations/task_relaxation_tracker
         xaip/relaxations/relaxation_iterated_search
         xaip/relaxations/modified_init_task
         xaip/relaxations/relaxation_extension_search
+<<<<<<< HEAD
+        potentials/individual_goal_potential_heuristics
+        potentials/potential_goals_heuristic
+=======
+        xaip/policy/policy_client
+        xaip/policy/policy_pruning
+>>>>>>> policy-server
     DEPENDS MAX_HEURISTIC
 )
 

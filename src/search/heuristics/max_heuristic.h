@@ -35,7 +35,7 @@ protected:
     virtual int compute_heuristic(const State &ancestor_state) override;
 public:
     explicit HSPMaxHeuristic(const options::Options &opts);
-    std::vector<int> get_heuristic_values(const State &state, std::vector<FactPair> facts);
+    std::vector<int> get_heuristic_values(const State &state, std::vector<FactPair> facts) override;
 };
 }
 

@@ -236,6 +236,10 @@ bool MSGSCollection::prune(const State &state, vector<int> costs, int remaining_
 
 bool MSGSCollection::track(const State &state){
 
+    // cout<< "-------------- CURRENT MSGS ------------------" << endl;
+    // this->print_subsets();
+    // cout<< "-------------- CURRENT MSGS ------------------" << endl;
+
     if(hard_goal_list.size() == 0){
         GoalSubset satisfied_goals = get_satisfied_all_goals(state);
         update_best_state(state.get_id(), satisfied_goals.count());

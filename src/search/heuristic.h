@@ -20,6 +20,7 @@ class Options;
 }
 
 class Heuristic : public Evaluator {
+protected:
     struct HEntry {
         /* dirty is conceptually a bool, but Visual C++ does not support
            packing ints and bools together in a bitfield. */
@@ -45,7 +46,7 @@ class Heuristic : public Evaluator {
     */
     ordered_set::OrderedSet<OperatorID> preferred_operators;
 
-protected:
+
     /*
       Cache for saving h values
       Before accessing this cache always make sure that the cache_evaluator_values
@@ -83,8 +84,7 @@ public:
 
     static void add_options_to_parser(options::OptionParser &parser);
 
-    virtual EvaluationResult compute_result(
-        EvaluationContext &eval_context) override;
+    virtual EvaluationResult compute_result(EvaluationContext &eval_context) override;
 
     virtual bool does_cache_estimates() const override;
     virtual bool is_estimate_cached(const State &state) const override;
@@ -93,6 +93,7 @@ public:
     virtual void set_abstract_task(std::shared_ptr<AbstractTask> task);
     std::shared_ptr<AbstractTask> get_abstract_task() const;
 
+    virtual std::vector<int> get_heuristic_values(const State &state, std::vector<FactPair> facts);
     virtual GoalSubsets get_msgs() const;
     virtual GoalSubsets get_mugs() const;
     virtual void compute_mugs() ;

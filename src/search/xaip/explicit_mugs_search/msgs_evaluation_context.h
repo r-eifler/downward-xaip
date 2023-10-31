@@ -1,10 +1,12 @@
-#ifndef EVALUATION_CONTEXT_H
-#define EVALUATION_CONTEXT_H
+#ifndef MSGS_EVALUATION_CONTEXT_H
+#define MSGS_EVALUATION_CONTEXT_H
 
-#include "evaluation_result.h"
-#include "evaluator_cache.h"
-#include "operator_id.h"
-#include "task_proxy.h"
+#include "../../evaluation_result.h"
+#include "../../evaluator_cache.h"
+#include "../../evaluation_context.h"
+#include "../../operator_id.h"
+#include "../../task_proxy.h"
+#include "msgs_collection.h"
 
 #include <unordered_map>
 
@@ -14,14 +16,14 @@ class SearchStatistics;
 /*
   TODO: Now that we have an explicit EvaluationResult class, it's
   perhaps not such a great idea to duplicate all its access methods
-  like "get_evaluator_value()" etc. on EvaluationContext. Might be a
-  simpler interface to just give EvaluationContext an operator[]
+  like "get_evaluator_value()" etc. on MSGSEvaluationContext. Might be a
+  simpler interface to just give MSGSEvaluationContext an operator[]
   method or other simple way of accessing a given EvaluationResult
   and then use the methods of the result directly.
 */
 
 /*
-  EvaluationContext has two main purposes:
+  MSGSEvaluationContext has two main purposes:
 
   1. It packages up the information that evaluators and open lists
      need in order to perform an evaluation: the state, the g value of
@@ -40,44 +42,32 @@ class SearchStatistics;
      new best f value.
 */
 
-class EvaluationContext {
+class MSGSEvaluationContext : public EvaluationContext{
 
-protected:
-    EvaluatorCache cache;
-    State state;
-    int g_value;
-    bool preferred;
-    SearchStatistics *statistics;
-    bool calculate_preferred;
+    MSGSCollection *current_msgs;
 
-    static const int INVALID = -1;
-
-    EvaluationContext(
+    MSGSEvaluationContext(
         const EvaluatorCache &cache, const State &state, int g_value,
-        bool is_preferred, SearchStatistics *statistics,
+        bool is_preferred, SearchStatistics *statistics, MSGSCollection* current_msgs, 
         bool calculate_preferred);
 public:
-
-    // added because of new MSGSEvaluationContext
-    virtual ~EvaluationContext() = default;
-
     /*
       Copy existing heuristic cache and use it to look up heuristic values.
       Used for example by lazy search.
 
       TODO: Can we reuse caches? Can we move them instead of copying them?
     */
-    EvaluationContext(
-        const EvaluationContext &other,
+    MSGSEvaluationContext(
+        const MSGSEvaluationContext &other,
         int g_value, bool is_preferred, SearchStatistics *statistics,
-        bool calculate_preferred = false);
+        MSGSCollection* current_msgs, bool calculate_preferred = false);
     /*
       Create new heuristic cache for caching heuristic values. Used for example
       by eager search.
     */
-    EvaluationContext(
+    MSGSEvaluationContext(
         const State &state, int g_value, bool is_preferred,
-        SearchStatistics *statistics, bool calculate_preferred = false);
+        SearchStatistics *statistics, MSGSCollection* current_msgs, bool calculate_preferred = false);
     /*
       Use the following constructor when you don't care about g values,
       preferredness (and statistics), e.g. when sampling states for heuristics.
@@ -90,32 +80,17 @@ public:
             the need to store the g value and preferredness for evaluation
             contexts that don't need this information.
     */
-    EvaluationContext(
+    MSGSEvaluationContext(
         const State &state,
-        SearchStatistics *statistics = nullptr, bool calculate_preferred = false);
+        SearchStatistics *statistics = nullptr, MSGSCollection* current_msgs = nullptr, bool calculate_preferred = false);
 
-    virtual const EvaluationResult &get_result(Evaluator *eval);
-    const EvaluatorCache &get_cache() const;
-    const State &get_state() const;
-    int get_g_value() const;
-    bool is_preferred() const;
+    const EvaluationResult &get_result(Evaluator *eval) override;
 
-    /*
-      Use get_evaluator_value() to query finite evaluator values. It
-      is an error (guarded by an assertion) to call this method for
-      states with infinite evaluator values, because such states often
-      need to be treated specially and we want to catch cases where we
-      forget to do this.
+    bool is_evaluator_value_infinite(Evaluator *eval) override;
+    int get_evaluator_value(Evaluator *eval) override;
+    int get_evaluator_value_or_infinity(Evaluator *eval) override;
 
-      In cases where finite and infinite evaluator values can be
-      treated uniformly, use get_evaluator_value_or_infinity(), which
-      returns numeric_limits<int>::max() for infinite estimates.
-    */
-    virtual bool is_evaluator_value_infinite(Evaluator *eval);
-    virtual int get_evaluator_value(Evaluator *eval);
-    virtual int get_evaluator_value_or_infinity(Evaluator *eval);
-    const std::vector<OperatorID> &get_preferred_operators(Evaluator *eval);
-    bool get_calculate_preferred() const;
+    MSGSCollection* get_msgs_collection() const;
 };
 
 #endif

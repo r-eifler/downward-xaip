@@ -62,8 +62,10 @@ int AdditiveCartesianHeuristic::compute_heuristic(const State &ancestor_state) {
 
 std::vector<int> AdditiveCartesianHeuristic::get_heuristic_values(const State &state, std::vector<FactPair>){
     vector<int> costs;
+    // cout << "----------------------------" << endl;
     for (const CartesianHeuristicFunction &function : heuristic_functions) {
         int value = function.get_value(state);
+        // cout << "h=" << value << endl;
         assert(value >= 0);
         costs.push_back(value);
     }

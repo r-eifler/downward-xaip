@@ -2,6 +2,7 @@
 #define EVALUATOR_H
 
 #include "evaluation_result.h"
+#include "xaip/explicit_mugs_search/msgs_evaluation_context.h"
 
 #include "../utils/logging.h"
 
@@ -81,8 +82,7 @@ public:
       EvaluationContext. We need to think of a clean way to achieve
       this.
     */
-    virtual EvaluationResult compute_result(
-        EvaluationContext &eval_context) = 0;
+    virtual EvaluationResult compute_result( EvaluationContext &eval_context) = 0;
 
     void report_value_for_initial_state(const EvaluationResult &result) const;
     void report_new_minimum_value(const EvaluationResult &result) const;
