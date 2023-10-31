@@ -495,13 +495,8 @@ fast_downward_plugin(
         xaip/relaxations/relaxation_iterated_search
         xaip/relaxations/modified_init_task
         xaip/relaxations/relaxation_extension_search
-<<<<<<< HEAD
         potentials/individual_goal_potential_heuristics
         potentials/potential_goals_heuristic
-=======
-        xaip/policy/policy_client
-        xaip/policy/policy_pruning
->>>>>>> policy-server
     DEPENDS MAX_HEURISTIC
 )
 
