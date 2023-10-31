@@ -127,17 +127,19 @@ SearchStatus GoalSubsetAStar::step() {
     tl::optional<SearchNode> node;
     while (true) {
         if (open_list->empty()) {
-            if (log.is_at_least_normal())
-                log << "Completely explored state space -- no solution!" << endl;
             if (osp) {
-                StateID best_state_id = pruning_method->get_cardinally_best_state();
+                StateID best_state_id = current_msgs.get_cardinally_best_state();
                 if (best_state_id != StateID::no_state){
                     cout << "OSP task plan found" << endl;
                     State best_state = state_registry.lookup_state(best_state_id);
-                    cout << "Maximal number of solved soft goals: " << pruning_method->get_max_solved_soft_goals() << endl;
+                    cout << "Maximal number of solved soft goals: " << current_msgs.get_max_solved_soft_goals() << endl;
                     set_osp_plan(best_state);
                     return SOLVED;
                 }
+            }
+            else{
+                if (log.is_at_least_normal())
+                log << "Completely explored state space -- no solution!" << endl;
             }
             return FAILED;
         }
