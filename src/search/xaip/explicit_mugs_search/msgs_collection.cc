@@ -157,7 +157,7 @@ vector<FactPair> MSGSCollection::get_goal_facts() {
 }
 
 void MSGSCollection::update_best_state(StateID id, int num_solved_soft_goals) {
-    if (num_solved_soft_goals >= max_num_solved_soft_goals){
+    if (num_solved_soft_goals > max_num_solved_soft_goals){
         best_state = id;
         max_num_solved_soft_goals = num_solved_soft_goals;
     }
