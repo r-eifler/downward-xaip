@@ -497,6 +497,13 @@ fast_downward_plugin(
         xaip/relaxations/relaxation_extension_search
         potentials/individual_goal_potential_heuristics
         potentials/potential_goals_heuristic
+<<<<<<< Updated upstream
+=======
+        xaip/policy/policy_client
+        xaip/policy/policy_confidence_pruning
+        xaip/policy/policy_diverging_actions_pruning
+        xaip/utils/initial_state_heuristic
+>>>>>>> Stashed changes
     DEPENDS MAX_HEURISTIC
 )
 
