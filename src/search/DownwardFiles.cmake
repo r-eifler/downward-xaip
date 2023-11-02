@@ -499,7 +499,7 @@ fast_downward_plugin(
         potentials/potential_goals_heuristic
         xaip/policy/policy_client
         xaip/policy/policy_confidence_pruning
-        xaip/policy/policy_diverging_actions_prunin
+        xaip/policy/policy_diverging_actions_pruning
     DEPENDS MAX_HEURISTIC
 )
 
