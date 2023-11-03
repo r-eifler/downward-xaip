@@ -20,7 +20,7 @@ void PolicyDivergingActionsPruningMethod::initialize(const shared_ptr<AbstractTa
     cout << "Initialize PolicyDivergingActionsPruningMethod ... " << endl;
     PruningMethod::initialize(task);
     policy_client.initialize(task);
-    policy_client.establish_connection(url);
+    // policy_client.establish_connection(url);
 
     policy_evaluation_timer.reset();
 }
