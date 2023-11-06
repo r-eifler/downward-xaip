@@ -123,13 +123,6 @@ void GoalSubsetAStar::print_statistics() const {
     pruning_method->print_statistics();
 }
 
-void GoalSubsetAStar::print_anytime_results() const {
-    statistics.print_detailed_statistics();
-    search_space.print_statistics();
-    current_msgs.print();
-    pruning_method->print_statistics();
-}
-
 SearchStatus GoalSubsetAStar::step() {
     // cout << "===================== STEP =====================" << endl;
     tl::optional<SearchNode> node;
