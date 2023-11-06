@@ -10,6 +10,10 @@ using namespace goalsubset;
 
 MSGSCollection::MSGSCollection() {}
 
+MSGSCollection::MSGSCollection(bool anytime): anytime(anytime) {
+
+}
+
 void MSGSCollection::initialize(shared_ptr<AbstractTask> task_) {
 
     cout << "---------------- INIT MSGS Collection ---------------------- " << endl;
@@ -248,6 +252,7 @@ bool MSGSCollection::track(const State &state){
         if(!contains_superset(satisfied_goals)){
             this->add_and_mimize(satisfied_goals);
             // cout<< "add new goal subset" << endl;
+            cout << "New MSGS: " << satisfied_goals.to_string(soft_goal_fact_names) << endl;
             return true;
         }
         return false;

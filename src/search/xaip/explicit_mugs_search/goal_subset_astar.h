@@ -20,6 +20,7 @@ class Options;
 namespace goal_subset_astar {
 class GoalSubsetAStar : public SearchEngine {
     const bool reopen_closed_nodes;
+    const bool anytime;
 
     std::unique_ptr<StateOpenList> open_list;
     std::shared_ptr<Evaluator> f_evaluator;
@@ -55,6 +56,7 @@ public:
     }
 
     virtual void print_statistics() const override;
+    virtual void print_anytime_results() const override;
 
     void dump_search_space() const;
 };

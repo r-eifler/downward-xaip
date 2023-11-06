@@ -27,6 +27,7 @@ namespace goal_subset_astar {
 GoalSubsetAStar::GoalSubsetAStar(const Options &opts)
     : SearchEngine(opts),
       reopen_closed_nodes(opts.get<bool>("reopen_closed")),
+      anytime(opts.get<bool>("anytime")),
       open_list(opts.get<shared_ptr<OpenListFactory>>("open")->
                 create_state_open_list()),
       f_evaluator(opts.get<shared_ptr<Evaluator>>("f_eval", nullptr)),
@@ -47,7 +48,7 @@ void GoalSubsetAStar::initialize() {
         << endl;
     assert(open_list);
 
-    current_msgs = MSGSCollection();
+    current_msgs = MSGSCollection(anytime);
     current_msgs.initialize(task);
 
     set<Evaluator *> evals;
@@ -116,6 +117,13 @@ void GoalSubsetAStar::initialize() {
 }
 
 void GoalSubsetAStar::print_statistics() const {
+    statistics.print_detailed_statistics();
+    search_space.print_statistics();
+    current_msgs.print();
+    pruning_method->print_statistics();
+}
+
+void GoalSubsetAStar::print_anytime_results() const {
     statistics.print_detailed_statistics();
     search_space.print_statistics();
     current_msgs.print();
@@ -386,6 +394,7 @@ static shared_ptr<SearchEngine> _parse(OptionParser &parser) {
         "lazy_evaluator",
         "An evaluator that re-evaluates a state before it is expanded.",
         OptionParser::NONE);
+    parser.add_option<bool>("anytime", "print every new MSGS that is found during search", "false");
 
     add_options_to_parser(parser);
     Options opts = parser.parse();

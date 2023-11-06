@@ -110,6 +110,7 @@ class GoalSubset {
     
 
     void print() const;
+    std::string to_string(std::vector<std::string> goal_facts_names);
 };
 
 class GoalSubsetHashFunction {

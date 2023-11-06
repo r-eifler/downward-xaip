@@ -30,6 +30,7 @@ private:
 
     StateID best_state = StateID::no_state;
     int max_num_solved_soft_goals = 0;
+    bool anytime = false;
 
 protected:
 
@@ -47,6 +48,7 @@ protected:
 
 public:
     explicit MSGSCollection();
+    explicit MSGSCollection(bool anytime);
     void initialize(std::shared_ptr<AbstractTask> task);
 
     std::vector<FactPair> get_goal_facts();

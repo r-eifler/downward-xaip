@@ -100,4 +100,25 @@ void GoalSubset::print() const {
     cout << goals << endl;
 }
 
+std::string GoalSubset::to_string(std::vector<std::string> goal_facts_names) {
+    
+    vector<string> fact_names;
+    for (size_t i = 0; i < goal_facts_names.size(); i++) {
+        if (this->contains(i)) {
+            fact_names.push_back(goal_facts_names[i]);
+        }
+    }
+
+    string s = "";
+    for(uint i = 0; i < fact_names.size(); i++){
+            s += fact_names[i];
+            if (i < fact_names.size() - 1){
+                s += "|";
+            }
+        }
+
+    return s;
+}
+
+
 }
