@@ -252,7 +252,9 @@ bool MSGSCollection::track(const State &state){
         if(!contains_superset(satisfied_goals)){
             this->add_and_mimize(satisfied_goals);
             // cout<< "add new goal subset" << endl;
-            cout << "New MSGS: " << satisfied_goals.to_string(soft_goal_fact_names) << endl;
+			if(anytime){
+				cout << "New MSGS: " << satisfied_goals.to_string(soft_goal_fact_names) << endl;
+			}
             return true;
         }
         return false;
