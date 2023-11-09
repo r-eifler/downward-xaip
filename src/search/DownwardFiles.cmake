@@ -500,6 +500,7 @@ fast_downward_plugin(
         xaip/policy/policy_client
         xaip/policy/policy_confidence_pruning
         xaip/policy/policy_diverging_actions_pruning
+        xaip/utils/initial_state_heuristic
     DEPENDS MAX_HEURISTIC
 )
 
