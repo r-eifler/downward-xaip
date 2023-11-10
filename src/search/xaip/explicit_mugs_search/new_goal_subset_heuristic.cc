@@ -145,7 +145,7 @@ int NewGoalSubsetHeuristic::compute_heuristic(const State &state, MSGSCollection
         max_hard_goal = max(costs[i], max_hard_goal);
     }
 
-    int max_get_superset = 0;
+    int min_get_superset = -1;
     for(GoalSubset gs : (*current_msgs)){
         //max unsat
         // int max_unsat = 0;
@@ -167,11 +167,11 @@ int NewGoalSubsetHeuristic::compute_heuristic(const State &state, MSGSCollection
         // cout << "subset: ";
         // gs.print();
         // cout << "h=" << min_to_sat << endl;
-        max_get_superset = max(min_to_sat, max_get_superset);
+        min_get_superset = min(min_to_sat, min_get_superset);
 
     }
 
-    int res = max(max_hard_goal, max_get_superset);
+    int res = max(max_hard_goal, min_get_superset);
     // cout << "res: " << res << endl;
 
     // current_msgs.track(state);
