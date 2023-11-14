@@ -1,6 +1,7 @@
 #include "msgs_collection.h"
 
 #include "../../tasks/root_task.h"
+#include "../../utils/logging.h"
 
 #include <fstream>
 #include <bitset>
@@ -253,7 +254,7 @@ bool MSGSCollection::track(const State &state){
             this->add_and_mimize(satisfied_goals);
             // cout<< "add new goal subset" << endl;
 			if(anytime){
-				cout << "New MSGS: " << satisfied_goals.to_string(soft_goal_fact_names) << endl;
+				utils::g_log << "New MSGS: " << satisfied_goals.to_string(soft_goal_fact_names) << endl;
 			}
             return true;
         }
