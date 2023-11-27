@@ -75,6 +75,12 @@ public:
      */
     OperatorID apply(const State &state);
     static OperatorID static_apply(const State &state);
+
+    /**
+     * Get probability distribution over applicable operators.
+     */
+    bool get_operators_prob(const State &state, std::vector<OperatorID>* applicable_operator_ids, std::vector<float>* operator_probabilities);
+    static bool static_operators_prob(const State &state, std::vector<OperatorID>* applicable_operator_ids, std::vector<float>* operator_probabilities);
 };
 }
 

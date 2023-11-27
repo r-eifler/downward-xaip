@@ -13,7 +13,7 @@ PolicyConfidencePruningMethod::PolicyConfidencePruningMethod(const Options &opts
     url(opts.get<string>("url")),
     project_resources(opts.get<bool>("project_resources")),
     policy_client(PolicyClient(url, project_resources)),
-    T(opts.get<int>("threshold")) {
+    T(opts.get<double>("threshold")) {
 }
 
 void PolicyConfidencePruningMethod::initialize(const shared_ptr<AbstractTask> &task) {
@@ -22,27 +22,43 @@ void PolicyConfidencePruningMethod::initialize(const shared_ptr<AbstractTask> &t
 }
 
 void PolicyConfidencePruningMethod::prune(const State &state, std::vector<OperatorID> & op_ids) {
-    vector<double> policy_values; // = policy_client.get_value(state, op_ids);
 
-    double max = 0.0;
-    for(size_t i = 0; i < policy_values.size(); i++){
-        if(policy_values[i] > max){
-            max = policy_values[i];
+     if(op_ids.size() == 0){
+        return;
+    }
+
+    vector<OperatorID> applicable_operators;
+    vector<float> operator_probabilities;
+
+    policy_client.get_operators_prob(state, &applicable_operators, &operator_probabilities);
+
+    float max = 0.0;
+    // cout << "--------------------------------" << endl;
+    for(size_t i = 0; i < operator_probabilities.size(); i++){
+        // cout << operator_probabilities[i] << " ";
+        if(operator_probabilities[i] > max){
+            max = operator_probabilities[i];
         }
         // cout << "Curr Max: " << max << endl;
     }
+    // cout << endl;
+    sum_max_probabilities += max;
+   
+    int index = int(10 * max);
+    max_prob_distribution[index] += 1;
+    num_tested_states += 1;
 
     // cout << "Max: " << max << endl;
 
-    // Now check which applicable operators are in the stubborn set.
     vector<OperatorID> remaining_op_ids;
     remaining_op_ids.reserve(op_ids.size());
-    for(size_t i = 0; i < policy_values.size(); i++){
-        if(max - policy_values[i] <= T){
-            remaining_op_ids.push_back(op_ids[i]);
+    for(size_t i = 0; i < operator_probabilities.size(); i++){
+        // cout << max - operator_probabilities[i] << endl;
+        if(max - operator_probabilities[i] <= T){
+            remaining_op_ids.push_back(applicable_operators[i]);
         }
     }
-    // cout << "remaining ops: " << remaining_op_ids.size() << endl;
+    // cout << "Num operators: " << remaining_op_ids.size() << endl;
     op_ids.swap(remaining_op_ids);
 }
 
@@ -52,7 +68,7 @@ static shared_ptr<PruningMethod> _parse(OptionParser &parser) {
         "url",
         "url of the policy server",
         "localhost:54321");
-    parser.add_option<int>(
+    parser.add_option<double>(
         "threshold",
         "threshold for policy confidence",
         "1",
