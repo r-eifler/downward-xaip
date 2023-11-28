@@ -99,7 +99,10 @@ bool PolicyClient::static_operators_prob(const State &state_in, vector<OperatorI
     int st = phrmPolicyFDRStateOperatorsProb(pheromone_policy, state.data(), state.size(),
                                             &op_size, &op_ids, &op_probs);
 
-    assert(st == 0);
+    if(st == 1){
+        std::cerr << "phrmPolicyFDRStateOperatorsProb failed" << std::endl;
+        utils::exit_with(utils::ExitCode::REMOTE_POLICY_ERROR);
+    }
 
     for (int opi = 0; opi < op_size; ++opi){
         applicable_operator_ids->push_back(OperatorID(op_ids[opi]));
