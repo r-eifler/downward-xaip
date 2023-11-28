@@ -31,6 +31,7 @@ private:
     StateID best_state = StateID::no_state;
     int max_num_solved_soft_goals = 0;
     bool anytime = false;
+    int num_states = 0;
 
 protected:
 

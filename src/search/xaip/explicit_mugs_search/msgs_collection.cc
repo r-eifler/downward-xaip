@@ -245,6 +245,8 @@ bool MSGSCollection::track(const State &state){
     // this->print_subsets();
     // cout<< "-------------- CURRENT MSGS ------------------" << endl;
 
+    num_states++;
+
     if(hard_goal_list.size() == 0){
         GoalSubset satisfied_goals = get_satisfied_all_goals(state);
         update_best_state(state.get_id(), satisfied_goals.count());
@@ -254,7 +256,7 @@ bool MSGSCollection::track(const State &state){
             this->add_and_mimize(satisfied_goals);
             // cout<< "add new goal subset" << endl;
 			if(anytime){
-				utils::g_log << "New MSGS: " << satisfied_goals.to_string(soft_goal_fact_names) << endl;
+				utils::g_log << "New MSGS: " << satisfied_goals.to_string(soft_goal_fact_names) << " after " << num_states << " states " << endl;
 			}
             return true;
         }
