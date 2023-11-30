@@ -73,7 +73,7 @@ double Timer::current_clock() const {
     uint64_t end = mach_absolute_time();
     mach_absolute_difference(end, start, &tp);
 #else
-    clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &tp);
+    clock_gettime(CLOCK_MONOTONIC_COARSE, &tp);
 #endif
     return tp.tv_sec + tp.tv_nsec / 1e9;
 #endif
