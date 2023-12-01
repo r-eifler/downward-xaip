@@ -32,6 +32,11 @@ void PolicyConfidencePruningMethod::prune(const State &state, std::vector<Operat
 
     policy_client.get_operators_prob(state, &applicable_operators, &operator_probabilities);
 
+    if(applicable_operators.size() == 0){
+        std::cerr << "get_operators_prob retuens no operators altough there exist applicable operators" << std::endl;
+        utils::exit_with(utils::ExitCode::REMOTE_POLICY_ERROR);
+    }
+
     float max = 0.0;
     // cout << "--------------------------------" << endl;
     for(size_t i = 0; i < operator_probabilities.size(); i++){
