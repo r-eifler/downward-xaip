@@ -102,6 +102,8 @@ int HSPMaxHeuristic::compute_heuristic(const State &ancestor_state) {
 
 vector<int> HSPMaxHeuristic::get_heuristic_values(const State &state, vector<FactPair> facts){
 
+    // State state = convert_ancestor_state(ancestor_state);
+
     setup_exploration_queue();
     setup_exploration_queue_state(state);
     relaxed_exploration();

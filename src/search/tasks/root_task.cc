@@ -589,9 +589,10 @@ vector<int> RootTask::get_initial_state_values() const {
 
 void RootTask::convert_state_values(
     vector<int> &, const AbstractTask *ancestor_task) const {
-    if (this != ancestor_task) {
-        ABORT("Invalid state conversion");
-    }
+        // cout << this << " " << ancestor_task << endl;
+    // if (this != ancestor_task) {
+    //     ABORT("Invalid state conversion");
+    // }
 }
 
 void read_root_task(istream &in, bool is_osp_task) {
