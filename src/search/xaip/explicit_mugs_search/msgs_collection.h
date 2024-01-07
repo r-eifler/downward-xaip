@@ -15,6 +15,7 @@ class MSGSCollection : public GoalSubsets{
 
 private: 
 
+    bool initialized = false;
     std::shared_ptr<AbstractTask> task;
 
     std::vector<FactPair> soft_goal_list;
@@ -58,6 +59,14 @@ public:
     int get_max_solved_soft_goals() {return max_num_solved_soft_goals;}
 
     GoalSubsets get_mugs() const;
+
+    int get_size() const {
+        return subsets.size();
+    }
+
+    bool is_initialized() const {
+        return initialized;
+    }
 
     void print() const;
     std::vector<std::vector<std::string>> generate_msgs_string();

@@ -47,8 +47,10 @@ void GoalSubsetAStar::initialize() {
         << endl;
     assert(open_list);
 
-    current_msgs = MSGSCollection();
-    current_msgs.initialize(task);
+    if(! current_msgs.is_initialized()){
+        current_msgs.initialize(task);
+    }
+
 
     set<Evaluator *> evals;
     open_list->get_path_dependent_evaluators(evals);
@@ -363,6 +365,14 @@ void GoalSubsetAStar::update_f_value_statistics(MSGSEvaluationContext &eval_cont
         int f_value = eval_context.get_evaluator_value(f_evaluator.get());
         statistics.report_f_value_progress(f_value);
     }
+}
+
+void  GoalSubsetAStar::init_msgs(MSGSCollection collection){
+    this->current_msgs = collection;
+}
+
+MSGSCollection  GoalSubsetAStar::get_msgs(){
+    return this->current_msgs;
 }
 
 void add_options_to_parser(OptionParser &parser) {

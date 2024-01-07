@@ -54,6 +54,9 @@ public:
         return pruning_method;
     }
 
+    void init_msgs(MSGSCollection collection);
+    MSGSCollection get_msgs();
+
     virtual void print_statistics() const override;
 
     void dump_search_space() const;

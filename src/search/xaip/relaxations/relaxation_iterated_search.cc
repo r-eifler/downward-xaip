@@ -7,8 +7,7 @@
 #include "../heuristic.h"
 #include "../explicit_mugs_search/msgs_collection.h"
 #include "../goal_subsets/output_handler.h"
-#include "../../search_engines/eager_search.h"
-
+#include "../explicit_mugs_search/goal_subset_astar.h"
 #include <iostream>
 
 using namespace std;
@@ -54,8 +53,8 @@ shared_ptr<SearchEngine> RelaxationIteratedSearch::get_search_engine() {
     OptionParser parser(engine_configs[0], registry, predefinitions, false);
     shared_ptr<SearchEngine> engine(parser.start_parsing<shared_ptr<SearchEngine>>());
 
-    cout << "update pruning method" << endl;
-    static_pointer_cast<eager_search::EagerSearch>(engine)->get_pruning_method()->init_msgs(relaxedTask->get_msgs());
+    cout << "init search with MSGS" << endl;
+    static_pointer_cast<goal_subset_astar::GoalSubsetAStar>(engine)->init_msgs(relaxedTask->get_msgs());
 
     cout << "Starting search log: ";
     kptree::print_tree_bracketed(engine_configs[0], cout);
@@ -82,7 +81,7 @@ SearchStatus RelaxationIteratedSearch::step() {
     cout << "start search" << endl;
     current_search->search();
 
-    relaxedTask->add_msgs(static_pointer_cast<eager_search::EagerSearch>(current_search)->get_pruning_method()->get_msgs());
+    relaxedTask->add_msgs(static_pointer_cast<goal_subset_astar::GoalSubsetAStar>(current_search)->get_msgs());
     // relaxedTask->print();
 
 
