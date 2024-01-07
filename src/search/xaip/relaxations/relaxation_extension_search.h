@@ -28,8 +28,11 @@ class RelaxationExtensionSearch : public SearchEngine {
     std::vector<Evaluator *> path_dependent_evaluators;
     std::vector<std::shared_ptr<Evaluator>> preferred_operator_evaluators;
     std::shared_ptr<Evaluator> lazy_evaluator;
+    std::shared_ptr<Evaluator> eval;
 
     std::shared_ptr<PruningMethod> pruning_method;
+
+    MSGSCollection current_msgs;
 
     TaskRelaxationTracker* taskRelaxationTracker;
     RelaxedTask* relaxedTask;

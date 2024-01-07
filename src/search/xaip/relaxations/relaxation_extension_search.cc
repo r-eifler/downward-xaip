@@ -1,6 +1,6 @@
 #include "relaxation_extension_search.h"
 
-#include "../../evaluation_context.h"
+#include "../explicit_mugs_search/msgs_evaluation_context.h"
 #include "../../evaluator.h"
 #include "../../open_list_factory.h"
 #include "../../option_parser.h"
@@ -36,6 +36,7 @@ RelaxationExtensionSearch::RelaxationExtensionSearch(const Options &opts)
       f_evaluator(opts.get<shared_ptr<Evaluator>>("f_eval", nullptr)),
       preferred_operator_evaluators(opts.get_list<shared_ptr<Evaluator>>("preferred")),
       lazy_evaluator(opts.get<shared_ptr<Evaluator>>("lazy_evaluator", nullptr)),
+      eval(opts.get<shared_ptr<Evaluator>>("eval", nullptr)),
       pruning_method(opts.get<shared_ptr<PruningMethod>>("pruning")) {
     if (lazy_evaluator && !lazy_evaluator->does_cache_estimates()) {
         cerr << "lazy_evaluator must cache its estimates" << endl;
@@ -49,6 +50,10 @@ void RelaxationExtensionSearch::initialize() {
         << " reopening closed nodes, (real) bound = " << bound
         << endl;
     assert(open_list);
+
+    if(! current_msgs.is_initialized()){
+        current_msgs.initialize(task);
+    }
 
     set<Evaluator *> evals;
     open_list->get_path_dependent_evaluators(evals);
@@ -87,6 +92,7 @@ void RelaxationExtensionSearch::initialize() {
         evaluator->notify_initial_state(initial_state);
     }
 
+    current_msgs.track(initial_state);
     pruning_method->prune_state(initial_state, bound);
     
     taskRelaxationTracker = new TaskRelaxationTracker(this->getTask());
@@ -97,7 +103,7 @@ void RelaxationExtensionSearch::initialize() {
       Note: we consider the initial state as reached by a preferred
       operator.
     */
-    EvaluationContext eval_context(initial_state, 0, true, &statistics);
+    MSGSEvaluationContext eval_context(initial_state, 0, true, &statistics, &current_msgs);
 
     statistics.inc_evaluated_states();
 
@@ -141,7 +147,7 @@ bool RelaxationExtensionSearch::expand(const State &state){
     pruning_method->prune_operators(state, applicable_ops);
 
     // This evaluates the expanded state (again) to get preferred ops
-    EvaluationContext eval_context(state, node->get_g(), false, &statistics, true);
+    MSGSEvaluationContext eval_context(state, node->get_g(), false, &statistics, &current_msgs, true);
     ordered_set::OrderedSet<OperatorID> preferred_operators;
     for (const shared_ptr<Evaluator> &preferred_operator_evaluator : preferred_operator_evaluators) {
         collect_preferred_operators(eval_context,
@@ -183,8 +189,8 @@ bool RelaxationExtensionSearch::expand(const State &state){
             // TODO: Make this less fragile.
             int succ_g = node->get_g() + get_adjusted_cost(op);
 
-            EvaluationContext succ_eval_context(
-                succ_state, succ_g, is_preferred, &statistics);
+            MSGSEvaluationContext succ_eval_context(
+                succ_state, succ_g, is_preferred, &statistics, &current_msgs);
             statistics.inc_evaluated_states();
 
             if (open_list->is_dead_end(succ_eval_context)) {
@@ -192,6 +198,13 @@ bool RelaxationExtensionSearch::expand(const State &state){
                 statistics.inc_dead_ends();
                 continue;
             }
+
+            int succ_estimate = succ_eval_context.get_evaluator_value_or_infinity(eval.get());
+            if(succ_estimate == - 1 or succ_estimate + (node->get_real_g() + op.get_cost()) >= bound){
+                // cout << "prune: " << succ_estimate << " or " << succ_estimate << " + " <<  (node->get_real_g() + op.get_cost()) << " = " << estimate + (node->get_real_g() + op.get_cost())  << endl;
+                continue;
+            }
+
             if (pruning_method->prune_state(succ_state, bound - (node->get_real_g() + op.get_cost()))){
                 continue;
             }
@@ -218,8 +231,8 @@ bool RelaxationExtensionSearch::expand(const State &state){
                 }
                 succ_node.reopen(*node, op, get_adjusted_cost(op));
 
-                EvaluationContext succ_eval_context(
-                    succ_state, succ_node.get_g(), is_preferred, &statistics);
+                MSGSEvaluationContext succ_eval_context(
+                    succ_state, succ_node.get_g(), is_preferred, &statistics, &current_msgs);
 
                 /*
                   Note: our old code used to retrieve the h value from
@@ -269,11 +282,13 @@ SearchStatus RelaxationExtensionSearch::step() {
         if (node->is_closed())
             continue;
 
+        current_msgs.track(s);
+
         /*
           We can pass calculate_preferred=false here since preferred
           operators are computed when the state is expanded.
         */
-        EvaluationContext eval_context(s, node->get_g(), false, &statistics);
+        MSGSEvaluationContext eval_context(s, node->get_g(), false, &statistics, &current_msgs);
 
         if (lazy_evaluator) {
             /*
@@ -374,7 +389,7 @@ bool RelaxationExtensionSearch::next_relaxed_task() {
     }
 
     // update MSGS of finished iteration
-    relaxedTask->add_msgs(pruning_method->get_msgs());
+    relaxedTask->add_msgs(current_msgs);
 
     relaxedTask->set_num_expanded_states(statistics.get_expanded() - expanded_states_up_to_prev_task);
     expanded_states_up_to_prev_task = statistics.get_expanded();
@@ -399,7 +414,7 @@ bool RelaxationExtensionSearch::next_relaxed_task() {
         relaxedTask->add_msgs(t->get_msgs());
     }
 
-    pruning_method->init_msgs(relaxedTask->get_msgs());
+    current_msgs = relaxedTask->get_msgs();
     cout << "init #MSGS: " << relaxedTask->get_msgs().size() << endl;
 
     return init_with_frontier_states();
@@ -407,7 +422,7 @@ bool RelaxationExtensionSearch::next_relaxed_task() {
 
 bool RelaxationExtensionSearch::init_with_frontier_states()
 {
-    std::cout << "EXTERNAL RELAXATION: continue with frontier states" << std::endl;
+    std::cout << "ITERATIVE EXPANSION OF STATE SPACE: continue with frontier states" << std::endl;
 //    std::cout << "frontier: #states: " << pending_initial_states.size() << std::endl;
 
     //Get frontier states from lower cover
