@@ -221,6 +221,8 @@ SearchStatus GoalSubsetAStar::step() {
                                     preferred_operators);
     }
 
+    // int pre_estimate = eval_context.get_evaluator_value_or_infinity(eval.get());
+
     for (OperatorID op_id : applicable_ops) {
         // cout << "****************** EXPAND *****************" << endl;
         OperatorProxy op = task_proxy.get_operators()[op_id];
@@ -264,6 +266,14 @@ SearchStatus GoalSubsetAStar::step() {
             }
 
             int succ_estimate = succ_eval_context.get_evaluator_value_or_infinity(eval.get());
+
+            // consistency test
+            // cout << "h(succ) = " << succ_estimate << endl;
+            // if (pre_estimate > succ_estimate + op.get_cost()){
+            //     cout << "----------------- NOT CONSISTENT -----------------" << endl;
+            //     cout << pre_estimate << " > " << succ_estimate << " + " << op.get_cost() << endl;
+            // }
+
             // cout << "prune test: " << succ_estimate << " or " << succ_estimate << " + " <<  (node->get_real_g() + op.get_cost()) << " = " << estimate + (node->get_real_g() + op.get_cost())  << endl;
             if(succ_estimate == - 1 or succ_estimate + (node->get_real_g() + op.get_cost()) >= bound){
                 // cout << "prune: " << succ_estimate << " or " << succ_estimate << " + " <<  (node->get_real_g() + op.get_cost()) << " = " << estimate + (node->get_real_g() + op.get_cost())  << endl;

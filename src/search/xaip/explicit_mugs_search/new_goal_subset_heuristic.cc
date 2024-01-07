@@ -159,6 +159,7 @@ int NewGoalSubsetHeuristic::compute_heuristic(const State &state, MSGSCollection
         //min to sat
         int min_to_sat = -1; // infinity
         for(size_t i = 0; i < soft_goal_list.size(); i++){
+            // cout << i << " = " << costs[hard_goal_list.size() + i] << endl;
             if(! gs.contains(i)){
                 min_to_sat =min(min_to_sat, costs[hard_goal_list.size() + i]);
             }
