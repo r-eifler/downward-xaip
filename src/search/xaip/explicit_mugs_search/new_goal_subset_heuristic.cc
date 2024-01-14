@@ -10,7 +10,7 @@ using namespace goalsubset;
 
 namespace new_goal_subset_heuristic {
 NewGoalSubsetHeuristic::NewGoalSubsetHeuristic(const Options &opts)
-    : Heuristic(opts),
+    : Heuristic(opts), heuristic_cache(HGEntry(NO_VALUE, 0, true)),
     h(opts.get<shared_ptr<Evaluator>>("h", nullptr)){
 
     log << "--> new goal subset heuristic" << endl;
@@ -102,19 +102,23 @@ EvaluationResult NewGoalSubsetHeuristic::compute_result(EvaluationContext &eval_
     MSGSEvaluationContext* msgs_eval_context = dynamic_cast<MSGSEvaluationContext*>(&eval_context);
 
     const State &state = msgs_eval_context->get_state();
+    const int g = msgs_eval_context-> get_g_value();
     MSGSCollection* current_msgs = msgs_eval_context->get_msgs_collection();
+    int remaining_cost = msgs_eval_context->get_cost_bound() - msgs_eval_context->get_g_value();
     // cout << "Size current MUGS: " << current_msgs->size() << endl;
 
     int heuristic = NO_VALUE;
 
     if (cache_evaluator_values &&
-        heuristic_cache[state].h != NO_VALUE && !heuristic_cache[state].dirty) {
+        heuristic_cache[state].h != NO_VALUE && 
+        heuristic_cache[state].g == g &&
+        !heuristic_cache[state].dirty) {
         heuristic = heuristic_cache[state].h;
         result.set_count_evaluation(false);
     } else {
-        heuristic = compute_heuristic(state, current_msgs);
+        heuristic = compute_heuristic(state, current_msgs, remaining_cost);
         if (cache_evaluator_values) {
-            heuristic_cache[state] = HEntry(heuristic, false);
+            heuristic_cache[state] = HGEntry(heuristic, g, false);
         }
         result.set_count_evaluation(true);
     }
@@ -129,60 +133,25 @@ EvaluationResult NewGoalSubsetHeuristic::compute_result(EvaluationContext &eval_
     return result;
 }
 
-int NewGoalSubsetHeuristic::compute_heuristic(const State &state, MSGSCollection* current_msgs){
+int NewGoalSubsetHeuristic::compute_heuristic(const State &state, MSGSCollection* current_msgs, int remaining_cost){
+
+    // cout << "new goal subset heuristic: " << state.get_id() << " = ";
 
     vector<int> costs = goals_heuristic->get_heuristic_values(state, all_goal_list);
     // costs contains the heuristic estimate of all goal fact in the order in
     // all_goal_list (first hard goals, then soft goals)
 
     //check all hard goals reachable
-    int max_hard_goal = 0;
-    GoalSubset reachable_goals = GoalSubset(all_goal_list.size());
-    for(size_t i = 0; i < hard_goal_list.size(); i++){
-        if(costs[i] == -1){
-            return - 1;
-        }
-        max_hard_goal = max(costs[i], max_hard_goal);
-    }
-
-    int min_get_superset = -1;
-    for(GoalSubset gs : (*current_msgs)){
-        //max unsat
-        // int max_unsat = 0;
-        // for(size_t i = 0; i < soft_goal_list.size(); i++){
-        //     FactPair g = soft_goal_list[i];
-        //     if(gs.contains(i) && state[g.var].get_value() != g.value){
-        //         max_unsat = max(max_unsat, costs[hard_goal_list.size() + i]);
-        //     }
-        // }
-
-        //min to sat
-        int min_to_sat = -1; // infinity
-        for(size_t i = 0; i < soft_goal_list.size(); i++){
-            // cout << i << " = " << costs[hard_goal_list.size() + i] << endl;
-            if(! gs.contains(i)){
-                min_to_sat =min(min_to_sat, costs[hard_goal_list.size() + i]);
-            }
-        }
-
-        // cout << "subset: ";
-        // gs.print();
-        // cout << "h=" << min_to_sat << endl;
-        min_get_superset = min(min_to_sat, min_get_superset);
-
-    }
-
-    int res = max(max_hard_goal, min_get_superset);
-    // cout << "res: " << res << endl;
-
-    // current_msgs.track(state);
-
+    int res = current_msgs->prune(state, costs, remaining_cost);
+    // cout << res << endl;
     return res;
 }
 
 
 
 int NewGoalSubsetHeuristic::compute_heuristic(const State &state){
+
+    // cout << "new goal subset heuristic: -------------------------------" << endl;
 
     vector<int> costs = goals_heuristic->get_heuristic_values(state, all_goal_list);
     int res = 0;

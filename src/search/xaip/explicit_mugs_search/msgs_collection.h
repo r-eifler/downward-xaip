@@ -53,7 +53,7 @@ public:
     std::vector<FactPair> get_goal_facts();
     void add_and_mimize(GoalSubsets subsets);
 
-    bool prune(const State &state, std::vector<int> costs, int remaining_cost);
+    int prune(const State &state, std::vector<int> costs, int remaining_cost);
     bool track(const State &state);
     StateID get_cardinally_best_state() {return best_state;}
     int get_max_solved_soft_goals() {return max_num_solved_soft_goals;}

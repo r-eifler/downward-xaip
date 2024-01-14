@@ -103,7 +103,7 @@ void RelaxationExtensionSearch::initialize() {
       Note: we consider the initial state as reached by a preferred
       operator.
     */
-    MSGSEvaluationContext eval_context(initial_state, 0, true, &statistics, &current_msgs);
+    MSGSEvaluationContext eval_context(initial_state, 0, true, &statistics, &current_msgs, bound);
 
     statistics.inc_evaluated_states();
 
@@ -190,7 +190,7 @@ bool RelaxationExtensionSearch::expand(const State &state){
             int succ_g = node->get_g() + get_adjusted_cost(op);
 
             MSGSEvaluationContext succ_eval_context(
-                succ_state, succ_g, is_preferred, &statistics, &current_msgs);
+                succ_state, succ_g, is_preferred, &statistics, &current_msgs, bound);
             statistics.inc_evaluated_states();
 
             if (open_list->is_dead_end(succ_eval_context)) {
@@ -232,7 +232,7 @@ bool RelaxationExtensionSearch::expand(const State &state){
                 succ_node.reopen(*node, op, get_adjusted_cost(op));
 
                 MSGSEvaluationContext succ_eval_context(
-                    succ_state, succ_node.get_g(), is_preferred, &statistics, &current_msgs);
+                    succ_state, succ_node.get_g(), is_preferred, &statistics, &current_msgs, bound);
 
                 /*
                   Note: our old code used to retrieve the h value from
@@ -288,7 +288,7 @@ SearchStatus RelaxationExtensionSearch::step() {
           We can pass calculate_preferred=false here since preferred
           operators are computed when the state is expanded.
         */
-        MSGSEvaluationContext eval_context(s, node->get_g(), false, &statistics, &current_msgs);
+        MSGSEvaluationContext eval_context(s, node->get_g(), false, &statistics, &current_msgs, bound);
 
         if (lazy_evaluator) {
             /*

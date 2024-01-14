@@ -12,27 +12,27 @@ using namespace std;
 MSGSEvaluationContext::MSGSEvaluationContext(
     const EvaluatorCache &cache, const State &state, int g_value,
     bool is_preferred, SearchStatistics *statistics,
-    MSGSCollection *current_msgs,
+    MSGSCollection *current_msgs, int bound,
     bool calculate_preferred)
     :  EvaluationContext(cache, state, g_value, is_preferred, statistics, calculate_preferred),
-    current_msgs(current_msgs){
+    current_msgs(current_msgs), bound(bound){
 }
 
 
 MSGSEvaluationContext::MSGSEvaluationContext(
     const MSGSEvaluationContext &other, int g_value,
-    bool is_preferred, SearchStatistics *statistics, MSGSCollection *current_msgs, bool calculate_preferred)
+    bool is_preferred, SearchStatistics *statistics, MSGSCollection *current_msgs, int bound, bool calculate_preferred)
     : EvaluationContext(other.cache, other.state, g_value, is_preferred,
                         statistics, calculate_preferred),
-    current_msgs(current_msgs) {
+    current_msgs(current_msgs), bound(bound) {
 }
 
 MSGSEvaluationContext::MSGSEvaluationContext(
     const State &state, int g_value, bool is_preferred,
-    SearchStatistics *statistics, MSGSCollection *current_msgs, bool calculate_preferred)
+    SearchStatistics *statistics, MSGSCollection *current_msgs, int bound, bool calculate_preferred)
     : EvaluationContext(EvaluatorCache(), state, g_value, is_preferred,
                         statistics, calculate_preferred) ,
-    current_msgs(current_msgs){
+    current_msgs(current_msgs), bound(bound){
 }
 
 MSGSEvaluationContext::MSGSEvaluationContext(
@@ -72,6 +72,10 @@ int MSGSEvaluationContext::get_evaluator_value_or_infinity(Evaluator *eval) {
 
 MSGSCollection* MSGSEvaluationContext::get_msgs_collection() const{
     return current_msgs;
+}
+
+int MSGSEvaluationContext::get_cost_bound() const{
+    return bound;
 }
 
 
