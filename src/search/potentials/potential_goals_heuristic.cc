@@ -20,7 +20,10 @@ int PotentialGoalsHeuristic::compute_heuristic(const State &ancestor_state) {
     State state = convert_ancestor_state(ancestor_state);
     int value = 0;
     for (auto &function : functions) {
-        value = max(value, function->get_value(state));
+        int e = max(value, function->get_value(state));
+        if (e == std::numeric_limits<int>::max())
+            continue;
+        value += e;
     }
     return value;
 }
