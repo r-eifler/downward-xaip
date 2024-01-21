@@ -14,6 +14,21 @@ namespace new_goal_subset_heuristic {
 
 class NewGoalSubsetHeuristic : public Heuristic {
 
+protected:
+
+    struct HGEntry : HEntry {
+        /* dirty is conceptually a bool, but Visual C++ does not support
+           packing ints and bools together in a bitfield. */
+        int g : 31;
+
+        HGEntry(int h, int g, bool dirty)
+            : HEntry(h, dirty), g(g) {
+        }
+    };
+    static_assert(sizeof(HGEntry) == 8, "HEntry has unexpected size.");
+
+    PerStateInformation<HGEntry> heuristic_cache;
+
 private:
 
     std::vector<FactPair> soft_goal_list;
@@ -32,7 +47,7 @@ private:
 public:
     explicit NewGoalSubsetHeuristic(const options::Options &opts);
 
-    int compute_heuristic(const State &ancestor_state, MSGSCollection* current_msgs);
+    int compute_heuristic(const State &ancestor_state, MSGSCollection* current_msgs, int remaining_cost);
     int compute_heuristic(const State &ancestor_state);
     virtual EvaluationResult compute_result(EvaluationContext &eval_context) override;
     virtual void print_statistics() const override;

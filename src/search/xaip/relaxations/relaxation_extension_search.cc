@@ -1,6 +1,6 @@
 #include "relaxation_extension_search.h"
 
-#include "../../evaluation_context.h"
+#include "../explicit_mugs_search/msgs_evaluation_context.h"
 #include "../../evaluator.h"
 #include "../../open_list_factory.h"
 #include "../../option_parser.h"
@@ -33,14 +33,8 @@ RelaxationExtensionSearch::RelaxationExtensionSearch(const Options &opts)
       reopen_closed_nodes(opts.get<bool>("reopen_closed")),
       open_list(opts.get<shared_ptr<OpenListFactory>>("open")->
                 create_state_open_list()),
-      f_evaluator(opts.get<shared_ptr<Evaluator>>("f_eval", nullptr)),
-      preferred_operator_evaluators(opts.get_list<shared_ptr<Evaluator>>("preferred")),
-      lazy_evaluator(opts.get<shared_ptr<Evaluator>>("lazy_evaluator", nullptr)),
-      pruning_method(opts.get<shared_ptr<PruningMethod>>("pruning")) {
-    if (lazy_evaluator && !lazy_evaluator->does_cache_estimates()) {
-        cerr << "lazy_evaluator must cache its estimates" << endl;
-        utils::exit_with(utils::ExitCode::SEARCH_INPUT_ERROR);
-    }
+        eval(opts.get<shared_ptr<Evaluator>>("eval", nullptr)){
+    
 }
 
 void RelaxationExtensionSearch::initialize() {
@@ -50,44 +44,13 @@ void RelaxationExtensionSearch::initialize() {
         << endl;
     assert(open_list);
 
-    set<Evaluator *> evals;
-    open_list->get_path_dependent_evaluators(evals);
-
-    /*
-      Collect path-dependent evaluators that are used for preferred operators
-      (in case they are not also used in the open list).
-    */
-    for (const shared_ptr<Evaluator> &evaluator : preferred_operator_evaluators) {
-        evaluator->get_path_dependent_evaluators(evals);
+    if(! current_msgs.is_initialized()){
+        current_msgs.initialize(task);
     }
-
-    /*
-      Collect path-dependent evaluators that are used in the f_evaluator.
-      They are usually also used in the open list and will hence already be
-      included, but we want to be sure.
-    */
-    if (f_evaluator) {
-        f_evaluator->get_path_dependent_evaluators(evals);
-    }
-
-    /*
-      Collect path-dependent evaluators that are used in the lazy_evaluator
-      (in case they are not already included).
-    */
-    if (lazy_evaluator) {
-        lazy_evaluator->get_path_dependent_evaluators(evals);
-    }
-
-    path_dependent_evaluators.assign(evals.begin(), evals.end());
-
-    pruning_method->initialize(task);
 
     State initial_state = state_registry.get_initial_state();
-    for (Evaluator *evaluator : path_dependent_evaluators) {
-        evaluator->notify_initial_state(initial_state);
-    }
 
-    pruning_method->prune_state(initial_state, bound);
+    current_msgs.track(initial_state);
     
     taskRelaxationTracker = new TaskRelaxationTracker(this->getTask());
     relaxedTask = taskRelaxationTracker->next_relaxed_task();
@@ -97,7 +60,7 @@ void RelaxationExtensionSearch::initialize() {
       Note: we consider the initial state as reached by a preferred
       operator.
     */
-    EvaluationContext eval_context(initial_state, 0, true, &statistics);
+    MSGSEvaluationContext eval_context(initial_state, 0, true, &statistics, &current_msgs, bound);
 
     statistics.inc_evaluated_states();
 
@@ -134,20 +97,8 @@ bool RelaxationExtensionSearch::expand(const State &state){
     vector<OperatorID> applicable_ops;
     successor_generator.generate_applicable_ops(state, applicable_ops);
 
-    /*
-      TODO: When preferred operators are in use, a preferred operator will be
-      considered by the preferred operator queues even when it is pruned.
-    */
-    pruning_method->prune_operators(state, applicable_ops);
-
     // This evaluates the expanded state (again) to get preferred ops
-    EvaluationContext eval_context(state, node->get_g(), false, &statistics, true);
-    ordered_set::OrderedSet<OperatorID> preferred_operators;
-    for (const shared_ptr<Evaluator> &preferred_operator_evaluator : preferred_operator_evaluators) {
-        collect_preferred_operators(eval_context,
-                                    preferred_operator_evaluator.get(),
-                                    preferred_operators);
-    }
+    MSGSEvaluationContext eval_context(state, node->get_g(), false, &statistics, &current_msgs, true);
 
     for (OperatorID op_id : applicable_ops) {
         OperatorProxy op = task_proxy.get_operators()[op_id];
@@ -156,7 +107,6 @@ bool RelaxationExtensionSearch::expand(const State &state){
 
         State succ_state = state_registry.get_successor_state(state, op);
         statistics.inc_generated();
-        bool is_preferred = preferred_operators.contains(op_id);
 
         //for external relaxation check whether the state satisfies the limits
         if (! relaxedTask->sat_limits(succ_state)){
@@ -183,8 +133,8 @@ bool RelaxationExtensionSearch::expand(const State &state){
             // TODO: Make this less fragile.
             int succ_g = node->get_g() + get_adjusted_cost(op);
 
-            EvaluationContext succ_eval_context(
-                succ_state, succ_g, is_preferred, &statistics);
+            MSGSEvaluationContext succ_eval_context(
+                succ_state, succ_g, true, &statistics, &current_msgs, bound);
             statistics.inc_evaluated_states();
 
             if (open_list->is_dead_end(succ_eval_context)) {
@@ -192,9 +142,12 @@ bool RelaxationExtensionSearch::expand(const State &state){
                 statistics.inc_dead_ends();
                 continue;
             }
-            if (pruning_method->prune_state(succ_state, bound - (node->get_real_g() + op.get_cost()))){
+
+            if(succ_eval_context.is_evaluator_value_infinite(eval.get())){
+                // cout << "Prune Succ State: " << succ_state.get_id() << endl;
                 continue;
             }
+
             succ_node.open(*node, op, get_adjusted_cost(op));
 
             succ_state_generated = true;
@@ -218,8 +171,13 @@ bool RelaxationExtensionSearch::expand(const State &state){
                 }
                 succ_node.reopen(*node, op, get_adjusted_cost(op));
 
-                EvaluationContext succ_eval_context(
-                    succ_state, succ_node.get_g(), is_preferred, &statistics);
+                MSGSEvaluationContext succ_eval_context(
+                    succ_state, succ_node.get_g(), true, &statistics, &current_msgs, bound);
+
+                if(succ_eval_context.is_evaluator_value_infinite(eval.get())){
+                    // cout << "Prune Succ State: " << succ_state.get_id() << endl;
+                    continue;
+                }
 
                 /*
                   Note: our old code used to retrieve the h value from
@@ -269,11 +227,13 @@ SearchStatus RelaxationExtensionSearch::step() {
         if (node->is_closed())
             continue;
 
+        current_msgs.track(s);
+
         /*
           We can pass calculate_preferred=false here since preferred
           operators are computed when the state is expanded.
         */
-        EvaluationContext eval_context(s, node->get_g(), false, &statistics);
+        MSGSEvaluationContext eval_context(s, node->get_g(), false, &statistics, &current_msgs, bound);
 
         if (lazy_evaluator) {
             /*
@@ -374,7 +334,7 @@ bool RelaxationExtensionSearch::next_relaxed_task() {
     }
 
     // update MSGS of finished iteration
-    relaxedTask->add_msgs(pruning_method->get_msgs());
+    relaxedTask->add_msgs(current_msgs);
 
     relaxedTask->set_num_expanded_states(statistics.get_expanded() - expanded_states_up_to_prev_task);
     expanded_states_up_to_prev_task = statistics.get_expanded();
@@ -399,7 +359,7 @@ bool RelaxationExtensionSearch::next_relaxed_task() {
         relaxedTask->add_msgs(t->get_msgs());
     }
 
-    pruning_method->init_msgs(relaxedTask->get_msgs());
+    current_msgs = relaxedTask->get_msgs();
     cout << "init #MSGS: " << relaxedTask->get_msgs().size() << endl;
 
     return init_with_frontier_states();
@@ -407,7 +367,7 @@ bool RelaxationExtensionSearch::next_relaxed_task() {
 
 bool RelaxationExtensionSearch::init_with_frontier_states()
 {
-    std::cout << "EXTERNAL RELAXATION: continue with frontier states" << std::endl;
+    std::cout << "ITERATIVE EXPANSION OF STATE SPACE: continue with frontier states" << std::endl;
 //    std::cout << "frontier: #states: " << pending_initial_states.size() << std::endl;
 
     //Get frontier states from lower cover
@@ -468,28 +428,25 @@ void add_options_to_parser(OptionParser &parser) {
 
 static shared_ptr<SearchEngine> _parse(OptionParser &parser) {
     parser.document_synopsis(
-        "A* search (eager)",
-        "A* is a special case of eager best first search that uses g+h "
-        "as f-function. "
+        "Greedy branch and bound",
         "We break ties using the evaluator. Closed nodes are re-opened.");
-    parser.add_option<shared_ptr<Evaluator>>("eval", "evaluator for h-value");
-    parser.add_option<shared_ptr<Evaluator>>(
-        "lazy_evaluator",
-        "An evaluator that re-evaluates a state before it is expanded.",
-        OptionParser::NONE);
+
+    parser.add_option<shared_ptr<Evaluator>>("eval", "evaluator for pruning");
+    parser.add_list_option<shared_ptr<Evaluator>>("evals", "evaluators");
+    parser.add_list_option<shared_ptr<Evaluator>>("preferred",
+        "use preferred operators of these evaluators", "[]");
+    parser.add_option<int>("boost",
+        "boost value for preferred operator open lists", "0");
 
     relaxation_extension_search::add_options_to_parser(parser);
     Options opts = parser.parse();
+    opts.verify_list_non_empty<shared_ptr<Evaluator>>("evals");
 
     shared_ptr<relaxation_extension_search::RelaxationExtensionSearch> engine;
     if (!parser.dry_run()) {
-        auto temp = search_common::create_astar_open_list_factory_and_f_eval(opts);
-        opts.set("open", temp.first);
-        opts.set("f_eval", temp.second);
+        opts.set("open", search_common::create_greedy_open_list_factory(opts));
         opts.set("reopen_closed", true);
-        vector<shared_ptr<Evaluator>> preferred_list;
-        opts.set("preferred", preferred_list);
-        engine = make_shared<relaxation_extension_search::RelaxationExtensionSearch>(opts);
+        engine = make_shared<RelaxationExtensionSearch>(opts);
     }
 
     return engine;

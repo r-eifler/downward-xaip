@@ -25,7 +25,8 @@ namespace max_heuristic {
 
 // construction and destruction
 HSPMaxHeuristic::HSPMaxHeuristic(const Options &opts)
-    : RelaxationHeuristic(opts) {
+    : RelaxationHeuristic(opts),
+    no_deadends(opts.get<bool>("no_deadends")) {
     if (log.is_at_least_normal()) {
         log << "Initializing HSP max heuristic..." << endl;
     }
@@ -93,8 +94,12 @@ int HSPMaxHeuristic::compute_heuristic(const State &ancestor_state) {
     for (PropID goal_id : goal_propositions) {
         const Proposition *goal = get_proposition(goal_id);
         int goal_cost = goal->cost;
-        if (goal_cost == -1)
+        if (goal_cost == -1){
+            if(no_deadends){
+                continue;
+            }
             return DEAD_END;
+        }
         total_cost = max(total_cost, goal_cost);
     }
     return total_cost;
@@ -130,6 +135,11 @@ static shared_ptr<Heuristic> _parse(OptionParser &parser) {
     parser.document_property("consistent", "yes for tasks without axioms");
     parser.document_property("safe", "yes for tasks without axioms");
     parser.document_property("preferred operators", "no");
+
+    parser.add_option<bool>(
+        "no_deadends",
+        "do not report deadend when h^add identifies one, instead return 0",
+        "false");
 
     Heuristic::add_options_to_parser(parser);
     Options opts = parser.parse();

@@ -768,6 +768,9 @@ def main():
         print(sas_task.soft_goal.pairs)
     else:
         sas_task = pddl_to_sas(task)
+        # print("-------------------- Variables --------------------")
+        # for v in sas_task.variables.value_names:
+        #     print(v)      
         dump_statistics(sas_task)
 
     with timers.timing("Writing output"):

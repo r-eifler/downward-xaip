@@ -45,11 +45,12 @@ class SearchStatistics;
 class MSGSEvaluationContext : public EvaluationContext{
 
     MSGSCollection *current_msgs;
+    int bound;
 
     MSGSEvaluationContext(
         const EvaluatorCache &cache, const State &state, int g_value,
         bool is_preferred, SearchStatistics *statistics, MSGSCollection* current_msgs, 
-        bool calculate_preferred);
+        int cost_bound, bool calculate_preferred);
 public:
     /*
       Copy existing heuristic cache and use it to look up heuristic values.
@@ -60,14 +61,15 @@ public:
     MSGSEvaluationContext(
         const MSGSEvaluationContext &other,
         int g_value, bool is_preferred, SearchStatistics *statistics,
-        MSGSCollection* current_msgs, bool calculate_preferred = false);
+        MSGSCollection* current_msgs, int cost_bound, bool calculate_preferred = false);
     /*
       Create new heuristic cache for caching heuristic values. Used for example
       by eager search.
     */
     MSGSEvaluationContext(
         const State &state, int g_value, bool is_preferred,
-        SearchStatistics *statistics, MSGSCollection* current_msgs, bool calculate_preferred = false);
+        SearchStatistics *statistics, MSGSCollection* current_msgs, int cost_bound, 
+        bool calculate_preferred = false);
     /*
       Use the following constructor when you don't care about g values,
       preferredness (and statistics), e.g. when sampling states for heuristics.
@@ -91,6 +93,7 @@ public:
     int get_evaluator_value_or_infinity(Evaluator *eval) override;
 
     MSGSCollection* get_msgs_collection() const;
+    int get_cost_bound() const;
 };
 
 #endif

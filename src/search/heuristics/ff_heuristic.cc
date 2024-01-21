@@ -14,6 +14,7 @@ namespace ff_heuristic {
 // construction and destruction
 FFHeuristic::FFHeuristic(const Options &opts)
     : AdditiveHeuristic(opts),
+        no_deadends(opts.get<bool>("no_deadends")),
       relaxed_plan(task_proxy.get_operators().size(), false) {
     if (log.is_at_least_normal()) {
         log << "Initializing FF heuristic..." << endl;
@@ -50,12 +51,27 @@ void FFHeuristic::mark_preferred_operators_and_relaxed_plan(
     }
 }
 
+int FFHeuristic::get_no_deadend_estimate(){
+    int total_cost = 0;
+    for (PropID goal_id : goal_propositions) {
+        const Proposition *goal = get_proposition(goal_id);
+        int goal_cost = goal->cost;
+        if (goal_cost == -1){
+                continue;
+        }
+        total_cost += goal_cost;
+    }
+    return total_cost;
+}
+
 int FFHeuristic::compute_heuristic(const State &ancestor_state) {
     State state = convert_ancestor_state(ancestor_state);
     int h_add = compute_add_and_ff(state);
-    if (h_add == DEAD_END)
+    if (h_add == DEAD_END){
+        if (no_deadends)
+            return get_no_deadend_estimate();
         return h_add;
-
+    }
     // Collecting the relaxed plan also sets the preferred operators.
     for (PropID goal_id : goal_propositions)
         mark_preferred_operators_and_relaxed_plan(state, goal_id);
@@ -84,6 +100,11 @@ static shared_ptr<Heuristic> _parse(OptionParser &parser) {
     parser.document_property("consistent", "no");
     parser.document_property("safe", "yes for tasks without axioms");
     parser.document_property("preferred operators", "yes");
+
+    parser.add_option<bool>(
+        "no_deadends",
+        "do not report deadend when h^add identifies one, instead return 0",
+        "false");
 
     Heuristic::add_options_to_parser(parser);
     Options opts = parser.parse();

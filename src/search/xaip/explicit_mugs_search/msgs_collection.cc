@@ -18,10 +18,11 @@ MSGSCollection::MSGSCollection(bool anytime): anytime(anytime) {
 void MSGSCollection::initialize(shared_ptr<AbstractTask> task_) {
 
     cout << "---------------- INIT MSGS Collection ---------------------- " << endl;
-    if(soft_goal_list.size() > 0){
+    if(initialized){
         cout << "--> already initialized" << endl;
         return;
     }
+    initialized = true;
 
     num_visited_states_since_last_added = 0;
 
@@ -162,14 +163,14 @@ vector<FactPair> MSGSCollection::get_goal_facts() {
 }
 
 void MSGSCollection::update_best_state(StateID id, int num_solved_soft_goals) {
-    if (num_solved_soft_goals >= max_num_solved_soft_goals){
+    if (num_solved_soft_goals > max_num_solved_soft_goals){
         best_state = id;
         max_num_solved_soft_goals = num_solved_soft_goals;
     }
 }
 
 
-bool MSGSCollection::prune(const State &state, vector<int> costs, int remaining_cost){
+int MSGSCollection::prune(const State &state, vector<int> costs, int remaining_cost){
 
     // costs containes the costs of the facts in all_goal_list (in the same order)
     overall_timer.resume();
@@ -180,9 +181,13 @@ bool MSGSCollection::prune(const State &state, vector<int> costs, int remaining_
     // cout<< "-------------- CURRENT MSGS ------------------" << endl;
 
     GoalSubset reachable_goals = GoalSubset(all_goal_list.size());
+    int min_reachable_goals = INT_MAX;
     for(size_t i = 0; i < all_goal_list.size(); i++){
         // in FD the cost bound is strict thus we can test for < instead of <=
         reachable_goals.set(i, costs[i] != -1 && costs[i] < remaining_cost); 
+        if( reachable_goals.contains(i)){
+            min_reachable_goals = costs[i] < min_reachable_goals ? costs[i] : min_reachable_goals;
+        }
     }
 
     // cout << "reachable goals: " << endl;
@@ -193,27 +198,14 @@ bool MSGSCollection::prune(const State &state, vector<int> costs, int remaining_
             // cout<< "contains superset" << endl;
             num_pruned_states += 1;
             overall_timer.stop();
-            return true;
+            return -1; // means infinity
         }
         else{
-            GoalSubset satisfied_goals = get_satisfied_all_goals(state);
-            update_best_state(state.get_id(), satisfied_goals.count());
-            assert(reachable_goals.is_superset_of(satisfied_goals));
-            // cout << "satisfied goals: " << endl;
-            // satisfied_goals.print();
-            if(!contains_superset(satisfied_goals)){
-                this->add_and_mimize(satisfied_goals);
-                // cout << "Num states since last add new goal subset: " << num_visited_states_since_last_added << endl;
-                num_visited_states_since_last_added = 0;
-            }
             overall_timer.stop();
-            return false;
+            return min_reachable_goals;
         }
     }
     else{
-        GoalSubset satisfied_hard_goals = get_satisfied_hard_goals(state);
-        GoalSubset satisfied_soft_goals = get_satisfied_soft_goals(state);
-
         GoalSubset reachable_hard_goals = get_reachable_hard_goals(reachable_goals);
         GoalSubset reachable_soft_goals = get_reachable_soft_goals(reachable_goals);
 
@@ -223,19 +215,13 @@ bool MSGSCollection::prune(const State &state, vector<int> costs, int remaining_
         if(! reachable_hard_goals.all() || superset_alreday_readched){
             // cout<< "contains superset" << endl;
             num_pruned_states += 1;
-            return true;
+            overall_timer.stop();
+            return -1; // means infinity
         }
         else{
-            update_best_state(state.get_id(), satisfied_soft_goals.count());
-            if(satisfied_hard_goals.all() && !contains_superset(satisfied_soft_goals)){
-                this->add_and_mimize(satisfied_soft_goals);
-                // cout<< "add new goal subset" << endl;
-            }
-            if(superset_alreday_readched)
-                num_pruned_states += 1;
-            return superset_alreday_readched;
+            overall_timer.stop();
+            return min_reachable_goals;
         }
-
     }
 }
 
