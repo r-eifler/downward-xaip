@@ -1,10 +1,10 @@
-#ifndef SEARCH_ENGINES_GOAL_SUBSET_ASTAR_SEARCH_H
-#define SEARCH_ENGINES_GOAL_SUBSET_ASTAR_SEARCH_H
+#ifndef SEARCH_ENGINES_RELAXATION_EXTENSION_EAGER_SEARCH_H
+#define SEARCH_ENGINES_RELAXATION_EXTENSION_SEARCH_H
 
-#include "../open_list.h"
-#include "../search_engine.h"
-#include "msgs_collection.h"
-#include "msgs_evaluation_context.h"
+#include "../../open_list.h"
+#include "../../search_engine.h"
+
+#include "radius_tracker.h"
 #include "../policy/policy_pruning.h"
 
 #include <memory>
@@ -18,46 +18,42 @@ class OptionParser;
 class Options;
 }
 
-namespace goal_subset_astar {
-class GoalSubsetAStar : public SearchEngine {
+namespace iterative_extension_search {
+class IterativeExtensionSearch : public SearchEngine {
     const bool reopen_closed_nodes;
-    const bool anytime;
 
     std::unique_ptr<StateOpenList> open_list;
     std::shared_ptr<Evaluator> f_evaluator;
 
-    std::vector<Evaluator *> path_dependent_evaluators;
-    std::vector<std::shared_ptr<Evaluator>> preferred_operator_evaluators;
-    std::shared_ptr<Evaluator> lazy_evaluator;
     std::shared_ptr<Evaluator> eval;
 
     std::shared_ptr<policy_pruning_method::PolicyPruningMethod> pruning_method;
 
     MSGSCollection current_msgs;
 
-    void start_f_value_statistics(MSGSEvaluationContext &eval_context);
-    void update_f_value_statistics(MSGSEvaluationContext &eval_context);
+    RadiusTracker radius_tracker;
+    float current_radius;
+    std::vector<StateID> pending_initial_states;
+
+    void start_f_value_statistics(EvaluationContext &eval_context);
+    void update_f_value_statistics(EvaluationContext &eval_context);
     void reward_progress();
 
 protected:
     virtual void initialize() override;
     virtual SearchStatus step() override;
+    bool expand(const State &state);
+    bool init_with_frontier_states();
+    bool next_relaxed_task();
 
 public:
-    explicit GoalSubsetAStar(const options::Options &opts);
-    virtual ~GoalSubsetAStar() = default;
+    explicit IterativeExtensionSearch(const options::Options &opts);
+    virtual ~IterativeExtensionSearch() = default;
 
     // void set_pruning_method( std::shared_ptr<PruningMethod> pruning_method){
     //     std::cout << "********** set pruning method ***************" << std::endl;
     //     this->pruning_method = pruning_method;
     // }
-
-    // std::shared_ptr<PruningMethod> get_pruning_method(){
-    //     return pruning_method;
-    // }
-
-    void init_msgs(MSGSCollection collection);
-    MSGSCollection get_msgs();
 
     virtual void print_statistics() const override;
 

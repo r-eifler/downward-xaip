@@ -1,0 +1,6438 @@
+INFO     planner time limit: None
+INFO     planner memory limit: None
+
+INFO     Running translator.
+INFO     translator stdin: None
+INFO     translator time limit: None
+INFO     translator memory limit: None
+INFO     translator command line string: /usr/bin/python3 /home/rebecca/XPP/framework/downward-xaip/builds/release/bin/translate/translate.py ../../benchmarks/ipc/blocks/domain.pddl ../../benchmarks/ipc/blocks/probBLOCKS-6-0.pddl --sas-file output.sas
+domain:  ../../benchmarks/ipc/blocks/domain.pddl
+problem:  ../../benchmarks/ipc/blocks/probBLOCKS-6-0.pddl
+explanations settings:  None
+Parsing...
+Parsing: [0.000s CPU, 0.001s wall-clock]
+Normalizing task... [0.000s CPU, 0.000s wall-clock]
+Instantiating...
+Generating Datalog program... [0.010s CPU, 0.000s wall-clock]
+Normalizing Datalog program...
+Normalizing Datalog program: [0.000s CPU, 0.002s wall-clock]
+Preparing model... [0.000s CPU, 0.000s wall-clock]
+Generated 21 rules.
+Computing model... [0.010s CPU, 0.001s wall-clock]
+152 relevant atoms
+102 auxiliary atoms
+254 final queue length
+412 total queue pushes
+Completing instantiation... [0.000s CPU, 0.001s wall-clock]
+Instantiating: [0.020s CPU, 0.004s wall-clock]
+Computing fact groups...
+Finding invariants...
+10 initial candidates
+Finding invariants: [0.000s CPU, 0.001s wall-clock]
+Checking invariant weight... [0.000s CPU, 0.000s wall-clock]
+Instantiating groups... [0.000s CPU, 0.000s wall-clock]
+Collecting mutex groups... [0.000s CPU, 0.000s wall-clock]
+Choosing groups...
+7 uncovered facts
+Choosing groups: [0.000s CPU, 0.000s wall-clock]
+Building translation key... [0.000s CPU, 0.000s wall-clock]
+Computing fact groups: [0.000s CPU, 0.002s wall-clock]
+Building STRIPS to SAS dictionary... [0.000s CPU, 0.000s wall-clock]
+Building dictionary for full mutex groups... [0.000s CPU, 0.000s wall-clock]
+Building mutex information...
+Building mutex information: [0.000s CPU, 0.000s wall-clock]
+Translating task...
+Processing axioms...
+Simplifying axioms... [0.000s CPU, 0.000s wall-clock]
+Translator axioms removed by simplifying: 0
+Computing negative axioms... [0.000s CPU, 0.000s wall-clock]
+Processing axioms: [0.000s CPU, 0.000s wall-clock]
+Translating task: [0.000s CPU, 0.002s wall-clock]
+102 effect conditions simplified
+0 implied preconditions added
+Skip simplification (filter_unreachable_propositions) for: 
+[]
+Detecting unreachable propositions...
+0 operators removed
+0 axioms removed
+12 propositions removed
+Detecting unreachable propositions: [0.000s CPU, 0.001s wall-clock]
+Skip simplification (find_and_apply_variable_order) reordering for: 
+[]
+Reordering and filtering variables...
+13 of 13 variables necessary.
+7 of 13 mutex groups necessary.
+72 of 72 operators necessary.
+0 of 0 axiom rules necessary.
+Reordering and filtering variables: [0.000s CPU, 0.001s wall-clock]
+Translator variables: 13
+Translator derived variables: 0
+Translator facts: 56
+Translator goal facts: 5
+Translator mutex groups: 7
+Translator total mutex groups size: 49
+Translator operators: 72
+Translator axioms: 0
+Translator task size: 645
+Translator peak memory: 35396 KB
+Writing output... [0.000s CPU, 0.000s wall-clock]
+Done! [0.020s CPU, 0.011s wall-clock]
+translate exit code: 0
+
+INFO     Running search (release).
+INFO     search stdin: output.sas
+INFO     search time limit: None
+INFO     search memory limit: None
+INFO     search command line string: /home/rebecca/XPP/framework/downward-xaip/builds/release/bin/downward --heuristic 'ngsh=ngs(hmax)' --search 'gsastar(evals=[ngsh], eval=ngsh, bound=13)' --internal-plan-file sas_plan < output.sas
+[t=2.7486e-05s, 45548 KB] reading input...
+[t=0.000432954s, 45548 KB] done reading input!
+[t=0.00133954s, 45944 KB] Simplifying 276 unary operators... done! [216 unary operators]
+[t=0.00145319s, 46076 KB] time to simplify: 0.00012949s
+[t=0.00148143s, 46076 KB] Initializing HSP max heuristic...
+[t=0.00149815s, 46076 KB] --> new goal subset heuristic
+--> all goals are soft goals
+[t=0.00151146s, 46076 KB] initialize heuristic: new goal subset heuristic
+[t=0.00154668s, 46076 KB] Building successor generator...done!
+[t=0.0015922s, 46076 KB] peak memory difference for successor generator creation: 0 KB
+[t=0.00160745s, 46076 KB] time for successor generation creation: 2.2071e-05s
+[t=0.00161766s, 46076 KB] Variables: 13
+[t=0.00162569s, 46076 KB] FactPairs: 56
+[t=0.00163359s, 46076 KB] Bytes per state: 4
+[t=0.00169709s, 46076 KB] Conducting best first branch and bound search with reopening closed nodes, (real) bound = 13
+---------------- INIT MSGS Collection ---------------------- 
+--> all goals are soft goals
+8 = 4    -->  id: 0 Atom on(a, e)
+9 = 1    -->  id: 1 Atom on(b, a)
+10 = 2    -->  id: 2 Atom on(c, b)
+11 = 5    -->  id: 3 Atom on(e, f)
+12 = 4    -->  id: 4 Atom on(f, d)
+check initial state 
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+00000
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11111
+initial state no deadend
+[t=0.00177039s, 46076 KB] New best heuristic value for ngs(hmax): 2
+[t=0.00178101s, 46076 KB] g=0, 1 evaluated, 0 expanded
+[t=0.00179137s, 46076 KB] Initial heuristic value for ngs(hmax): 2
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+00000
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11111
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+00000
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11111
+new goals reachable?????
+[t=0.00182912s, 46076 KB] New best heuristic value for ngs(hmax): 1
+[t=0.0018373s, 46076 KB] g=1, 3 evaluated, 1 expanded
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+00000
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11111
+new goals reachable?????
+[t=0.00185973s, 46076 KB] New best heuristic value for ngs(hmax): 0
+[t=0.00186807s, 46076 KB] g=2, 4 evaluated, 2 expanded
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10000
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11111
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10000
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11111
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10000
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11111
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+11000
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11111
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+11000
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11111
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+11000
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11111
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+11000
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11111
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+11000
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11011
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+11000
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11111
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+11000
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11111
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+11000
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11111
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+11000
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11010
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+11000
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11000
+DEADEND Succ State: #16
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+11000
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11111
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+11000
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11111
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+11000
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11111
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+11000
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11111
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+11000
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11111
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+11000
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11111
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+11000
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11111
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+11000
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11111
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+11000
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11111
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+11000
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11111
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+11000
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11111
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+11000
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11111
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+11000
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11111
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+11000
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11111
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+11000
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11111
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+11000
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11111
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+11000
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11111
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+11000
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11111
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+11000
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11111
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+11000
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11111
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+11000
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11111
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+11000
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11111
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+11000
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11111
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+11000
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11011
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+11000
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11111
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+11000
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11111
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+11000
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11111
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+11000
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11111
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+11000
+01001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11111
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+11000
+01001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11111
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+11000
+01001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11111
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+01001
+11000
+01010
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11111
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+01001
+11000
+01010
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11111
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+01001
+11000
+01010
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11111
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+01001
+11000
+01010
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11111
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+01001
+11000
+01010
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+01111
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+01001
+11000
+01010
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11111
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+01001
+11000
+01010
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11111
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+01001
+11000
+01010
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+01111
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+01001
+11000
+01010
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11111
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+01001
+11000
+01010
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+01111
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+01001
+11000
+01010
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+01111
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+01001
+11000
+01010
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+01111
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+01001
+11000
+01010
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11111
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+01001
+11000
+01010
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+01101
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+01001
+11000
+01010
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+01101
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+01001
+11000
+01010
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11101
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+01001
+11000
+01010
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+01111
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+01001
+11000
+01010
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+01111
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+01001
+11000
+01010
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+01111
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+01001
+11000
+01010
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+01111
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+01001
+11000
+01010
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+01111
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+01001
+11000
+01010
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+01111
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+01001
+11000
+01010
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11111
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+01001
+11000
+01010
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+01111
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+01001
+11000
+01010
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11011
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+01001
+11000
+01010
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+01010
+DEADEND Succ State: #73
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+01001
+11000
+01010
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11010
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+01001
+11000
+01010
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+01111
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+01001
+11000
+01010
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+01001
+DEADEND Succ State: #76
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+01001
+11000
+01010
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11001
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+01001
+11000
+01010
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+01101
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+01001
+11000
+01010
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+01101
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+01001
+11000
+01010
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11101
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+01001
+11000
+01010
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+01110
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+01001
+11000
+01010
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+01110
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+01001
+11000
+01010
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+01101
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+01001
+11000
+01010
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+01111
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+01001
+11000
+01010
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+01111
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+01001
+11000
+01010
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+01110
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+01001
+11000
+01010
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+01100
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+01001
+11000
+01010
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+01110
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+01001
+11000
+01010
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+01011
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+01001
+11000
+01010
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+01111
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+01001
+11000
+01010
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+01110
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+01001
+11000
+01010
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+01101
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+01010
+11000
+01001
+01100
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+01111
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+01010
+11000
+01001
+01100
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+01000
+DEADEND Succ State: #94
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+01010
+11000
+01001
+01100
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+01001
+DEADEND Succ State: #95
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+01010
+11000
+01001
+01100
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+01101
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+01010
+11000
+01001
+01100
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+01000
+DEADEND Succ State: #97
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+01010
+11000
+01001
+01100
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+01101
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+01010
+11000
+01001
+01100
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+01111
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+01010
+11000
+01001
+01100
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+01011
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+01010
+11000
+01001
+01100
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+01111
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+01010
+11000
+01001
+01100
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+01111
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+01100
+11000
+01011
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+01011
+DEADEND Succ State: #103
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+01100
+11000
+01011
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+01111
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+01100
+11000
+01011
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+01111
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+01100
+11000
+01011
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+01101
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+01011
+11000
+01101
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+01110
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+01011
+11000
+01101
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+01011
+DEADEND Succ State: #108
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+01011
+11000
+01101
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+01111
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+01011
+11000
+01101
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+01110
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+01011
+11000
+01101
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+01011
+DEADEND Succ State: #111
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+01011
+11000
+01101
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+01111
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+01011
+11000
+01101
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+01111
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+01011
+11000
+01101
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+01110
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+01011
+11000
+01101
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+01101
+DEADEND Succ State: #115
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+01011
+11000
+01101
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+01111
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+01011
+11000
+01101
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+01101
+DEADEND Succ State: #117
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+01011
+11000
+01101
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11010
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+01011
+11000
+01101
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11010
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+01011
+11000
+01101
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11010
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+01011
+11000
+01101
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+01100
+DEADEND Succ State: #121
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+01011
+11000
+01101
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+01001
+DEADEND Succ State: #122
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+01011
+11000
+01101
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+01101
+DEADEND Succ State: #123
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+01011
+11000
+01101
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+01001
+DEADEND Succ State: #124
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+01011
+11000
+01101
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+01100
+DEADEND Succ State: #125
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+01011
+11000
+01101
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+01101
+DEADEND Succ State: #126
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+01011
+11000
+01101
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+01110
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+01011
+11000
+01101
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+01010
+DEADEND Succ State: #128
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+01011
+11000
+01101
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+01110
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+01011
+11000
+01101
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+01100
+DEADEND Succ State: #130
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+01011
+11000
+01101
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+01100
+DEADEND Succ State: #131
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+01011
+11000
+01101
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+01000
+DEADEND Succ State: #132
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+01011
+11000
+01101
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+01110
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+01011
+11000
+01101
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+01110
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+01011
+11000
+01101
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+01011
+DEADEND Succ State: #135
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+01011
+11000
+01101
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+01110
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+01011
+11000
+01101
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+01110
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+01011
+11000
+01101
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+01101
+DEADEND Succ State: #138
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+01011
+11000
+01101
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+01100
+DEADEND Succ State: #139
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+01011
+11000
+01101
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+01000
+DEADEND Succ State: #140
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+01011
+11000
+01101
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+01100
+DEADEND Succ State: #141
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+01011
+11000
+01101
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+01110
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+01011
+11000
+01101
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+01010
+DEADEND Succ State: #143
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+01011
+11000
+01101
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+01001
+DEADEND Succ State: #144
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+01011
+11000
+01101
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+01000
+DEADEND Succ State: #145
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+01011
+11000
+01101
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+01100
+DEADEND Succ State: #146
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+01011
+11000
+01101
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+01000
+DEADEND Succ State: #147
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+01011
+11000
+01101
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+01000
+DEADEND Succ State: #148
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+01011
+11000
+01101
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+01101
+DEADEND Succ State: #149
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+01011
+11000
+01101
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+01100
+DEADEND Succ State: #150
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+01011
+11000
+01101
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+01000
+DEADEND Succ State: #151
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+01011
+11000
+01101
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+01010
+DEADEND Succ State: #152
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+01011
+11000
+01101
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+01001
+DEADEND Succ State: #153
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+01011
+11000
+01101
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+01000
+DEADEND Succ State: #154
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+01011
+11000
+01101
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+01000
+DEADEND Succ State: #155
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+01011
+11000
+01101
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+01001
+DEADEND Succ State: #156
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+01011
+11000
+01101
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+01101
+DEADEND Succ State: #157
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+01011
+11000
+01101
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+01001
+DEADEND Succ State: #158
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+01011
+11000
+01101
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+01011
+DEADEND Succ State: #159
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+01011
+11000
+01101
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+01101
+DEADEND Succ State: #160
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+01011
+11000
+01101
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+01011
+DEADEND Succ State: #161
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+01011
+11000
+01101
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+01111
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+01011
+11000
+01101
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+01011
+DEADEND Succ State: #163
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+01011
+11000
+01101
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+01001
+DEADEND Succ State: #164
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+01011
+11000
+01101
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+01001
+DEADEND Succ State: #165
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+01011
+11000
+01101
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+01101
+DEADEND Succ State: #166
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+01011
+11000
+01101
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+01000
+DEADEND Succ State: #167
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+01011
+11000
+01101
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+01100
+DEADEND Succ State: #168
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+01011
+11000
+01101
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+01000
+DEADEND Succ State: #169
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+01011
+11000
+01101
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+01100
+DEADEND Succ State: #170
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+01011
+11000
+01101
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+01000
+DEADEND Succ State: #171
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+01011
+11000
+01101
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+01010
+DEADEND Succ State: #172
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+01011
+11000
+01101
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+01110
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+01011
+11000
+01101
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+01010
+DEADEND Succ State: #174
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+01011
+11000
+01101
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+01000
+DEADEND Succ State: #175
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+01011
+11000
+01101
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+01100
+DEADEND Succ State: #176
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+01011
+11000
+01101
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+01010
+DEADEND Succ State: #177
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+01011
+11000
+01101
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+01000
+DEADEND Succ State: #178
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+01011
+11000
+01101
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+01000
+DEADEND Succ State: #179
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+01011
+11000
+01101
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+01000
+DEADEND Succ State: #180
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+01011
+11000
+01101
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+01000
+DEADEND Succ State: #181
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+01011
+11000
+01101
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+01000
+DEADEND Succ State: #182
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+01011
+11000
+01101
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+01010
+DEADEND Succ State: #183
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+01011
+11000
+01101
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+00010
+DEADEND Succ State: #184
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+01011
+11000
+01101
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+00010
+DEADEND Succ State: #185
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+01011
+11000
+01101
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+00010
+DEADEND Succ State: #186
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+01011
+11000
+01101
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+10010
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+01011
+11000
+01101
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+00010
+DEADEND Succ State: #188
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+01011
+11000
+01101
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+00010
+DEADEND Succ State: #189
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+01011
+11000
+01101
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+10010
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+01011
+11000
+01101
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+01110
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+01011
+11000
+01101
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+01000
+DEADEND Succ State: #192
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+01011
+11000
+01101
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+01100
+DEADEND Succ State: #193
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+01011
+11000
+01101
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+01110
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+01011
+11000
+01101
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+01000
+DEADEND Succ State: #195
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+01011
+11000
+01101
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+01010
+DEADEND Succ State: #196
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+01011
+11000
+01101
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+01000
+DEADEND Succ State: #197
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+01011
+11000
+01101
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+01110
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+01101
+11000
+01011
+01110
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+01010
+DEADEND Succ State: #199
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+01101
+11000
+01011
+01110
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+01011
+DEADEND Succ State: #200
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+01101
+11000
+01011
+01110
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+01111
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+11000
+01111
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+01010
+DEADEND Succ State: #202
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+11000
+01111
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+01110
+DEADEND Succ State: #203
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+11000
+01111
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+01010
+DEADEND Succ State: #204
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+11000
+01111
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+10010
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+01111
+11000
+10010
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+00010
+DEADEND Succ State: #206
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+01111
+11000
+10010
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+10010
+DEADEND Succ State: #207
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+01111
+11000
+10010
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+00010
+DEADEND Succ State: #208
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+01111
+11000
+10010
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+00010
+DEADEND Succ State: #209
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+01111
+11000
+10010
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+01110
+DEADEND Succ State: #210
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+01111
+11000
+10010
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+01010
+DEADEND Succ State: #211
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+01111
+11000
+10010
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+01110
+DEADEND Succ State: #212
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+01111
+11000
+10010
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11111
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+01111
+11000
+10010
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11111
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+01111
+11000
+10010
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11111
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+01111
+11000
+10010
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11111
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+01111
+11000
+10010
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11111
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+01111
+11000
+10010
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11111
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+01111
+11000
+10010
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11111
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+01111
+11000
+10010
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11010
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+01111
+11000
+10010
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11011
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+01111
+11000
+10010
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+01110
+DEADEND Succ State: #222
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+01111
+11000
+10010
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11101
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+01111
+11000
+10010
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11011
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+01111
+11000
+10010
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11111
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+01111
+11000
+10010
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11101
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+01111
+11000
+10010
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11000
+DEADEND Succ State: #227
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+01111
+11000
+10010
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11001
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+01111
+11000
+10010
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11101
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+01111
+11000
+10010
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11111
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+01111
+11000
+10010
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11110
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+01111
+11000
+10010
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11101
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+01111
+11000
+10010
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11011
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+01111
+11000
+10010
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11111
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+01111
+11000
+10010
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11010
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+01111
+11000
+10010
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+01001
+DEADEND Succ State: #236
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+01111
+11000
+10010
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11011
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+01111
+11000
+10010
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+01000
+DEADEND Succ State: #238
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+01111
+11000
+10010
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11001
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+01111
+11000
+10010
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11001
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+01111
+11000
+10010
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11001
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+01111
+11000
+10010
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11100
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+01111
+11000
+10010
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11001
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+01111
+11000
+10010
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11101
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+01111
+11000
+10010
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11111
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+01111
+11000
+10010
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11111
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+01111
+11000
+10010
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11011
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+01111
+11000
+10010
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11111
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+01111
+11000
+10010
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+01001
+DEADEND Succ State: #249
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+01111
+11000
+10010
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11111
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+01111
+11000
+10010
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11111
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+01111
+11000
+10010
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11111
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+01111
+11000
+10010
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11111
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+01111
+11000
+10010
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+10000
+DEADEND Succ State: #254
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+01111
+11000
+10010
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+10011
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+01111
+11000
+10010
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11111
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+01111
+11000
+10010
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11111
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+01111
+11000
+10010
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11111
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+01111
+11000
+10010
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11011
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+01111
+11000
+10010
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+00111
+DEADEND Succ State: #260
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+01111
+11000
+10010
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+01111
+DEADEND Succ State: #261
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+01111
+11000
+10010
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11010
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+01111
+11000
+10010
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11010
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+01111
+11000
+10010
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11010
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+01111
+11000
+10010
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11010
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+01111
+11000
+10010
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11000
+DEADEND Succ State: #266
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+01111
+11000
+10010
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+10000
+DEADEND Succ State: #267
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+01111
+11000
+10010
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+10000
+DEADEND Succ State: #268
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+01111
+11000
+10010
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11000
+DEADEND Succ State: #269
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+01111
+11000
+10010
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11101
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+01111
+11000
+10010
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11001
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+01111
+11000
+10010
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+10001
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+01111
+11000
+10010
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+01101
+DEADEND Succ State: #273
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+01111
+11000
+10010
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+00001
+DEADEND Succ State: #274
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+01111
+11000
+10010
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+00001
+DEADEND Succ State: #275
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+01111
+11000
+10010
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+10001
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+01111
+11000
+10010
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+10001
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+00001
+DEADEND Succ State: #278
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+00001
+DEADEND Succ State: #279
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11001
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11000
+DEADEND Succ State: #281
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+10001
+DEADEND Succ State: #282
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+10001
+DEADEND Succ State: #283
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11111
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11011
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+10111
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+01111
+DEADEND Succ State: #287
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+00001
+DEADEND Succ State: #288
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+00011
+DEADEND Succ State: #289
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+00101
+DEADEND Succ State: #290
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+10001
+DEADEND Succ State: #291
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11011
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11010
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11001
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+10011
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+10001
+DEADEND Succ State: #296
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+10010
+DEADEND Succ State: #297
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11001
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11001
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+00001
+DEADEND Succ State: #300
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+01001
+DEADEND Succ State: #301
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11000
+DEADEND Succ State: #302
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11101
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11001
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+10101
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+01101
+DEADEND Succ State: #306
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+00001
+DEADEND Succ State: #307
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+10001
+DEADEND Succ State: #308
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11001
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11000
+DEADEND Succ State: #310
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+10001
+DEADEND Succ State: #311
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+10001
+DEADEND Succ State: #312
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11000
+DEADEND Succ State: #313
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+01000
+DEADEND Succ State: #314
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11000
+DEADEND Succ State: #315
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+00000
+DEADEND Succ State: #316
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+00000
+DEADEND Succ State: #317
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+00001
+DEADEND Succ State: #318
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+00010
+DEADEND Succ State: #319
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+00000
+DEADEND Succ State: #320
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+00010
+DEADEND Succ State: #321
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+00100
+DEADEND Succ State: #322
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+00000
+DEADEND Succ State: #323
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+00000
+DEADEND Succ State: #324
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+00000
+DEADEND Succ State: #325
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+00000
+DEADEND Succ State: #326
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+10000
+DEADEND Succ State: #327
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+00000
+DEADEND Succ State: #328
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+00000
+DEADEND Succ State: #329
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+10000
+DEADEND Succ State: #330
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+00010
+DEADEND Succ State: #331
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+00100
+DEADEND Succ State: #332
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+00000
+DEADEND Succ State: #333
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+00000
+DEADEND Succ State: #334
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+00000
+DEADEND Succ State: #335
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+00100
+DEADEND Succ State: #336
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+10000
+DEADEND Succ State: #337
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+00000
+DEADEND Succ State: #338
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+00000
+DEADEND Succ State: #339
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+10000
+DEADEND Succ State: #340
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+00000
+DEADEND Succ State: #341
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+00010
+DEADEND Succ State: #342
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+10000
+DEADEND Succ State: #343
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+00000
+DEADEND Succ State: #344
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+00010
+DEADEND Succ State: #345
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+00100
+DEADEND Succ State: #346
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+10000
+DEADEND Succ State: #347
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+00000
+DEADEND Succ State: #348
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+00001
+DEADEND Succ State: #349
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+00000
+DEADEND Succ State: #350
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+00001
+DEADEND Succ State: #351
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+00000
+DEADEND Succ State: #352
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+00000
+DEADEND Succ State: #353
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+00000
+DEADEND Succ State: #354
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+00000
+DEADEND Succ State: #355
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+00000
+DEADEND Succ State: #356
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+00000
+DEADEND Succ State: #357
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+10000
+DEADEND Succ State: #358
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+10000
+DEADEND Succ State: #359
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+00000
+DEADEND Succ State: #360
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+10000
+DEADEND Succ State: #361
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+00000
+DEADEND Succ State: #362
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+00000
+DEADEND Succ State: #363
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+01000
+DEADEND Succ State: #364
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+00001
+DEADEND Succ State: #365
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+01000
+DEADEND Succ State: #366
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+00000
+DEADEND Succ State: #367
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+00010
+DEADEND Succ State: #368
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11111
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11111
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11111
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+10001
+DEADEND Succ State: #372
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11111
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11111
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11111
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11111
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11101
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+10001
+DEADEND Succ State: #378
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11101
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+10000
+DEADEND Succ State: #380
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+10001
+DEADEND Succ State: #381
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11111
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11111
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11111
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11111
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11111
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11111
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11111
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11101
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+00101
+DEADEND Succ State: #390
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+10001
+DEADEND Succ State: #391
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11111
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11111
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11111
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11111
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11111
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11111
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11111
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+10101
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+10011
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+10010
+DEADEND Succ State: #401
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+10010
+DEADEND Succ State: #402
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+10011
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+01001
+DEADEND Succ State: #404
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+01001
+DEADEND Succ State: #405
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+00000
+DEADEND Succ State: #406
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+00010
+DEADEND Succ State: #407
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11111
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+00110
+DEADEND Succ State: #409
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+00010
+DEADEND Succ State: #410
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11011
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11111
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+00010
+DEADEND Succ State: #413
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11111
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11111
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11111
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11111
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11111
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11111
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11111
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+00111
+DEADEND Succ State: #421
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+00111
+DEADEND Succ State: #422
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11111
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11111
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11111
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+01010
+DEADEND Succ State: #426
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+00111
+DEADEND Succ State: #427
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+00111
+DEADEND Succ State: #428
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+01101
+DEADEND Succ State: #429
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+01101
+DEADEND Succ State: #430
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+01111
+DEADEND Succ State: #431
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+01111
+DEADEND Succ State: #432
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+00111
+DEADEND Succ State: #433
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+00011
+DEADEND Succ State: #434
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+00111
+DEADEND Succ State: #435
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11111
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11111
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11111
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11111
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11111
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+10111
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+10011
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+10011
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+10010
+DEADEND Succ State: #444
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+10000
+DEADEND Succ State: #445
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+10000
+DEADEND Succ State: #446
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+10100
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+10000
+DEADEND Succ State: #448
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11111
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11111
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11111
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11111
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11111
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11111
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11010
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11101
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+00101
+DEADEND Succ State: #457
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+01001
+DEADEND Succ State: #458
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11101
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+00111
+DEADEND Succ State: #460
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+00011
+DEADEND Succ State: #461
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+00000
+DEADEND Succ State: #462
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+01000
+DEADEND Succ State: #463
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11011
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11111
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+10000
+DEADEND Succ State: #466
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+10000
+DEADEND Succ State: #467
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+01010
+DEADEND Succ State: #468
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11011
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11111
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+10000
+DEADEND Succ State: #471
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+10000
+DEADEND Succ State: #472
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+01010
+DEADEND Succ State: #473
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+01011
+DEADEND Succ State: #474
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11000
+DEADEND Succ State: #475
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+00001
+DEADEND Succ State: #476
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11111
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11111
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11111
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11111
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11101
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11101
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11111
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11111
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11111
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11111
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11111
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11111
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11111
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+01111
+DEADEND Succ State: #490
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11111
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11111
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+01111
+DEADEND Succ State: #493
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+00101
+DEADEND Succ State: #494
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+00111
+DEADEND Succ State: #495
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+00111
+DEADEND Succ State: #496
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11011
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+01000
+DEADEND Succ State: #498
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+01111
+DEADEND Succ State: #499
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11111
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+00001
+DEADEND Succ State: #501
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+01111
+DEADEND Succ State: #502
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11111
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+01011
+DEADEND Succ State: #504
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+00011
+DEADEND Succ State: #505
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11111
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11111
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11111
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+00111
+DEADEND Succ State: #509
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11100
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+01110
+DEADEND Succ State: #511
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+10001
+DEADEND Succ State: #512
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11111
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11111
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+01110
+DEADEND Succ State: #515
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+01110
+DEADEND Succ State: #516
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+01011
+DEADEND Succ State: #517
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+10100
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+00001
+DEADEND Succ State: #519
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+10101
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+00000
+DEADEND Succ State: #521
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+00000
+DEADEND Succ State: #522
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+00000
+DEADEND Succ State: #523
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+00000
+DEADEND Succ State: #524
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+10000
+DEADEND Succ State: #525
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11111
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11111
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11111
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+01111
+DEADEND Succ State: #529
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+00101
+DEADEND Succ State: #530
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+00001
+DEADEND Succ State: #531
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+00111
+DEADEND Succ State: #532
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11111
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+10111
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+10100
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+00111
+DEADEND Succ State: #536
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+10111
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+00100
+DEADEND Succ State: #538
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+00000
+DEADEND Succ State: #539
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+00000
+DEADEND Succ State: #540
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+00000
+DEADEND Succ State: #541
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+10000
+DEADEND Succ State: #542
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+00000
+DEADEND Succ State: #543
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+00100
+DEADEND Succ State: #544
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+10000
+DEADEND Succ State: #545
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+10000
+DEADEND Succ State: #546
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+00100
+DEADEND Succ State: #547
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+10100
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+00000
+DEADEND Succ State: #549
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+10000
+DEADEND Succ State: #550
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11010
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11010
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+00010
+DEADEND Succ State: #553
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+01000
+DEADEND Succ State: #554
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+10001
+DEADEND Succ State: #555
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11101
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+10001
+DEADEND Succ State: #557
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11101
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+10001
+DEADEND Succ State: #559
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11111
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11111
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+00100
+DEADEND Succ State: #562
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+00110
+DEADEND Succ State: #563
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11001
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+01011
+DEADEND Succ State: #565
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11001
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+10001
+DEADEND Succ State: #567
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11001
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+01000
+DEADEND Succ State: #569
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+00000
+DEADEND Succ State: #570
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+01000
+DEADEND Succ State: #571
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+10000
+DEADEND Succ State: #572
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11101
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11111
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11101
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11111
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11111
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+10000
+DEADEND Succ State: #578
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+10000
+DEADEND Succ State: #579
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+10000
+DEADEND Succ State: #580
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+01101
+DEADEND Succ State: #581
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+00001
+DEADEND Succ State: #582
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11100
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11000
+DEADEND Succ State: #584
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+10000
+DEADEND Succ State: #585
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+00001
+DEADEND Succ State: #586
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+00100
+DEADEND Succ State: #587
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11111
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11111
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11111
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11111
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11111
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11111
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11111
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11111
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11111
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11111
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11111
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11111
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11111
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11111
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11100
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11100
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+10000
+DEADEND Succ State: #604
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11100
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11000
+DEADEND Succ State: #606
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11100
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11100
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+10000
+DEADEND Succ State: #609
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11000
+DEADEND Succ State: #610
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11100
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+10000
+DEADEND Succ State: #612
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+10100
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+10000
+DEADEND Succ State: #614
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10010
+11000
+01111
+10001
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11100
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10001
+01111
+11100
+10010
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11000
+DEADEND Succ State: #616
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10001
+01111
+11100
+10010
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+10100
+DEADEND Succ State: #617
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10001
+01111
+11100
+10010
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+10000
+DEADEND Succ State: #618
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10001
+01111
+11100
+10010
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+10000
+DEADEND Succ State: #619
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10001
+01111
+11100
+10010
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11111
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10001
+01111
+11100
+10010
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11001
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10001
+01111
+11100
+10010
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11010
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10001
+01111
+11100
+10010
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11000
+DEADEND Succ State: #623
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10001
+01111
+11100
+10010
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+01010
+DEADEND Succ State: #624
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10001
+01111
+11100
+10010
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11010
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10001
+01111
+11100
+10010
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11100
+DEADEND Succ State: #626
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10001
+01111
+11100
+10010
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+00000
+DEADEND Succ State: #627
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10001
+01111
+11100
+10010
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+00000
+DEADEND Succ State: #628
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10001
+01111
+11100
+10010
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11111
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10001
+01111
+11100
+10010
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11101
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10001
+01111
+11100
+10010
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+10001
+DEADEND Succ State: #631
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10001
+01111
+11100
+10010
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11111
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10001
+01111
+11100
+10010
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11111
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10001
+01111
+11100
+10010
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11101
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10001
+01111
+11100
+10010
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+10001
+DEADEND Succ State: #635
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10001
+01111
+11100
+10010
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11101
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10001
+01111
+11100
+10010
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+10000
+DEADEND Succ State: #637
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10001
+01111
+11100
+10010
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11111
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10001
+01111
+11100
+10010
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11101
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10001
+01111
+11100
+10010
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11100
+DEADEND Succ State: #640
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10001
+01111
+11100
+10010
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11111
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10001
+01111
+11100
+10010
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11101
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10001
+01111
+11100
+10010
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11001
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10001
+01111
+11100
+10010
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+10001
+DEADEND Succ State: #644
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10001
+01111
+11100
+10010
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+01001
+DEADEND Succ State: #645
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10001
+01111
+11100
+10010
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+00001
+DEADEND Succ State: #646
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10001
+01111
+11100
+10010
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+01000
+DEADEND Succ State: #647
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10001
+01111
+11100
+10010
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+00000
+DEADEND Succ State: #648
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10001
+01111
+11100
+10010
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+00000
+DEADEND Succ State: #649
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10001
+01111
+11100
+10010
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+00000
+DEADEND Succ State: #650
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10001
+01111
+11100
+10010
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+00000
+DEADEND Succ State: #651
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10001
+01111
+11100
+10010
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11100
+DEADEND Succ State: #652
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10001
+01111
+11100
+10010
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+01001
+DEADEND Succ State: #653
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10001
+01111
+11100
+10010
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11101
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10001
+01111
+11100
+10010
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+00001
+DEADEND Succ State: #655
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10001
+01111
+11100
+10010
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11000
+DEADEND Succ State: #656
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10001
+01111
+11100
+10010
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11000
+DEADEND Succ State: #657
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10001
+01111
+11100
+10010
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11111
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10001
+01111
+11100
+10010
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11111
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10001
+01111
+11100
+10010
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11111
+new goals reachable?????
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10001
+01111
+11100
+10010
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+10001
+DEADEND Succ State: #661
+new goal subset heuristic: ++++++++++++++++++++++
+-------------- CURRENT MSGS ------------------
+10001
+01111
+11100
+10010
+-------------- CURRENT MSGS ------------------
+reachable goals: 
+11101
+new goals reachable?????
+[t=0.0114805s, 46076 KB] Completely explored state space -- no solution!
+[t=0.0114986s, 46076 KB] Actual search time: 0.00970859s
+[t=0.0115107s, 46076 KB] Expanded 390 state(s).
+[t=0.0115107s, 46076 KB] Reopened 47 state(s).
+[t=0.0115107s, 46076 KB] Evaluated 663 state(s).
+[t=0.0115107s, 46076 KB] Evaluations: 663
+[t=0.0115107s, 46076 KB] Generated 1348 state(s).
+[t=0.0115107s, 46076 KB] Dead ends: 320 state(s).
+[t=0.0115107s, 46076 KB] Number of registered states: 663
+[t=0.0115107s, 46076 KB] Int hash set load factor: 663/1024 = 0.647461
+[t=0.0115107s, 46076 KB] Int hash set resizes: 10
+HIT computation: 1.5106e-05s
+Prunig time: 0.00602184s
+#pruned states: 320
+*********************************
+#hard goals: 0
+#soft goals: 5
+	0: Atom on(a, e)
+	1: Atom on(b, a)
+	2: Atom on(c, b)
+	3: Atom on(e, f)
+	4: Atom on(f, d)
+*********************************
+#MSGS: 4
+*********************************
+10001
+01111
+11100
+10010
+*********************************
+*********************************
+#MUGS: 5
+*********************************
+11010
+10110
+11001
+10101
+10011
+*********************************
+Atom on(b, a)|Atom on(e, f)|Atom on(f, d)
+Atom on(b, a)|Atom on(c, b)|Atom on(f, d)
+Atom on(a, e)|Atom on(e, f)|Atom on(f, d)
+Atom on(a, e)|Atom on(c, b)|Atom on(f, d)
+Atom on(a, e)|Atom on(b, a)|Atom on(f, d)
+*********************************
+[t=0.0115107s, 46076 KB] Search time: 0.00981396s
+[t=0.0115107s, 46076 KB] Total time: 0.0115107s
+Search stopped without finding a solution.
+Peak memory: 46076 KB
+Remove intermediate file output.sas
+search exit code: 12
+
+Driver aborting after search
+INFO     Planner time: 0.10s

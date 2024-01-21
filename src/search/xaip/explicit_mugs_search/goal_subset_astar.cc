@@ -22,6 +22,7 @@
 #include <set>
 
 using namespace std;
+using namespace policy_pruning_method;
 
 namespace goal_subset_astar {
 GoalSubsetAStar::GoalSubsetAStar(const Options &opts)
@@ -31,7 +32,7 @@ GoalSubsetAStar::GoalSubsetAStar(const Options &opts)
       open_list(opts.get<shared_ptr<OpenListFactory>>("open")->
                 create_state_open_list()),
       eval(opts.get<shared_ptr<Evaluator>>("eval", nullptr)),
-      pruning_method(opts.get<shared_ptr<PruningMethod>>("pruning")) {
+    pruning_method(opts.get<shared_ptr<PolicyPruningMethod>>("pruning")) {
 }
 
 void GoalSubsetAStar::initialize() {
@@ -280,7 +281,7 @@ MSGSCollection  GoalSubsetAStar::get_msgs(){
 }
 
 void add_options_to_parser(OptionParser &parser) {
-    SearchEngine::add_pruning_option(parser);
+    // SearchEngine::add_pruning_option(parser);
     SearchEngine::add_options_to_parser(parser);
 }
 
@@ -296,6 +297,8 @@ static shared_ptr<SearchEngine> _parse(OptionParser &parser) {
     "use preferred operators of these evaluators", "[]");
     parser.add_option<int>("boost",
     "boost value for preferred operator open lists", "0");
+
+    parser.add_option<shared_ptr<PolicyPruningMethod>>("pruning", "TODO");
 
     add_options_to_parser(parser);
     Options opts = parser.parse();

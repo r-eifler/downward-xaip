@@ -1,0 +1,1419 @@
+1 translate input (domain, problem): ['../../../phd_thesis/benchmarks/xaip_benchmarks/resources_time_windows_relaxed/relaxed_tasks/blocksworld/domain.pddl', '../../../phd_thesis/benchmarks/xaip_benchmarks/resources_time_windows_relaxed/relaxed_tasks/blocksworld/problem_07_06_0.pddl']
+INFO     planner time limit: None
+INFO     planner memory limit: None
+
+INFO     Running translator.
+INFO     translator stdin: None
+INFO     translator time limit: None
+INFO     translator memory limit: None
+INFO     translator command line string: /usr/bin/python3 /home/rebecca/XPP/framework/downward-xaip/builds/release/bin/translate/translate.py ../../../phd_thesis/benchmarks/xaip_benchmarks/resources_time_windows_relaxed/relaxed_tasks/blocksworld/domain.pddl ../../../phd_thesis/benchmarks/xaip_benchmarks/resources_time_windows_relaxed/relaxed_tasks/blocksworld/problem_07_06_0.pddl --explanation-settings ../../../phd_thesis/benchmarks/xaip_benchmarks/resources_time_windows_relaxed/relaxed_tasks/blocksworld/relaxed_tasks_setting_problem_07_06_0_2.json --sas-file output.sas
+domain:  ../../../phd_thesis/benchmarks/xaip_benchmarks/resources_time_windows_relaxed/relaxed_tasks/blocksworld/domain.pddl
+problem:  ../../../phd_thesis/benchmarks/xaip_benchmarks/resources_time_windows_relaxed/relaxed_tasks/blocksworld/problem_07_06_0.pddl
+explanations settings:  ../../../phd_thesis/benchmarks/xaip_benchmarks/resources_time_windows_relaxed/relaxed_tasks/blocksworld/relaxed_tasks_setting_problem_07_06_0_2.json
+Parsing...
+Parsing: [0.000s CPU, 0.001s wall-clock]
+Normalizing task... [0.000s CPU, 0.000s wall-clock]
+{'id': '0', 'name': 'energy_level0_h0', 'inits': ['energy(level0, h0)'], 'limits': {'type': 'OR', 'facts': ['energy(level16, h0)']}, 'upper_cover': [1], 'lower_cover': []}
+{'id': '1', 'name': 'energy_level1_h0', 'inits': ['energy(level1, h0)'], 'limits': {'type': 'OR', 'facts': ['energy(level15, h0)', 'energy(level16, h0)']}, 'upper_cover': [2], 'lower_cover': [0]}
+{'id': '2', 'name': 'energy_level2_h0', 'inits': ['energy(level2, h0)'], 'limits': {'type': 'OR', 'facts': ['energy(level14, h0)', 'energy(level15, h0)', 'energy(level16, h0)']}, 'upper_cover': [3], 'lower_cover': [1]}
+{'id': '3', 'name': 'energy_level3_h0', 'inits': ['energy(level3, h0)'], 'limits': {'type': 'OR', 'facts': ['energy(level13, h0)', 'energy(level14, h0)', 'energy(level15, h0)', 'energy(level16, h0)']}, 'upper_cover': [4], 'lower_cover': [2]}
+{'id': '4', 'name': 'energy_level4_h0', 'inits': ['energy(level4, h0)'], 'limits': {'type': 'OR', 'facts': ['energy(level12, h0)', 'energy(level13, h0)', 'energy(level14, h0)', 'energy(level15, h0)', 'energy(level16, h0)']}, 'upper_cover': [5], 'lower_cover': [3]}
+{'id': '5', 'name': 'energy_level5_h0', 'inits': ['energy(level5, h0)'], 'limits': {'type': 'OR', 'facts': ['energy(level11, h0)', 'energy(level12, h0)', 'energy(level13, h0)', 'energy(level14, h0)', 'energy(level15, h0)', 'energy(level16, h0)']}, 'upper_cover': [6], 'lower_cover': [4]}
+{'id': '6', 'name': 'energy_level6_h0', 'inits': ['energy(level6, h0)'], 'limits': {'type': 'OR', 'facts': ['energy(level10, h0)', 'energy(level11, h0)', 'energy(level12, h0)', 'energy(level13, h0)', 'energy(level14, h0)', 'energy(level15, h0)', 'energy(level16, h0)']}, 'upper_cover': [7], 'lower_cover': [5]}
+{'id': '7', 'name': 'energy_level7_h0', 'inits': ['energy(level7, h0)'], 'limits': {'type': 'OR', 'facts': ['energy(level9, h0)', 'energy(level10, h0)', 'energy(level11, h0)', 'energy(level12, h0)', 'energy(level13, h0)', 'energy(level14, h0)', 'energy(level15, h0)', 'energy(level16, h0)']}, 'upper_cover': [8], 'lower_cover': [6]}
+{'id': '8', 'name': 'energy_level8_h0', 'inits': ['energy(level8, h0)'], 'limits': {'type': 'OR', 'facts': ['energy(level8, h0)', 'energy(level9, h0)', 'energy(level10, h0)', 'energy(level11, h0)', 'energy(level12, h0)', 'energy(level13, h0)', 'energy(level14, h0)', 'energy(level15, h0)', 'energy(level16, h0)']}, 'upper_cover': [9], 'lower_cover': [7]}
+{'id': '9', 'name': 'energy_level9_h0', 'inits': ['energy(level9, h0)'], 'limits': {'type': 'OR', 'facts': ['energy(level7, h0)', 'energy(level8, h0)', 'energy(level9, h0)', 'energy(level10, h0)', 'energy(level11, h0)', 'energy(level12, h0)', 'energy(level13, h0)', 'energy(level14, h0)', 'energy(level15, h0)', 'energy(level16, h0)']}, 'upper_cover': [10], 'lower_cover': [8]}
+{'id': '10', 'name': 'energy_level10_h0', 'inits': ['energy(level10, h0)'], 'limits': {'type': 'OR', 'facts': ['energy(level6, h0)', 'energy(level7, h0)', 'energy(level8, h0)', 'energy(level9, h0)', 'energy(level10, h0)', 'energy(level11, h0)', 'energy(level12, h0)', 'energy(level13, h0)', 'energy(level14, h0)', 'energy(level15, h0)', 'energy(level16, h0)']}, 'upper_cover': [11], 'lower_cover': [9]}
+{'id': '11', 'name': 'energy_level11_h0', 'inits': ['energy(level11, h0)'], 'limits': {'type': 'OR', 'facts': ['energy(level5, h0)', 'energy(level6, h0)', 'energy(level7, h0)', 'energy(level8, h0)', 'energy(level9, h0)', 'energy(level10, h0)', 'energy(level11, h0)', 'energy(level12, h0)', 'energy(level13, h0)', 'energy(level14, h0)', 'energy(level15, h0)', 'energy(level16, h0)']}, 'upper_cover': [12], 'lower_cover': [10]}
+{'id': '12', 'name': 'energy_level12_h0', 'inits': ['energy(level12, h0)'], 'limits': {'type': 'OR', 'facts': ['energy(level4, h0)', 'energy(level5, h0)', 'energy(level6, h0)', 'energy(level7, h0)', 'energy(level8, h0)', 'energy(level9, h0)', 'energy(level10, h0)', 'energy(level11, h0)', 'energy(level12, h0)', 'energy(level13, h0)', 'energy(level14, h0)', 'energy(level15, h0)', 'energy(level16, h0)']}, 'upper_cover': [13], 'lower_cover': [11]}
+{'id': '13', 'name': 'energy_level13_h0', 'inits': ['energy(level13, h0)'], 'limits': {'type': 'OR', 'facts': ['energy(level3, h0)', 'energy(level4, h0)', 'energy(level5, h0)', 'energy(level6, h0)', 'energy(level7, h0)', 'energy(level8, h0)', 'energy(level9, h0)', 'energy(level10, h0)', 'energy(level11, h0)', 'energy(level12, h0)', 'energy(level13, h0)', 'energy(level14, h0)', 'energy(level15, h0)', 'energy(level16, h0)']}, 'upper_cover': [14], 'lower_cover': [12]}
+{'id': '14', 'name': 'energy_level14_h0', 'inits': ['energy(level14, h0)'], 'limits': {'type': 'OR', 'facts': ['energy(level2, h0)', 'energy(level3, h0)', 'energy(level4, h0)', 'energy(level5, h0)', 'energy(level6, h0)', 'energy(level7, h0)', 'energy(level8, h0)', 'energy(level9, h0)', 'energy(level10, h0)', 'energy(level11, h0)', 'energy(level12, h0)', 'energy(level13, h0)', 'energy(level14, h0)', 'energy(level15, h0)', 'energy(level16, h0)']}, 'upper_cover': [15], 'lower_cover': [13]}
+{'id': '15', 'name': 'energy_level15_h0', 'inits': ['energy(level15, h0)'], 'limits': {'type': 'OR', 'facts': ['energy(level1, h0)', 'energy(level2, h0)', 'energy(level3, h0)', 'energy(level4, h0)', 'energy(level5, h0)', 'energy(level6, h0)', 'energy(level7, h0)', 'energy(level8, h0)', 'energy(level9, h0)', 'energy(level10, h0)', 'energy(level11, h0)', 'energy(level12, h0)', 'energy(level13, h0)', 'energy(level14, h0)', 'energy(level15, h0)', 'energy(level16, h0)']}, 'upper_cover': [16], 'lower_cover': [14]}
+{'id': '16', 'name': 'energy_level16_h0', 'inits': ['energy(level16, h0)'], 'limits': {'type': 'OR', 'facts': ['energy(level0, h0)', 'energy(level1, h0)', 'energy(level2, h0)', 'energy(level3, h0)', 'energy(level4, h0)', 'energy(level5, h0)', 'energy(level6, h0)', 'energy(level7, h0)', 'energy(level8, h0)', 'energy(level9, h0)', 'energy(level10, h0)', 'energy(level11, h0)', 'energy(level12, h0)', 'energy(level13, h0)', 'energy(level14, h0)', 'energy(level15, h0)', 'energy(level16, h0)']}, 'upper_cover': [], 'lower_cover': [15]}
+# AS properties: 0
+# LTL properties: 2
+# G properties: 0
+Instantiating...
+Generating Datalog program... 
+-------------------- additional_init_facts -----------------------------
+num additional init facts: 17
+energy(level0,h0)
+energy(level13,h0)
+energy(level15,h0)
+energy(level4,h0)
+energy(level2,h0)
+energy(level10,h0)
+energy(level7,h0)
+energy(level12,h0)
+energy(level5,h0)
+energy(level9,h0)
+energy(level14,h0)
+energy(level1,h0)
+energy(level16,h0)
+energy(level11,h0)
+energy(level8,h0)
+energy(level6,h0)
+energy(level3,h0)
+[0.000s CPU, 0.001s wall-clock]
+Normalizing Datalog program...
+Normalizing Datalog program: [0.000s CPU, 0.002s wall-clock]
+Preparing model... [0.000s CPU, 0.001s wall-clock]
+Generated 53 rules.
+Computing model... [0.020s CPU, 0.015s wall-clock]
+2166 relevant atoms
+1304 auxiliary atoms
+3470 final queue length
+9751 total queue pushes
+Completing instantiation... [0.040s CPU, 0.044s wall-clock]
+Instantiating: [0.060s CPU, 0.063s wall-clock]
+Computing fact groups...
+Finding invariants...
+15 initial candidates
+Finding invariants: [0.010s CPU, 0.004s wall-clock]
+Checking invariant weight... [0.000s CPU, 0.000s wall-clock]
+Instantiating groups... [0.000s CPU, 0.000s wall-clock]
+Collecting mutex groups... [0.000s CPU, 0.000s wall-clock]
+Choosing groups...
+8 uncovered facts
+Choosing groups: [0.000s CPU, 0.000s wall-clock]
+Building translation key... [0.000s CPU, 0.000s wall-clock]
+Computing fact groups: [0.010s CPU, 0.005s wall-clock]
+Building STRIPS to SAS dictionary... [0.000s CPU, 0.000s wall-clock]
+Building dictionary for full mutex groups... [0.000s CPU, 0.000s wall-clock]
+Building mutex information...
+Building mutex information: [0.000s CPU, 0.000s wall-clock]
+Translating task...
+Processing axioms...
+Simplifying axioms... [0.000s CPU, 0.000s wall-clock]
+Translator axioms removed by simplifying: 0
+Computing negative axioms... [0.000s CPU, 0.000s wall-clock]
+Processing axioms: [0.000s CPU, 0.002s wall-clock]
+Translating task: [0.030s CPU, 0.037s wall-clock]
+2244 effect conditions simplified
+0 implied preconditions added
+Skip simplification (filter_unreachable_propositions) for: 
+{6: {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17}}
+Detecting unreachable propositions...
+0 operators removed
+0 axioms removed
+13 propositions removed
+Detecting unreachable propositions: [0.020s CPU, 0.017s wall-clock]
+Skip simplification (find_and_apply_variable_order) reordering for: 
+{6: {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17}}
+Reordering and filtering variables...
+16 of 16 variables necessary.
+8 of 16 mutex groups necessary.
+1584 of 1584 operators necessary.
+0 of 0 axiom rules necessary.
+Reordering and filtering variables: [0.010s CPU, 0.008s wall-clock]
+Translator variables: 16
+Translator derived variables: 0
+Translator facts: 89
+Translator goal facts: 7
+Translator mutex groups: 8
+Translator total mutex groups size: 62
+Translator operators: 1584
+Translator axioms: 0
+Translator task size: 14826
+Translator peak memory: 45732 KB
+----> run XPP framework
+#relaxed tasks: 17
+Relaxed tasks to SAS output
+Encode LTL properties into task.
+Number of auxiliary variables: 2
+****************************************************************************
+hard goals are specified but not soft goals -> original goal facts and all properties are soft goals
+Goal:
+[(9, 4), (10, 7), (11, 5), (12, 4), (13, 3), (14, 2), (15, 0), (17, 0), (19, 1), (21, 1)]
+Hard Goal:
+[(17, 0)]
+Soft Goal:
+[(9, 4), (10, 7), (11, 5), (12, 4), (13, 3), (14, 2), (15, 0), (19, 1), (21, 1)]
+Writing output... [0.010s CPU, 0.009s wall-clock]
+Done! [0.140s CPU, 0.202s wall-clock]
+translate exit code: 0
+
+INFO     Running search (release).
+INFO     search stdin: output.sas
+INFO     search time limit: None
+INFO     search memory limit: None
+INFO     search command line string: /home/rebecca/XPP/framework/downward-xaip/builds/release/bin/downward --search 'astar_relaxations(eval=ngs(hmax))' --internal-plan-file sas_plan < output.sas
+[t=2.6483e-05s, 45540 KB] reading input...
+[t=0.00631084s, 46220 KB] done reading input!
+[t=0.00800205s, 47508 KB] Simplifying 9821 unary operators... done! [7181 unary operators]
+[t=0.0165454s, 48272 KB] time to simplify: 0.00856431s
+[t=0.0166649s, 48272 KB] Initializing HSP max heuristic...
+[t=0.0166933s, 48272 KB] --> new goal subset heuristic
+[t=0.0167074s, 48272 KB] initialize heuristic: new goal subset heuristic
+[t=0.016743s, 48272 KB] Building successor generator...done!
+[t=0.0171846s, 48272 KB] peak memory difference for successor generator creation: 0 KB
+[t=0.0171941s, 48272 KB] time for successor generation creation: 0.000403334s
+[t=0.0172078s, 48272 KB] Variables: 24
+[t=0.0172236s, 48272 KB] FactPairs: 106
+[t=0.0172317s, 48272 KB] Bytes per state: 8
+[t=0.0173021s, 48272 KB] Conducting best first search with reopening closed nodes, (real) bound = 2147483647
+---------------- INIT MSGS Collection ---------------------- 
+9 = 4    -->  id: 0 Atom on(b0, b3)
+10 = 7    -->  id: 1 Atom ontable(b1)
+11 = 5    -->  id: 2 Atom on(b2, b4)
+12 = 4    -->  id: 3 Atom on(b3, b2)
+13 = 3    -->  id: 4 Atom on(b4, b1)
+14 = 2    -->  id: 5 Atom on(b5, b0)
+15 = 0    -->  id: 6 Atom clear(b5)
+19 = 1    -->  id: 7 soft_accepting(stack_blocks_tb1_bb4)
+21 = 1    -->  id: 8 soft_accepting(on_the_table_at_the_same_time_b5_b4)
+################# TASK RELAXATION TRACKER ##############
+---------------- INIT MSGS Collection ---------------------- 
+9 = 4    -->  id: 0 Atom on(b0, b3)
+10 = 7    -->  id: 1 Atom ontable(b1)
+11 = 5    -->  id: 2 Atom on(b2, b4)
+12 = 4    -->  id: 3 Atom on(b3, b2)
+13 = 3    -->  id: 4 Atom on(b4, b1)
+14 = 2    -->  id: 5 Atom on(b5, b0)
+15 = 0    -->  id: 6 Atom clear(b5)
+19 = 1    -->  id: 7 soft_accepting(stack_blocks_tb1_bb4)
+21 = 1    -->  id: 8 soft_accepting(on_the_table_at_the_same_time_b5_b4)
+Init relaxation: energy_level0_h0
+---------------- INIT MSGS Collection ---------------------- 
+9 = 4    -->  id: 0 Atom on(b0, b3)
+10 = 7    -->  id: 1 Atom ontable(b1)
+11 = 5    -->  id: 2 Atom on(b2, b4)
+12 = 4    -->  id: 3 Atom on(b3, b2)
+13 = 3    -->  id: 4 Atom on(b4, b1)
+14 = 2    -->  id: 5 Atom on(b5, b0)
+15 = 0    -->  id: 6 Atom clear(b5)
+19 = 1    -->  id: 7 soft_accepting(stack_blocks_tb1_bb4)
+21 = 1    -->  id: 8 soft_accepting(on_the_table_at_the_same_time_b5_b4)
+Init relaxation: energy_level1_h0
+---------------- INIT MSGS Collection ---------------------- 
+9 = 4    -->  id: 0 Atom on(b0, b3)
+10 = 7    -->  id: 1 Atom ontable(b1)
+11 = 5    -->  id: 2 Atom on(b2, b4)
+12 = 4    -->  id: 3 Atom on(b3, b2)
+13 = 3    -->  id: 4 Atom on(b4, b1)
+14 = 2    -->  id: 5 Atom on(b5, b0)
+15 = 0    -->  id: 6 Atom clear(b5)
+19 = 1    -->  id: 7 soft_accepting(stack_blocks_tb1_bb4)
+21 = 1    -->  id: 8 soft_accepting(on_the_table_at_the_same_time_b5_b4)
+Init relaxation: energy_level2_h0
+---------------- INIT MSGS Collection ---------------------- 
+9 = 4    -->  id: 0 Atom on(b0, b3)
+10 = 7    -->  id: 1 Atom ontable(b1)
+11 = 5    -->  id: 2 Atom on(b2, b4)
+12 = 4    -->  id: 3 Atom on(b3, b2)
+13 = 3    -->  id: 4 Atom on(b4, b1)
+14 = 2    -->  id: 5 Atom on(b5, b0)
+15 = 0    -->  id: 6 Atom clear(b5)
+19 = 1    -->  id: 7 soft_accepting(stack_blocks_tb1_bb4)
+21 = 1    -->  id: 8 soft_accepting(on_the_table_at_the_same_time_b5_b4)
+Init relaxation: energy_level3_h0
+---------------- INIT MSGS Collection ---------------------- 
+9 = 4    -->  id: 0 Atom on(b0, b3)
+10 = 7    -->  id: 1 Atom ontable(b1)
+11 = 5    -->  id: 2 Atom on(b2, b4)
+12 = 4    -->  id: 3 Atom on(b3, b2)
+13 = 3    -->  id: 4 Atom on(b4, b1)
+14 = 2    -->  id: 5 Atom on(b5, b0)
+15 = 0    -->  id: 6 Atom clear(b5)
+19 = 1    -->  id: 7 soft_accepting(stack_blocks_tb1_bb4)
+21 = 1    -->  id: 8 soft_accepting(on_the_table_at_the_same_time_b5_b4)
+Init relaxation: energy_level4_h0
+---------------- INIT MSGS Collection ---------------------- 
+9 = 4    -->  id: 0 Atom on(b0, b3)
+10 = 7    -->  id: 1 Atom ontable(b1)
+11 = 5    -->  id: 2 Atom on(b2, b4)
+12 = 4    -->  id: 3 Atom on(b3, b2)
+13 = 3    -->  id: 4 Atom on(b4, b1)
+14 = 2    -->  id: 5 Atom on(b5, b0)
+15 = 0    -->  id: 6 Atom clear(b5)
+19 = 1    -->  id: 7 soft_accepting(stack_blocks_tb1_bb4)
+21 = 1    -->  id: 8 soft_accepting(on_the_table_at_the_same_time_b5_b4)
+Init relaxation: energy_level5_h0
+---------------- INIT MSGS Collection ---------------------- 
+9 = 4    -->  id: 0 Atom on(b0, b3)
+10 = 7    -->  id: 1 Atom ontable(b1)
+11 = 5    -->  id: 2 Atom on(b2, b4)
+12 = 4    -->  id: 3 Atom on(b3, b2)
+13 = 3    -->  id: 4 Atom on(b4, b1)
+14 = 2    -->  id: 5 Atom on(b5, b0)
+15 = 0    -->  id: 6 Atom clear(b5)
+19 = 1    -->  id: 7 soft_accepting(stack_blocks_tb1_bb4)
+21 = 1    -->  id: 8 soft_accepting(on_the_table_at_the_same_time_b5_b4)
+Init relaxation: energy_level6_h0
+---------------- INIT MSGS Collection ---------------------- 
+9 = 4    -->  id: 0 Atom on(b0, b3)
+10 = 7    -->  id: 1 Atom ontable(b1)
+11 = 5    -->  id: 2 Atom on(b2, b4)
+12 = 4    -->  id: 3 Atom on(b3, b2)
+13 = 3    -->  id: 4 Atom on(b4, b1)
+14 = 2    -->  id: 5 Atom on(b5, b0)
+15 = 0    -->  id: 6 Atom clear(b5)
+19 = 1    -->  id: 7 soft_accepting(stack_blocks_tb1_bb4)
+21 = 1    -->  id: 8 soft_accepting(on_the_table_at_the_same_time_b5_b4)
+Init relaxation: energy_level7_h0
+---------------- INIT MSGS Collection ---------------------- 
+9 = 4    -->  id: 0 Atom on(b0, b3)
+10 = 7    -->  id: 1 Atom ontable(b1)
+11 = 5    -->  id: 2 Atom on(b2, b4)
+12 = 4    -->  id: 3 Atom on(b3, b2)
+13 = 3    -->  id: 4 Atom on(b4, b1)
+14 = 2    -->  id: 5 Atom on(b5, b0)
+15 = 0    -->  id: 6 Atom clear(b5)
+19 = 1    -->  id: 7 soft_accepting(stack_blocks_tb1_bb4)
+21 = 1    -->  id: 8 soft_accepting(on_the_table_at_the_same_time_b5_b4)
+Init relaxation: energy_level8_h0
+---------------- INIT MSGS Collection ---------------------- 
+9 = 4    -->  id: 0 Atom on(b0, b3)
+10 = 7    -->  id: 1 Atom ontable(b1)
+11 = 5    -->  id: 2 Atom on(b2, b4)
+12 = 4    -->  id: 3 Atom on(b3, b2)
+13 = 3    -->  id: 4 Atom on(b4, b1)
+14 = 2    -->  id: 5 Atom on(b5, b0)
+15 = 0    -->  id: 6 Atom clear(b5)
+19 = 1    -->  id: 7 soft_accepting(stack_blocks_tb1_bb4)
+21 = 1    -->  id: 8 soft_accepting(on_the_table_at_the_same_time_b5_b4)
+Init relaxation: energy_level9_h0
+---------------- INIT MSGS Collection ---------------------- 
+9 = 4    -->  id: 0 Atom on(b0, b3)
+10 = 7    -->  id: 1 Atom ontable(b1)
+11 = 5    -->  id: 2 Atom on(b2, b4)
+12 = 4    -->  id: 3 Atom on(b3, b2)
+13 = 3    -->  id: 4 Atom on(b4, b1)
+14 = 2    -->  id: 5 Atom on(b5, b0)
+15 = 0    -->  id: 6 Atom clear(b5)
+19 = 1    -->  id: 7 soft_accepting(stack_blocks_tb1_bb4)
+21 = 1    -->  id: 8 soft_accepting(on_the_table_at_the_same_time_b5_b4)
+Init relaxation: energy_level10_h0
+---------------- INIT MSGS Collection ---------------------- 
+9 = 4    -->  id: 0 Atom on(b0, b3)
+10 = 7    -->  id: 1 Atom ontable(b1)
+11 = 5    -->  id: 2 Atom on(b2, b4)
+12 = 4    -->  id: 3 Atom on(b3, b2)
+13 = 3    -->  id: 4 Atom on(b4, b1)
+14 = 2    -->  id: 5 Atom on(b5, b0)
+15 = 0    -->  id: 6 Atom clear(b5)
+19 = 1    -->  id: 7 soft_accepting(stack_blocks_tb1_bb4)
+21 = 1    -->  id: 8 soft_accepting(on_the_table_at_the_same_time_b5_b4)
+Init relaxation: energy_level11_h0
+---------------- INIT MSGS Collection ---------------------- 
+9 = 4    -->  id: 0 Atom on(b0, b3)
+10 = 7    -->  id: 1 Atom ontable(b1)
+11 = 5    -->  id: 2 Atom on(b2, b4)
+12 = 4    -->  id: 3 Atom on(b3, b2)
+13 = 3    -->  id: 4 Atom on(b4, b1)
+14 = 2    -->  id: 5 Atom on(b5, b0)
+15 = 0    -->  id: 6 Atom clear(b5)
+19 = 1    -->  id: 7 soft_accepting(stack_blocks_tb1_bb4)
+21 = 1    -->  id: 8 soft_accepting(on_the_table_at_the_same_time_b5_b4)
+Init relaxation: energy_level12_h0
+---------------- INIT MSGS Collection ---------------------- 
+9 = 4    -->  id: 0 Atom on(b0, b3)
+10 = 7    -->  id: 1 Atom ontable(b1)
+11 = 5    -->  id: 2 Atom on(b2, b4)
+12 = 4    -->  id: 3 Atom on(b3, b2)
+13 = 3    -->  id: 4 Atom on(b4, b1)
+14 = 2    -->  id: 5 Atom on(b5, b0)
+15 = 0    -->  id: 6 Atom clear(b5)
+19 = 1    -->  id: 7 soft_accepting(stack_blocks_tb1_bb4)
+21 = 1    -->  id: 8 soft_accepting(on_the_table_at_the_same_time_b5_b4)
+Init relaxation: energy_level13_h0
+---------------- INIT MSGS Collection ---------------------- 
+9 = 4    -->  id: 0 Atom on(b0, b3)
+10 = 7    -->  id: 1 Atom ontable(b1)
+11 = 5    -->  id: 2 Atom on(b2, b4)
+12 = 4    -->  id: 3 Atom on(b3, b2)
+13 = 3    -->  id: 4 Atom on(b4, b1)
+14 = 2    -->  id: 5 Atom on(b5, b0)
+15 = 0    -->  id: 6 Atom clear(b5)
+19 = 1    -->  id: 7 soft_accepting(stack_blocks_tb1_bb4)
+21 = 1    -->  id: 8 soft_accepting(on_the_table_at_the_same_time_b5_b4)
+Init relaxation: energy_level14_h0
+---------------- INIT MSGS Collection ---------------------- 
+9 = 4    -->  id: 0 Atom on(b0, b3)
+10 = 7    -->  id: 1 Atom ontable(b1)
+11 = 5    -->  id: 2 Atom on(b2, b4)
+12 = 4    -->  id: 3 Atom on(b3, b2)
+13 = 3    -->  id: 4 Atom on(b4, b1)
+14 = 2    -->  id: 5 Atom on(b5, b0)
+15 = 0    -->  id: 6 Atom clear(b5)
+19 = 1    -->  id: 7 soft_accepting(stack_blocks_tb1_bb4)
+21 = 1    -->  id: 8 soft_accepting(on_the_table_at_the_same_time_b5_b4)
+Init relaxation: energy_level15_h0
+---------------- INIT MSGS Collection ---------------------- 
+9 = 4    -->  id: 0 Atom on(b0, b3)
+10 = 7    -->  id: 1 Atom ontable(b1)
+11 = 5    -->  id: 2 Atom on(b2, b4)
+12 = 4    -->  id: 3 Atom on(b3, b2)
+13 = 3    -->  id: 4 Atom on(b4, b1)
+14 = 2    -->  id: 5 Atom on(b5, b0)
+15 = 0    -->  id: 6 Atom clear(b5)
+19 = 1    -->  id: 7 soft_accepting(stack_blocks_tb1_bb4)
+21 = 1    -->  id: 8 soft_accepting(on_the_table_at_the_same_time_b5_b4)
+Init relaxation: energy_level16_h0
+#relaxed tasks: 17
+initial relaxed task: energy_level0_h0
+[t=0.0178057s, 48272 KB] New best heuristic value for eval = ngs(hmax): 5
+[t=0.0178192s, 48272 KB] g=0, 1 evaluated, 0 expanded
+[t=0.0178289s, 48272 KB] f = 5, 1 evaluated, 0 expanded
+[t=0.0178397s, 48272 KB] Initial heuristic value for eval = ngs(hmax): 5
+[t=0.0178981s, 48272 KB] New best heuristic value for eval = ngs(hmax): 4
+[t=0.0179082s, 48272 KB] g=1, 2 evaluated, 1 expanded
+[t=0.0179617s, 48272 KB] New best heuristic value for eval = ngs(hmax): 3
+[t=0.017971s, 48272 KB] g=2, 3 evaluated, 2 expanded
+[t=0.0180268s, 48272 KB] f = 7, 4 evaluated, 3 expanded
+[t=0.0181233s, 48272 KB] New best heuristic value for eval = ngs(hmax): 2
+[t=0.0181329s, 48272 KB] g=5, 6 evaluated, 5 expanded
+[t=0.0182274s, 48272 KB] f = 10, 8 evaluated, 6 expanded
+[t=0.0184039s, 48272 KB] f = 11, 12 evaluated, 9 expanded
+[t=0.0185s, 48272 KB] f = 12, 14 evaluated, 12 expanded
+[t=0.0185901s, 48272 KB] New best heuristic value for eval = ngs(hmax): 1
+[t=0.0186002s, 48272 KB] g=11, 16 evaluated, 14 expanded
+[t=0.0187284s, 48272 KB] f = 13, 19 evaluated, 15 expanded
+[t=0.0188611s, 48272 KB] f = 14, 22 evaluated, 18 expanded
+[t=0.01895s, 48272 KB] New best heuristic value for eval = ngs(hmax): 0
+[t=0.0189615s, 48272 KB] g=14, 24 evaluated, 20 expanded
+[t=0.0190548s, 48272 KB] f = 15, 26 evaluated, 21 expanded
+[t=0.0192201s, 48272 KB] f = 16, 30 evaluated, 24 expanded
+[t=0.0193507s, 48272 KB] f = 17, 33 evaluated, 27 expanded
+[t=0.0196692s, 48272 KB] f = 18, 41 evaluated, 34 expanded
+[t=0.0200502s, 48272 KB] f = 19, 51 evaluated, 40 expanded
+[t=0.0202542s, 48272 KB] f = 20, 56 evaluated, 45 expanded
+[t=0.0205681s, 48272 KB] f = 22, 64 evaluated, 57 expanded
+[t=0.0210181s, 48272 KB] f = 23, 76 evaluated, 75 expanded
+-----------------------------------------------------
+RESULTS: energy_level0_h0
+Relaxed Task Expanded States: 78
+HIT computation: 6.3495e-05s
+Prunig time: 0.00378675s
+#pruned states: 0
+*********************************
+#hard goals: 1
+	sync(world)
+#soft goals: 9
+	0: Atom on(b0, b3)
+	1: Atom ontable(b1)
+	2: Atom on(b2, b4)
+	3: Atom on(b3, b2)
+	4: Atom on(b4, b1)
+	5: Atom on(b5, b0)
+	6: Atom clear(b5)
+	7: soft_accepting(stack_blocks_tb1_bb4)
+	8: soft_accepting(on_the_table_at_the_same_time_b5_b4)
+*********************************
+#MSGS: 3
+*********************************
+001000110
+011000000
+000010000
+*********************************
+*********************************
+#MUGS: 10
+*********************************
+010000010
+001010000
+010000100
+000010100
+100000000
+000010010
+000100000
+000001000
+010010000
+000000001
+*********************************
+Atom ontable(b1)|soft_accepting(stack_blocks_tb1_bb4)
+Atom on(b4, b1)|Atom clear(b5)
+Atom on(b2, b4)|soft_accepting(stack_blocks_tb1_bb4)
+Atom on(b2, b4)|Atom on(b4, b1)
+soft_accepting(on_the_table_at_the_same_time_b5_b4)
+Atom ontable(b1)|Atom on(b4, b1)
+Atom on(b5, b0)
+Atom on(b3, b2)
+Atom on(b4, b1)|soft_accepting(stack_blocks_tb1_bb4)
+Atom on(b0, b3)
+*********************************
+-----------------------------------------------------
+[t=0.0212671s, 48272 KB] Expanded 78 state(s).
+[t=0.0212807s, 48272 KB] Reopened 0 state(s).
+[t=0.0212901s, 48272 KB] Evaluated 78 state(s).
+[t=0.0212989s, 48272 KB] Evaluations: 78
+[t=0.0213083s, 48272 KB] Generated 149 state(s).
+[t=0.021317s, 48272 KB] Dead ends: 0 state(s).
+[t=0.0213285s, 48272 KB] Expanded until last jump: 75 state(s).
+[t=0.0213423s, 48272 KB] Reopened until last jump: 0 state(s).
+[t=0.021351s, 48272 KB] Evaluated until last jump: 76 state(s).
+[t=0.0213624s, 48272 KB] Generated until last jump: 145 state(s).
+##############################################################################
+##############################################################################
+Current task: energy_level1_h0
+init #MSGS: 3
+ITERATIVE EXPANSION OF STATE SPACE: continue with frontier states
+energy_level0_h0 #frontier states: 37
+total sum: 0
+#skipped states total: 0
+stay in frontier #states: 0
+Next Iteration init #states: 37 with duplicates: 37
+-----------------------------------------------------
+RESULTS: energy_level1_h0
+Relaxed Task Expanded States: 416
+HIT computation: 0.000134906s
+Prunig time: 0.0136898s
+#pruned states: 0
+*********************************
+#hard goals: 1
+	sync(world)
+#soft goals: 9
+	0: Atom on(b0, b3)
+	1: Atom ontable(b1)
+	2: Atom on(b2, b4)
+	3: Atom on(b3, b2)
+	4: Atom on(b4, b1)
+	5: Atom on(b5, b0)
+	6: Atom clear(b5)
+	7: soft_accepting(stack_blocks_tb1_bb4)
+	8: soft_accepting(on_the_table_at_the_same_time_b5_b4)
+*********************************
+#MSGS: 6
+*********************************
+101000010
+001000110
+111000000
+101000100
+011000010
+001010010
+*********************************
+*********************************
+#MUGS: 9
+*********************************
+000001000
+110000010
+100010000
+000100000
+010000100
+100000110
+000010100
+010010000
+000000001
+*********************************
+Atom on(b3, b2)
+Atom ontable(b1)|soft_accepting(stack_blocks_tb1_bb4)|soft_accepting(on_the_table_at_the_same_time_b5_b4)
+Atom on(b4, b1)|soft_accepting(on_the_table_at_the_same_time_b5_b4)
+Atom on(b5, b0)
+Atom on(b2, b4)|soft_accepting(stack_blocks_tb1_bb4)
+Atom ontable(b1)|Atom on(b2, b4)|soft_accepting(on_the_table_at_the_same_time_b5_b4)
+Atom on(b2, b4)|Atom on(b4, b1)
+Atom on(b4, b1)|soft_accepting(stack_blocks_tb1_bb4)
+Atom on(b0, b3)
+*********************************
+-----------------------------------------------------
+[t=0.0311935s, 48272 KB] Expanded 494 state(s).
+[t=0.0312207s, 48272 KB] Reopened 174 state(s).
+[t=0.0312319s, 48272 KB] Evaluated 320 state(s).
+[t=0.0312411s, 48272 KB] Evaluations: 320
+[t=0.0312497s, 48272 KB] Generated 1153 state(s).
+[t=0.0312581s, 48272 KB] Dead ends: 0 state(s).
+[t=0.0312666s, 48272 KB] Expanded until last jump: 75 state(s).
+[t=0.0312751s, 48272 KB] Reopened until last jump: 0 state(s).
+[t=0.0312833s, 48272 KB] Evaluated until last jump: 76 state(s).
+[t=0.0312916s, 48272 KB] Generated until last jump: 145 state(s).
+##############################################################################
+##############################################################################
+Current task: energy_level2_h0
+init #MSGS: 6
+ITERATIVE EXPANSION OF STATE SPACE: continue with frontier states
+energy_level1_h0 #frontier states: 197
+total sum: 0
+#skipped states total: 0
+stay in frontier #states: 0
+Next Iteration init #states: 197 with duplicates: 197
+-----------------------------------------------------
+RESULTS: energy_level2_h0
+Relaxed Task Expanded States: 1071
+HIT computation: 5.1426e-05s
+Prunig time: 0.0367628s
+#pruned states: 0
+*********************************
+#hard goals: 1
+	sync(world)
+#soft goals: 9
+	0: Atom on(b0, b3)
+	1: Atom ontable(b1)
+	2: Atom on(b2, b4)
+	3: Atom on(b3, b2)
+	4: Atom on(b4, b1)
+	5: Atom on(b5, b0)
+	6: Atom clear(b5)
+	7: soft_accepting(stack_blocks_tb1_bb4)
+	8: soft_accepting(on_the_table_at_the_same_time_b5_b4)
+*********************************
+#MSGS: 4
+*********************************
+011000110
+111000000
+101000110
+001010110
+*********************************
+*********************************
+#MUGS: 7
+*********************************
+110000100
+000001000
+110000010
+000100000
+100010000
+010010000
+000000001
+*********************************
+Atom on(b2, b4)|soft_accepting(stack_blocks_tb1_bb4)|soft_accepting(on_the_table_at_the_same_time_b5_b4)
+Atom on(b3, b2)
+Atom ontable(b1)|soft_accepting(stack_blocks_tb1_bb4)|soft_accepting(on_the_table_at_the_same_time_b5_b4)
+Atom on(b5, b0)
+Atom on(b4, b1)|soft_accepting(on_the_table_at_the_same_time_b5_b4)
+Atom on(b4, b1)|soft_accepting(stack_blocks_tb1_bb4)
+Atom on(b0, b3)
+*********************************
+-----------------------------------------------------
+[t=0.0542737s, 48272 KB] Expanded 1565 state(s).
+[t=0.0542943s, 48272 KB] Reopened 660 state(s).
+[t=0.054304s, 48272 KB] Evaluated 905 state(s).
+[t=0.054313s, 48272 KB] Evaluations: 905
+[t=0.0543216s, 48272 KB] Generated 3685 state(s).
+[t=0.0543301s, 48272 KB] Dead ends: 0 state(s).
+[t=0.054338s, 48272 KB] Expanded until last jump: 75 state(s).
+[t=0.0543467s, 48272 KB] Reopened until last jump: 0 state(s).
+[t=0.054355s, 48272 KB] Evaluated until last jump: 76 state(s).
+[t=0.054363s, 48272 KB] Generated until last jump: 145 state(s).
+##############################################################################
+##############################################################################
+Current task: energy_level3_h0
+init #MSGS: 4
+ITERATIVE EXPANSION OF STATE SPACE: continue with frontier states
+energy_level2_h0 #frontier states: 309
+total sum: 0
+#skipped states total: 0
+stay in frontier #states: 0
+Next Iteration init #states: 309 with duplicates: 309
+-----------------------------------------------------
+RESULTS: energy_level3_h0
+Relaxed Task Expanded States: 2218
+HIT computation: 0.000778375s
+Prunig time: 0.0954371s
+#pruned states: 0
+*********************************
+#hard goals: 1
+	sync(world)
+#soft goals: 9
+	0: Atom on(b0, b3)
+	1: Atom ontable(b1)
+	2: Atom on(b2, b4)
+	3: Atom on(b3, b2)
+	4: Atom on(b4, b1)
+	5: Atom on(b5, b0)
+	6: Atom clear(b5)
+	7: soft_accepting(stack_blocks_tb1_bb4)
+	8: soft_accepting(on_the_table_at_the_same_time_b5_b4)
+*********************************
+#MSGS: 14
+*********************************
+101001100
+001110010
+111000100
+101010010
+000011010
+000001110
+011010010
+101000110
+011000110
+011100000
+001010110
+111000010
+001100110
+010001000
+*********************************
+*********************************
+#MUGS: 21
+*********************************
+010100010
+110000110
+100001010
+010001010
+000011100
+000101000
+010001100
+100100000
+010011000
+000000001
+001011000
+001001010
+010100100
+100011000
+010010100
+011001000
+000110100
+110010000
+110001000
+100010100
+010110000
+*********************************
+Atom ontable(b1)|Atom on(b5, b0)|soft_accepting(stack_blocks_tb1_bb4)
+Atom ontable(b1)|Atom on(b2, b4)|soft_accepting(stack_blocks_tb1_bb4)|soft_accepting(on_the_table_at_the_same_time_b5_b4)
+Atom ontable(b1)|Atom on(b3, b2)|soft_accepting(on_the_table_at_the_same_time_b5_b4)
+Atom ontable(b1)|Atom on(b3, b2)|soft_accepting(stack_blocks_tb1_bb4)
+Atom on(b2, b4)|Atom on(b3, b2)|Atom on(b4, b1)
+Atom on(b3, b2)|Atom on(b5, b0)
+Atom on(b2, b4)|Atom on(b3, b2)|soft_accepting(stack_blocks_tb1_bb4)
+Atom on(b5, b0)|soft_accepting(on_the_table_at_the_same_time_b5_b4)
+Atom on(b3, b2)|Atom on(b4, b1)|soft_accepting(stack_blocks_tb1_bb4)
+Atom on(b0, b3)
+Atom on(b3, b2)|Atom on(b4, b1)|Atom clear(b5)
+Atom ontable(b1)|Atom on(b3, b2)|Atom clear(b5)
+Atom on(b2, b4)|Atom on(b5, b0)|soft_accepting(stack_blocks_tb1_bb4)
+Atom on(b3, b2)|Atom on(b4, b1)|soft_accepting(on_the_table_at_the_same_time_b5_b4)
+Atom on(b2, b4)|Atom on(b4, b1)|soft_accepting(stack_blocks_tb1_bb4)
+Atom on(b3, b2)|Atom clear(b5)|soft_accepting(stack_blocks_tb1_bb4)
+Atom on(b2, b4)|Atom on(b4, b1)|Atom on(b5, b0)
+Atom on(b4, b1)|soft_accepting(stack_blocks_tb1_bb4)|soft_accepting(on_the_table_at_the_same_time_b5_b4)
+Atom on(b3, b2)|soft_accepting(stack_blocks_tb1_bb4)|soft_accepting(on_the_table_at_the_same_time_b5_b4)
+Atom on(b2, b4)|Atom on(b4, b1)|soft_accepting(on_the_table_at_the_same_time_b5_b4)
+Atom on(b4, b1)|Atom on(b5, b0)|soft_accepting(stack_blocks_tb1_bb4)
+*********************************
+-----------------------------------------------------
+[t=0.113133s, 48272 KB] Expanded 3783 state(s).
+[t=0.113186s, 48272 KB] Reopened 1415 state(s).
+[t=0.113203s, 48272 KB] Evaluated 2368 state(s).
+[t=0.113218s, 48272 KB] Evaluations: 2368
+[t=0.113232s, 48272 KB] Generated 9485 state(s).
+[t=0.113255s, 48272 KB] Dead ends: 0 state(s).
+[t=0.113265s, 48272 KB] Expanded until last jump: 75 state(s).
+[t=0.113279s, 48272 KB] Reopened until last jump: 0 state(s).
+[t=0.113292s, 48272 KB] Evaluated until last jump: 76 state(s).
+[t=0.113314s, 48272 KB] Generated until last jump: 145 state(s).
+##############################################################################
+##############################################################################
+Current task: energy_level4_h0
+init #MSGS: 14
+ITERATIVE EXPANSION OF STATE SPACE: continue with frontier states
+energy_level3_h0 #frontier states: 1191
+total sum: 0
+#skipped states total: 0
+stay in frontier #states: 0
+Next Iteration init #states: 1191 with duplicates: 1191
+-----------------------------------------------------
+RESULTS: energy_level4_h0
+Relaxed Task Expanded States: 6067
+HIT computation: 0.000152291s
+Prunig time: 0.215992s
+#pruned states: 0
+*********************************
+#hard goals: 1
+	sync(world)
+#soft goals: 9
+	0: Atom on(b0, b3)
+	1: Atom ontable(b1)
+	2: Atom on(b2, b4)
+	3: Atom on(b3, b2)
+	4: Atom on(b4, b1)
+	5: Atom on(b5, b0)
+	6: Atom clear(b5)
+	7: soft_accepting(stack_blocks_tb1_bb4)
+	8: soft_accepting(on_the_table_at_the_same_time_b5_b4)
+*********************************
+#MSGS: 8
+*********************************
+111001000
+011101000
+001111010
+011010110
+001101110
+101001110
+111000110
+101010110
+*********************************
+*********************************
+#MUGS: 12
+*********************************
+000011100
+100100000
+010011000
+010100010
+000000001
+100011000
+010100100
+000110100
+110010000
+010001100
+010110000
+010001010
+*********************************
+Atom on(b2, b4)|Atom on(b3, b2)|Atom on(b4, b1)
+Atom on(b5, b0)|soft_accepting(on_the_table_at_the_same_time_b5_b4)
+Atom on(b3, b2)|Atom on(b4, b1)|soft_accepting(stack_blocks_tb1_bb4)
+Atom ontable(b1)|Atom on(b5, b0)|soft_accepting(stack_blocks_tb1_bb4)
+Atom on(b0, b3)
+Atom on(b3, b2)|Atom on(b4, b1)|soft_accepting(on_the_table_at_the_same_time_b5_b4)
+Atom on(b2, b4)|Atom on(b5, b0)|soft_accepting(stack_blocks_tb1_bb4)
+Atom on(b2, b4)|Atom on(b4, b1)|Atom on(b5, b0)
+Atom on(b4, b1)|soft_accepting(stack_blocks_tb1_bb4)|soft_accepting(on_the_table_at_the_same_time_b5_b4)
+Atom on(b2, b4)|Atom on(b3, b2)|soft_accepting(stack_blocks_tb1_bb4)
+Atom on(b4, b1)|Atom on(b5, b0)|soft_accepting(stack_blocks_tb1_bb4)
+Atom ontable(b1)|Atom on(b3, b2)|soft_accepting(stack_blocks_tb1_bb4)
+*********************************
+-----------------------------------------------------
+[t=0.233638s, 48272 KB] Expanded 9850 state(s).
+[t=0.233687s, 48272 KB] Reopened 4460 state(s).
+[t=0.233702s, 48272 KB] Evaluated 5390 state(s).
+[t=0.233716s, 48272 KB] Evaluations: 5390
+[t=0.233727s, 48272 KB] Generated 24786 state(s).
+[t=0.233742s, 48272 KB] Dead ends: 0 state(s).
+[t=0.233753s, 48272 KB] Expanded until last jump: 75 state(s).
+[t=0.233767s, 48272 KB] Reopened until last jump: 0 state(s).
+[t=0.233778s, 48272 KB] Evaluated until last jump: 76 state(s).
+[t=0.233792s, 48272 KB] Generated until last jump: 145 state(s).
+##############################################################################
+##############################################################################
+Current task: energy_level5_h0
+init #MSGS: 8
+ITERATIVE EXPANSION OF STATE SPACE: continue with frontier states
+energy_level4_h0 #frontier states: 1755
+total sum: 0
+#skipped states total: 0
+stay in frontier #states: 0
+Next Iteration init #states: 1755 with duplicates: 1755
+-----------------------------------------------------
+RESULTS: energy_level5_h0
+Relaxed Task Expanded States: 12079
+HIT computation: 0.00118371s
+Prunig time: 0.500619s
+#pruned states: 0
+*********************************
+#hard goals: 1
+	sync(world)
+#soft goals: 9
+	0: Atom on(b0, b3)
+	1: Atom ontable(b1)
+	2: Atom on(b2, b4)
+	3: Atom on(b3, b2)
+	4: Atom on(b4, b1)
+	5: Atom on(b5, b0)
+	6: Atom clear(b5)
+	7: soft_accepting(stack_blocks_tb1_bb4)
+	8: soft_accepting(on_the_table_at_the_same_time_b5_b4)
+*********************************
+#MSGS: 19
+*********************************
+001110110
+101001101
+101100110
+000001111
+101001110
+111001100
+001111010
+011010110
+001101110
+101010110
+000011110
+010001001
+101101100
+111100000
+010001110
+111000110
+011101000
+011100110
+000011011
+*********************************
+*********************************
+#MUGS: 26
+*********************************
+000010101
+010010001
+110101000
+010101010
+011001010
+100011000
+011000001
+010011000
+100101010
+110000001
+001000011
+000100001
+010000101
+110001010
+001011100
+010110000
+000111100
+010101100
+100000011
+001010001
+110010000
+010000011
+110100100
+100110000
+100010001
+110100010
+*********************************
+Atom on(b0, b3)|Atom on(b2, b4)|Atom on(b4, b1)
+Atom on(b0, b3)|Atom on(b4, b1)|soft_accepting(stack_blocks_tb1_bb4)
+Atom on(b3, b2)|Atom on(b5, b0)|soft_accepting(stack_blocks_tb1_bb4)|soft_accepting(on_the_table_at_the_same_time_b5_b4)
+Atom ontable(b1)|Atom on(b3, b2)|Atom on(b5, b0)|soft_accepting(stack_blocks_tb1_bb4)
+Atom ontable(b1)|Atom on(b3, b2)|Atom clear(b5)|soft_accepting(stack_blocks_tb1_bb4)
+Atom on(b3, b2)|Atom on(b4, b1)|soft_accepting(on_the_table_at_the_same_time_b5_b4)
+Atom on(b0, b3)|Atom clear(b5)|soft_accepting(stack_blocks_tb1_bb4)
+Atom on(b3, b2)|Atom on(b4, b1)|soft_accepting(stack_blocks_tb1_bb4)
+Atom ontable(b1)|Atom on(b3, b2)|Atom on(b5, b0)|soft_accepting(on_the_table_at_the_same_time_b5_b4)
+Atom on(b0, b3)|soft_accepting(stack_blocks_tb1_bb4)|soft_accepting(on_the_table_at_the_same_time_b5_b4)
+Atom on(b0, b3)|Atom ontable(b1)|Atom clear(b5)
+Atom on(b0, b3)|Atom on(b5, b0)
+Atom on(b0, b3)|Atom on(b2, b4)|soft_accepting(stack_blocks_tb1_bb4)
+Atom ontable(b1)|Atom on(b3, b2)|soft_accepting(stack_blocks_tb1_bb4)|soft_accepting(on_the_table_at_the_same_time_b5_b4)
+Atom on(b2, b4)|Atom on(b3, b2)|Atom on(b4, b1)|Atom clear(b5)
+Atom on(b4, b1)|Atom on(b5, b0)|soft_accepting(stack_blocks_tb1_bb4)
+Atom on(b2, b4)|Atom on(b3, b2)|Atom on(b4, b1)|Atom on(b5, b0)
+Atom on(b2, b4)|Atom on(b3, b2)|Atom on(b5, b0)|soft_accepting(stack_blocks_tb1_bb4)
+Atom on(b0, b3)|Atom ontable(b1)|soft_accepting(on_the_table_at_the_same_time_b5_b4)
+Atom on(b0, b3)|Atom on(b4, b1)|Atom clear(b5)
+Atom on(b4, b1)|soft_accepting(stack_blocks_tb1_bb4)|soft_accepting(on_the_table_at_the_same_time_b5_b4)
+Atom on(b0, b3)|Atom ontable(b1)|soft_accepting(stack_blocks_tb1_bb4)
+Atom on(b2, b4)|Atom on(b5, b0)|soft_accepting(stack_blocks_tb1_bb4)|soft_accepting(on_the_table_at_the_same_time_b5_b4)
+Atom on(b4, b1)|Atom on(b5, b0)|soft_accepting(on_the_table_at_the_same_time_b5_b4)
+Atom on(b0, b3)|Atom on(b4, b1)|soft_accepting(on_the_table_at_the_same_time_b5_b4)
+Atom ontable(b1)|Atom on(b5, b0)|soft_accepting(stack_blocks_tb1_bb4)|soft_accepting(on_the_table_at_the_same_time_b5_b4)
+*********************************
+-----------------------------------------------------
+[t=0.518407s, 48688 KB] Expanded 21929 state(s).
+[t=0.518455s, 48688 KB] Reopened 9416 state(s).
+[t=0.518468s, 48688 KB] Evaluated 12513 state(s).
+[t=0.518484s, 48688 KB] Evaluations: 12513
+[t=0.518494s, 48688 KB] Generated 57196 state(s).
+[t=0.518508s, 48688 KB] Dead ends: 0 state(s).
+[t=0.518518s, 48688 KB] Expanded until last jump: 75 state(s).
+[t=0.518531s, 48688 KB] Reopened until last jump: 0 state(s).
+[t=0.518542s, 48688 KB] Evaluated until last jump: 76 state(s).
+[t=0.518555s, 48688 KB] Generated until last jump: 145 state(s).
+##############################################################################
+##############################################################################
+Current task: energy_level6_h0
+init #MSGS: 19
+ITERATIVE EXPANSION OF STATE SPACE: continue with frontier states
+energy_level5_h0 #frontier states: 5426
+total sum: 0
+#skipped states total: 0
+stay in frontier #states: 0
+Next Iteration init #states: 5426 with duplicates: 5426
+-----------------------------------------------------
+RESULTS: energy_level6_h0
+Relaxed Task Expanded States: 28144
+HIT computation: 0.000233197s
+Prunig time: 1.07456s
+#pruned states: 0
+*********************************
+#hard goals: 1
+	sync(world)
+#soft goals: 9
+	0: Atom on(b0, b3)
+	1: Atom ontable(b1)
+	2: Atom on(b2, b4)
+	3: Atom on(b3, b2)
+	4: Atom on(b4, b1)
+	5: Atom on(b5, b0)
+	6: Atom clear(b5)
+	7: soft_accepting(stack_blocks_tb1_bb4)
+	8: soft_accepting(on_the_table_at_the_same_time_b5_b4)
+*********************************
+#MSGS: 13
+*********************************
+001111011
+011010110
+101101110
+111001001
+111101000
+001101111
+111001110
+001111110
+111010010
+101011110
+011101001
+101001111
+011101110
+*********************************
+*********************************
+#MUGS: 12
+*********************************
+100010001
+010000011
+110010100
+010110000
+100100001
+010000101
+010011000
+110100100
+100110000
+110100010
+010010001
+000010101
+*********************************
+Atom on(b0, b3)|Atom on(b4, b1)|soft_accepting(on_the_table_at_the_same_time_b5_b4)
+Atom on(b0, b3)|Atom ontable(b1)|soft_accepting(stack_blocks_tb1_bb4)
+Atom on(b2, b4)|Atom on(b4, b1)|soft_accepting(stack_blocks_tb1_bb4)|soft_accepting(on_the_table_at_the_same_time_b5_b4)
+Atom on(b4, b1)|Atom on(b5, b0)|soft_accepting(stack_blocks_tb1_bb4)
+Atom on(b0, b3)|Atom on(b5, b0)|soft_accepting(on_the_table_at_the_same_time_b5_b4)
+Atom on(b0, b3)|Atom on(b2, b4)|soft_accepting(stack_blocks_tb1_bb4)
+Atom on(b3, b2)|Atom on(b4, b1)|soft_accepting(stack_blocks_tb1_bb4)
+Atom on(b2, b4)|Atom on(b5, b0)|soft_accepting(stack_blocks_tb1_bb4)|soft_accepting(on_the_table_at_the_same_time_b5_b4)
+Atom on(b4, b1)|Atom on(b5, b0)|soft_accepting(on_the_table_at_the_same_time_b5_b4)
+Atom ontable(b1)|Atom on(b5, b0)|soft_accepting(stack_blocks_tb1_bb4)|soft_accepting(on_the_table_at_the_same_time_b5_b4)
+Atom on(b0, b3)|Atom on(b4, b1)|soft_accepting(stack_blocks_tb1_bb4)
+Atom on(b0, b3)|Atom on(b2, b4)|Atom on(b4, b1)
+*********************************
+-----------------------------------------------------
+[t=1.09222s, 49616 KB] Expanded 50073 state(s).
+[t=1.09228s, 49616 KB] Reopened 23093 state(s).
+[t=1.09229s, 49616 KB] Evaluated 26980 state(s).
+[t=1.0923s, 49616 KB] Evaluations: 26980
+[t=1.0923s, 49616 KB] Generated 129029 state(s).
+[t=1.09231s, 49616 KB] Dead ends: 0 state(s).
+[t=1.09232s, 49616 KB] Expanded until last jump: 75 state(s).
+[t=1.09233s, 49616 KB] Reopened until last jump: 0 state(s).
+[t=1.09234s, 49616 KB] Evaluated until last jump: 76 state(s).
+[t=1.09235s, 49616 KB] Generated until last jump: 145 state(s).
+##############################################################################
+##############################################################################
+Current task: energy_level7_h0
+init #MSGS: 13
+ITERATIVE EXPANSION OF STATE SPACE: continue with frontier states
+energy_level6_h0 #frontier states: 7229
+total sum: 0
+#skipped states total: 0
+stay in frontier #states: 0
+Next Iteration init #states: 7229 with duplicates: 7229
+-----------------------------------------------------
+RESULTS: energy_level7_h0
+Relaxed Task Expanded States: 47587
+HIT computation: 0.000367185s
+Prunig time: 2.09085s
+#pruned states: 0
+*********************************
+#hard goals: 1
+	sync(world)
+#soft goals: 9
+	0: Atom on(b0, b3)
+	1: Atom ontable(b1)
+	2: Atom on(b2, b4)
+	3: Atom on(b3, b2)
+	4: Atom on(b4, b1)
+	5: Atom on(b5, b0)
+	6: Atom clear(b5)
+	7: soft_accepting(stack_blocks_tb1_bb4)
+	8: soft_accepting(on_the_table_at_the_same_time_b5_b4)
+*********************************
+#MSGS: 18
+*********************************
+011101001
+011110110
+001111110
+010011110
+101101110
+001111011
+111100110
+111101100
+000011111
+111010010
+101011110
+001101111
+111001110
+010001111
+101001111
+111001101
+101110110
+011101110
+*********************************
+*********************************
+#MUGS: 16
+*********************************
+010111000
+110000011
+010010001
+110011000
+010100101
+110101010
+100100001
+110110000
+011011000
+000110101
+110010100
+001010101
+010100011
+100111000
+011000011
+100010001
+*********************************
+Atom on(b3, b2)|Atom on(b4, b1)|Atom on(b5, b0)|soft_accepting(stack_blocks_tb1_bb4)
+Atom on(b0, b3)|Atom ontable(b1)|soft_accepting(stack_blocks_tb1_bb4)|soft_accepting(on_the_table_at_the_same_time_b5_b4)
+Atom on(b0, b3)|Atom on(b4, b1)|soft_accepting(stack_blocks_tb1_bb4)
+Atom on(b3, b2)|Atom on(b4, b1)|soft_accepting(stack_blocks_tb1_bb4)|soft_accepting(on_the_table_at_the_same_time_b5_b4)
+Atom on(b0, b3)|Atom on(b2, b4)|Atom on(b5, b0)|soft_accepting(stack_blocks_tb1_bb4)
+Atom ontable(b1)|Atom on(b3, b2)|Atom on(b5, b0)|soft_accepting(stack_blocks_tb1_bb4)|soft_accepting(on_the_table_at_the_same_time_b5_b4)
+Atom on(b0, b3)|Atom on(b5, b0)|soft_accepting(on_the_table_at_the_same_time_b5_b4)
+Atom on(b4, b1)|Atom on(b5, b0)|soft_accepting(stack_blocks_tb1_bb4)|soft_accepting(on_the_table_at_the_same_time_b5_b4)
+Atom on(b3, b2)|Atom on(b4, b1)|Atom clear(b5)|soft_accepting(stack_blocks_tb1_bb4)
+Atom on(b0, b3)|Atom on(b2, b4)|Atom on(b4, b1)|Atom on(b5, b0)
+Atom on(b2, b4)|Atom on(b4, b1)|soft_accepting(stack_blocks_tb1_bb4)|soft_accepting(on_the_table_at_the_same_time_b5_b4)
+Atom on(b0, b3)|Atom on(b2, b4)|Atom on(b4, b1)|Atom clear(b5)
+Atom on(b0, b3)|Atom ontable(b1)|Atom on(b5, b0)|soft_accepting(stack_blocks_tb1_bb4)
+Atom on(b3, b2)|Atom on(b4, b1)|Atom on(b5, b0)|soft_accepting(on_the_table_at_the_same_time_b5_b4)
+Atom on(b0, b3)|Atom ontable(b1)|Atom clear(b5)|soft_accepting(stack_blocks_tb1_bb4)
+Atom on(b0, b3)|Atom on(b4, b1)|soft_accepting(on_the_table_at_the_same_time_b5_b4)
+*********************************
+-----------------------------------------------------
+[t=2.10854s, 51848 KB] Expanded 97660 state(s).
+[t=2.10858s, 51848 KB] Reopened 45596 state(s).
+[t=2.10859s, 51848 KB] Evaluated 52064 state(s).
+[t=2.1086s, 51848 KB] Evaluations: 52064
+[t=2.1086s, 51848 KB] Generated 258894 state(s).
+[t=2.10861s, 51848 KB] Dead ends: 0 state(s).
+[t=2.10862s, 51848 KB] Expanded until last jump: 75 state(s).
+[t=2.10863s, 51848 KB] Reopened until last jump: 0 state(s).
+[t=2.10864s, 51848 KB] Evaluated until last jump: 76 state(s).
+[t=2.10864s, 51848 KB] Generated until last jump: 145 state(s).
+##############################################################################
+##############################################################################
+Current task: energy_level8_h0
+init #MSGS: 18
+ITERATIVE EXPANSION OF STATE SPACE: continue with frontier states
+energy_level7_h0 #frontier states: 16821
+total sum: 0
+#skipped states total: 0
+stay in frontier #states: 0
+Next Iteration init #states: 16821 with duplicates: 16821
+-----------------------------------------------------
+RESULTS: energy_level8_h0
+Relaxed Task Expanded States: 104128
+HIT computation: 5.346e-05s
+Prunig time: 4.05736s
+#pruned states: 0
+*********************************
+#hard goals: 1
+	sync(world)
+#soft goals: 9
+	0: Atom on(b0, b3)
+	1: Atom ontable(b1)
+	2: Atom on(b2, b4)
+	3: Atom on(b3, b2)
+	4: Atom on(b4, b1)
+	5: Atom on(b5, b0)
+	6: Atom clear(b5)
+	7: soft_accepting(stack_blocks_tb1_bb4)
+	8: soft_accepting(on_the_table_at_the_same_time_b5_b4)
+*********************************
+#MSGS: 10
+*********************************
+101101111
+101011111
+111101110
+111011110
+001111111
+101111110
+011101111
+111101001
+111001111
+011111110
+*********************************
+*********************************
+#MUGS: 5
+*********************************
+110100011
+110110000
+110100101
+100110001
+010010001
+*********************************
+Atom on(b0, b3)|Atom ontable(b1)|Atom on(b5, b0)|soft_accepting(stack_blocks_tb1_bb4)|soft_accepting(on_the_table_at_the_same_time_b5_b4)
+Atom on(b4, b1)|Atom on(b5, b0)|soft_accepting(stack_blocks_tb1_bb4)|soft_accepting(on_the_table_at_the_same_time_b5_b4)
+Atom on(b0, b3)|Atom on(b2, b4)|Atom on(b5, b0)|soft_accepting(stack_blocks_tb1_bb4)|soft_accepting(on_the_table_at_the_same_time_b5_b4)
+Atom on(b0, b3)|Atom on(b4, b1)|Atom on(b5, b0)|soft_accepting(on_the_table_at_the_same_time_b5_b4)
+Atom on(b0, b3)|Atom on(b4, b1)|soft_accepting(stack_blocks_tb1_bb4)
+*********************************
+-----------------------------------------------------
+[t=4.075s, 55360 KB] Expanded 201788 state(s).
+[t=4.07505s, 55360 KB] Reopened 101889 state(s).
+[t=4.07506s, 55360 KB] Evaluated 99899 state(s).
+[t=4.07507s, 55360 KB] Evaluations: 99899
+[t=4.07508s, 55360 KB] Generated 523312 state(s).
+[t=4.07509s, 55360 KB] Dead ends: 0 state(s).
+[t=4.07509s, 55360 KB] Expanded until last jump: 75 state(s).
+[t=4.07511s, 55360 KB] Reopened until last jump: 0 state(s).
+[t=4.07512s, 55360 KB] Evaluated until last jump: 76 state(s).
+[t=4.07513s, 55360 KB] Generated until last jump: 145 state(s).
+##############################################################################
+##############################################################################
+Current task: energy_level9_h0
+init #MSGS: 10
+ITERATIVE EXPANSION OF STATE SPACE: continue with frontier states
+energy_level8_h0 #frontier states: 19750
+total sum: 0
+#skipped states total: 0
+stay in frontier #states: 0
+Next Iteration init #states: 19750 with duplicates: 19750
+-----------------------------------------------------
+RESULTS: energy_level9_h0
+Relaxed Task Expanded States: 134382
+HIT computation: 0.000101765s
+Prunig time: 6.61715s
+#pruned states: 0
+*********************************
+#hard goals: 1
+	sync(world)
+#soft goals: 9
+	0: Atom on(b0, b3)
+	1: Atom ontable(b1)
+	2: Atom on(b2, b4)
+	3: Atom on(b3, b2)
+	4: Atom on(b4, b1)
+	5: Atom on(b5, b0)
+	6: Atom clear(b5)
+	7: soft_accepting(stack_blocks_tb1_bb4)
+	8: soft_accepting(on_the_table_at_the_same_time_b5_b4)
+*********************************
+#MSGS: 13
+*********************************
+011111110
+111101001
+111001111
+111110110
+101111110
+011101111
+111011110
+001111111
+101011111
+111101110
+010011111
+101101111
+111100101
+*********************************
+*********************************
+#MUGS: 7
+*********************************
+110111000
+110010001
+110100011
+011010001
+110101101
+100110001
+010110001
+*********************************
+Atom on(b3, b2)|Atom on(b4, b1)|Atom on(b5, b0)|soft_accepting(stack_blocks_tb1_bb4)|soft_accepting(on_the_table_at_the_same_time_b5_b4)
+Atom on(b0, b3)|Atom on(b4, b1)|soft_accepting(stack_blocks_tb1_bb4)|soft_accepting(on_the_table_at_the_same_time_b5_b4)
+Atom on(b0, b3)|Atom ontable(b1)|Atom on(b5, b0)|soft_accepting(stack_blocks_tb1_bb4)|soft_accepting(on_the_table_at_the_same_time_b5_b4)
+Atom on(b0, b3)|Atom on(b4, b1)|Atom clear(b5)|soft_accepting(stack_blocks_tb1_bb4)
+Atom on(b0, b3)|Atom on(b2, b4)|Atom on(b3, b2)|Atom on(b5, b0)|soft_accepting(stack_blocks_tb1_bb4)|soft_accepting(on_the_table_at_the_same_time_b5_b4)
+Atom on(b0, b3)|Atom on(b4, b1)|Atom on(b5, b0)|soft_accepting(on_the_table_at_the_same_time_b5_b4)
+Atom on(b0, b3)|Atom on(b4, b1)|Atom on(b5, b0)|soft_accepting(stack_blocks_tb1_bb4)
+*********************************
+-----------------------------------------------------
+[t=6.63483s, 59044 KB] Expanded 336170 state(s).
+[t=6.63488s, 59044 KB] Reopened 174147 state(s).
+[t=6.63489s, 59044 KB] Evaluated 162023 state(s).
+[t=6.6349s, 59044 KB] Evaluations: 162023
+[t=6.63491s, 59044 KB] Generated 890064 state(s).
+[t=6.63491s, 59044 KB] Dead ends: 0 state(s).
+[t=6.63492s, 59044 KB] Expanded until last jump: 75 state(s).
+[t=6.63493s, 59044 KB] Reopened until last jump: 0 state(s).
+[t=6.63494s, 59044 KB] Evaluated until last jump: 76 state(s).
+[t=6.63495s, 59044 KB] Generated until last jump: 145 state(s).
+##############################################################################
+##############################################################################
+Current task: energy_level10_h0
+init #MSGS: 13
+ITERATIVE EXPANSION OF STATE SPACE: continue with frontier states
+energy_level9_h0 #frontier states: 36751
+total sum: 0
+#skipped states total: 0
+stay in frontier #states: 0
+Next Iteration init #states: 36751 with duplicates: 36751
+[t=8.84565s, 63824 KB] f = 24, 217853 evaluated, 425695 expanded, 207844 reopened
+-----------------------------------------------------
+RESULTS: energy_level10_h0
+Relaxed Task Expanded States: 233136
+HIT computation: 8.778e-06s
+Prunig time: 10.8184s
+#pruned states: 0
+*********************************
+#hard goals: 1
+	sync(world)
+#soft goals: 9
+	0: Atom on(b0, b3)
+	1: Atom ontable(b1)
+	2: Atom on(b2, b4)
+	3: Atom on(b3, b2)
+	4: Atom on(b4, b1)
+	5: Atom on(b5, b0)
+	6: Atom clear(b5)
+	7: soft_accepting(stack_blocks_tb1_bb4)
+	8: soft_accepting(on_the_table_at_the_same_time_b5_b4)
+*********************************
+#MSGS: 5
+*********************************
+101111111
+011111111
+111101111
+111111110
+111011111
+*********************************
+*********************************
+#MUGS: 1
+*********************************
+110110001
+*********************************
+Atom on(b0, b3)|Atom on(b4, b1)|Atom on(b5, b0)|soft_accepting(stack_blocks_tb1_bb4)|soft_accepting(on_the_table_at_the_same_time_b5_b4)
+*********************************
+-----------------------------------------------------
+[t=10.8361s, 65564 KB] Expanded 569306 state(s).
+[t=10.8362s, 65564 KB] Reopened 305150 state(s).
+[t=10.8362s, 65564 KB] Evaluated 264156 state(s).
+[t=10.8362s, 65564 KB] Evaluations: 264156
+[t=10.8362s, 65564 KB] Generated 1474618 state(s).
+[t=10.8362s, 65564 KB] Dead ends: 0 state(s).
+[t=10.8362s, 65564 KB] Expanded until last jump: 425695 state(s).
+[t=10.8362s, 65564 KB] Reopened until last jump: 207844 state(s).
+[t=10.8362s, 65564 KB] Evaluated until last jump: 217853 state(s).
+[t=10.8362s, 65564 KB] Generated until last jump: 1092863 state(s).
+##############################################################################
+##############################################################################
+Current task: energy_level11_h0
+init #MSGS: 5
+ITERATIVE EXPANSION OF STATE SPACE: continue with frontier states
+energy_level10_h0 #frontier states: 35775
+total sum: 0
+#skipped states total: 0
+stay in frontier #states: 0
+Next Iteration init #states: 35775 with duplicates: 35775
+[t=12.0331s, 68492 KB] f = 25, 295358 evaluated, 606390 expanded, 311034 reopened
+-----------------------------------------------------
+RESULTS: energy_level11_h0
+Relaxed Task Expanded States: 253303
+HIT computation: 8.345e-06s
+Prunig time: 15.3562s
+#pruned states: 0
+*********************************
+#hard goals: 1
+	sync(world)
+#soft goals: 9
+	0: Atom on(b0, b3)
+	1: Atom ontable(b1)
+	2: Atom on(b2, b4)
+	3: Atom on(b3, b2)
+	4: Atom on(b4, b1)
+	5: Atom on(b5, b0)
+	6: Atom clear(b5)
+	7: soft_accepting(stack_blocks_tb1_bb4)
+	8: soft_accepting(on_the_table_at_the_same_time_b5_b4)
+*********************************
+#MSGS: 5
+*********************************
+111011111
+111101111
+101111111
+011111111
+111111110
+*********************************
+*********************************
+#MUGS: 1
+*********************************
+110110001
+*********************************
+Atom on(b0, b3)|Atom on(b4, b1)|Atom on(b5, b0)|soft_accepting(stack_blocks_tb1_bb4)|soft_accepting(on_the_table_at_the_same_time_b5_b4)
+*********************************
+-----------------------------------------------------
+[t=15.3739s, 79356 KB] Expanded 822609 state(s).
+[t=15.374s, 79356 KB] Reopened 451625 state(s).
+[t=15.374s, 79356 KB] Evaluated 370984 state(s).
+[t=15.374s, 79356 KB] Evaluations: 370984
+[t=15.374s, 79356 KB] Generated 2160387 state(s).
+[t=15.374s, 79356 KB] Dead ends: 0 state(s).
+[t=15.374s, 79356 KB] Expanded until last jump: 606390 state(s).
+[t=15.374s, 79356 KB] Reopened until last jump: 311034 state(s).
+[t=15.374s, 79356 KB] Evaluated until last jump: 295358 state(s).
+[t=15.374s, 79356 KB] Generated until last jump: 1565736 state(s).
+##############################################################################
+##############################################################################
+Current task: energy_level12_h0
+init #MSGS: 5
+ITERATIVE EXPANSION OF STATE SPACE: continue with frontier states
+energy_level11_h0 #frontier states: 58516
+total sum: 0
+#skipped states total: 0
+stay in frontier #states: 0
+Next Iteration init #states: 58516 with duplicates: 58516
+[t=19.3023s, 80944 KB] Solution found!
+-----------------------------------------------------
+RESULTS: energy_level12_h0
+Relaxed Task Expanded States: 263818
+HIT computation: 2.883e-06s
+Prunig time: 20.3434s
+#pruned states: 0
+*********************************
+#hard goals: 1
+	sync(world)
+#soft goals: 9
+	0: Atom on(b0, b3)
+	1: Atom ontable(b1)
+	2: Atom on(b2, b4)
+	3: Atom on(b3, b2)
+	4: Atom on(b4, b1)
+	5: Atom on(b5, b0)
+	6: Atom clear(b5)
+	7: soft_accepting(stack_blocks_tb1_bb4)
+	8: soft_accepting(on_the_table_at_the_same_time_b5_b4)
+*********************************
+#MSGS: 1
+*********************************
+111111111
+*********************************
+*********************************
+#MUGS: 0
+*********************************
+*********************************
+*********************************
+-----------------------------------------------------
+[t=20.3612s, 80944 KB] Expanded 1086427 state(s).
+[t=20.3612s, 80944 KB] Reopened 615810 state(s).
+[t=20.3612s, 80944 KB] Evaluated 493154 state(s).
+[t=20.3612s, 80944 KB] Evaluations: 493154
+[t=20.3612s, 80944 KB] Generated 2828881 state(s).
+[t=20.3612s, 80944 KB] Dead ends: 22536 state(s).
+[t=20.3612s, 80944 KB] Expanded until last jump: 606390 state(s).
+[t=20.3612s, 80944 KB] Reopened until last jump: 311034 state(s).
+[t=20.3613s, 80944 KB] Evaluated until last jump: 295358 state(s).
+[t=20.3613s, 80944 KB] Generated until last jump: 1565736 state(s).
+solved Iteration: energy_level12_h0
+solved Iteration: energy_level13_h0
+solved Iteration: energy_level14_h0
+solved Iteration: energy_level15_h0
+solved Iteration: energy_level16_h0
+##############################################################################
+##############################################################################
+no more relaxed tasks
+[t=20.3613s, 80944 KB] Actual search time: 20.3435s
+stack_blocks_tb1_bb4: (accept_all (true) -> accept_all) (1)
+on_the_table_at_the_same_time_b5_b4: (accept_all (true) -> accept_all) (1)
+[t=20.3613s, 80944 KB] Plan length: 2 step(s).
+[t=20.3613s, 80944 KB] Plan cost: 2
+[t=20.3613s, 80944 KB] Expanded 1086427 state(s).
+[t=20.3613s, 80944 KB] Reopened 615810 state(s).
+[t=20.3613s, 80944 KB] Evaluated 493154 state(s).
+[t=20.3613s, 80944 KB] Evaluations: 493154
+[t=20.3613s, 80944 KB] Generated 2828881 state(s).
+[t=20.3613s, 80944 KB] Dead ends: 22536 state(s).
+[t=20.3613s, 80944 KB] Expanded until last jump: 606390 state(s).
+[t=20.3613s, 80944 KB] Reopened until last jump: 311034 state(s).
+[t=20.3613s, 80944 KB] Evaluated until last jump: 295358 state(s).
+[t=20.3613s, 80944 KB] Generated until last jump: 1565736 state(s).
+[t=20.3613s, 80944 KB] Number of registered states: 587846
+[t=20.3613s, 80944 KB] Int hash set load factor: 587846/1048576 = 0.560614
+[t=20.3613s, 80944 KB] Int hash set resizes: 20
+[t=20.3613s, 80944 KB] Search time: 20.344s
+[t=20.3613s, 80944 KB] Total time: 20.3613s
+Solution found.
+Peak memory: 80944 KB
+Remove intermediate file output.sas
+search exit code: 0
+
+INFO     Planner time: 20.67s

@@ -1,20 +1,18 @@
-#ifndef PRUNING_POLICY_DIVERGING_ACTIONS_PRUNING_METHOD_H
-#define PRUNING_POLICY_DIVERGING_ACTIONS_PRUNING_METHOD_H
+#ifndef POLICY_DIVERGING_ACTIONS_DISTANCE_FUNCTION_METHOD_H
+#define POLICY_DIVERGING_ACTIONS_DISTANCE_FUNCTION_METHOD_H
 
-#include "../../pruning_method.h"
+#include "distance_function.h"
 #include "policy_client.h"
 #include "../../utils/timer.h"
 
 #include <unordered_map>
 
-namespace policy_pruning_method {
-class PolicyDivergingActionsPruningMethod : public PruningMethod {
+namespace policy_distance_function {
+class PolicyDivergingActionsDistanceFunction : public DistanceFunction {
 
     std::string url;
     bool project_resources = true;
     policy::PolicyClient policy_client;
-
-    double max_diverging_actions = 1;
 
     std::unordered_map<StateID,int> divergence_count;
     std::unordered_map<StateID,StateID> parent_map;
@@ -22,11 +20,9 @@ class PolicyDivergingActionsPruningMethod : public PruningMethod {
 
     utils::Timer policy_evaluation_timer;
 
-
-
-    virtual void prune(const State &, std::vector<OperatorID> &) override;
 public:
-    explicit PolicyDivergingActionsPruningMethod(const options::Options &opts);
+    explicit PolicyDivergingActionsDistanceFunction(const options::Options &opts);
+    std::vector<float> get_distances(const State &state, std::vector<OperatorID> &op_ids) override;
     virtual void initialize(const std::shared_ptr<AbstractTask> &) override;
     virtual void notify_initial_state(const State & initial_state) override;
     virtual void notify_state_transition(const State & parent_state, OperatorID op_id, const State & state);
