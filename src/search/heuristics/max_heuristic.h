@@ -17,6 +17,7 @@ using relaxation_heuristic::UnaryOperator;
 
 class HSPMaxHeuristic : public relaxation_heuristic::RelaxationHeuristic {
     priority_queues::AdaptiveQueue<PropID> queue;
+    bool no_deadends = false;
 protected:
     void setup_exploration_queue();
     void setup_exploration_queue_state(const State &state);
