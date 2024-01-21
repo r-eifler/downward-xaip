@@ -30,7 +30,8 @@ GoalSubsetAStar::GoalSubsetAStar(const Options &opts)
       anytime(opts.get<bool>("anytime")),
       open_list(opts.get<shared_ptr<OpenListFactory>>("open")->
                 create_state_open_list()),
-      eval(opts.get<shared_ptr<Evaluator>>("eval", nullptr)) {
+      eval(opts.get<shared_ptr<Evaluator>>("eval", nullptr)),
+      pruning_method(opts.get<shared_ptr<PruningMethod>>("pruning")) {
 }
 
 void GoalSubsetAStar::initialize() {
@@ -287,28 +288,7 @@ static shared_ptr<SearchEngine> _parse(OptionParser &parser) {
     parser.document_synopsis(
         "Greedy branch and bound",
         "We break ties using the evaluator. Closed nodes are re-opened.");
-<<<<<<< HEAD
-    parser.document_note(
-        "lazy_evaluator",
-        "When a state s is taken out of the open list, the lazy evaluator h "
-        "re-evaluates s. If h(s) changes (for example because h is path-dependent), "
-        "s is not expanded, but instead reinserted into the open list. "
-        "This option is currently only present for the A* algorithm.");
-    parser.document_note(
-        "Equivalent statements using general eager search",
-        "\n```\n--search astar(evaluator)\n```\n"
-        "is equivalent to\n"
-        "```\n--evaluator h=evaluator\n"
-        "--search eager(tiebreaking([sum([g(), h]), h], unsafe_pruning=false),\n"
-        "               reopen_closed=true, f_eval=sum([g(), h]))\n"
-        "```\n", true);
-    parser.add_option<shared_ptr<Evaluator>>("eval", "evaluator for h-value");
-    parser.add_option<shared_ptr<Evaluator>>(
-        "lazy_evaluator",
-        "An evaluator that re-evaluates a state before it is expanded.",
-        OptionParser::NONE);
     parser.add_option<bool>("anytime", "print every new MSGS that is found during search", "false");
-=======
 
     parser.add_option<shared_ptr<Evaluator>>("eval", "evaluator for pruning");
     parser.add_list_option<shared_ptr<Evaluator>>("evals", "evaluators");
@@ -316,7 +296,6 @@ static shared_ptr<SearchEngine> _parse(OptionParser &parser) {
     "use preferred operators of these evaluators", "[]");
     parser.add_option<int>("boost",
     "boost value for preferred operator open lists", "0");
->>>>>>> main
 
     add_options_to_parser(parser);
     Options opts = parser.parse();
