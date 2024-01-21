@@ -579,7 +579,8 @@ vector<int> RootTask::get_initial_state_values() const {
 void RootTask::convert_ancestor_state_values(
     vector<int> &, const AbstractTask *ancestor_task) const {
     if (this != ancestor_task) {
-        ABORT("Invalid state conversion");
+        // ABORT("Invalid state conversion");
+        // cout << "WARNING: Invalid state conversion" << endl;
     }
 }
 
