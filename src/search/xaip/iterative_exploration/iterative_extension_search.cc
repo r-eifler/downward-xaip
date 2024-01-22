@@ -97,9 +97,7 @@ void IterativeExtensionSearch::print_statistics() const {
     // taskRelaxationTracker->results_to_file();
 }
 
-bool IterativeExtensionSearch::expand(const State &state){
-
-    bool succ_state_generated = false;
+void IterativeExtensionSearch::expand(const State &state){
 
     tl::optional<SearchNode> node;
     node.emplace(search_space.get_node(state));
@@ -110,117 +108,115 @@ bool IterativeExtensionSearch::expand(const State &state){
 
 
     for (pair<float,OperatorID> dis_op : to_postpone) {
-        OperatorProxy op = task_proxy.get_operators()[dis_op.second];
-        if ((node->get_real_g() + op.get_cost()) >= bound)
-            continue;
-
-        State succ_state = state_registry.get_successor_state(state, op);
-        statistics.inc_generated();
-
-        radius_tracker.add_frontier_state(dis_op.first,succ_state.get_id());
+        radius_tracker.add_frontier_state(dis_op.first, state.get_id(), dis_op.second);
     }
 
-    // This evaluates the expanded state (again) to get preferred ops
-    MSGSEvaluationContext eval_context(state, node->get_g(), false, &statistics, &current_msgs, true);
-
     for (OperatorID op_id : applicable_ops) {
-        OperatorProxy op = task_proxy.get_operators()[op_id];
-        if ((node->get_real_g() + op.get_cost()) >= bound)
-            continue;
+        decide_to_openlist(*node, state, op_id);
+    }
 
-        State succ_state = state_registry.get_successor_state(state, op);
-        statistics.inc_generated();
+}
 
-        SearchNode succ_node = search_space.get_node(succ_state);
+bool IterativeExtensionSearch::decide_to_openlist(const SearchNode &node, const State &state, OperatorID op_id){
+    OperatorProxy op = task_proxy.get_operators()[op_id];
+    if ((node.get_real_g() + op.get_cost()) >= bound)
+        return false;
 
-        // Previously encountered dead end. Don't re-evaluate.
-        if (succ_node.is_dead_end())
-            continue;
+    State succ_state = state_registry.get_successor_state(state, op);
+    statistics.inc_generated();
 
-        if (succ_node.is_new()) {
-            // We have not seen this state before.
-            // Evaluate and create a new node.
+    SearchNode succ_node = search_space.get_node(succ_state);
 
-            // Careful: succ_node.get_g() is not available here yet,
-            // hence the stupid computation of succ_g.
-            // TODO: Make this less fragile.
-            int succ_g = node->get_g() + get_adjusted_cost(op);
+    // Previously encountered dead end. Don't re-evaluate.
+    if (succ_node.is_dead_end())
+        return false;
+
+    if (succ_node.is_new()) {
+        pruning_method->notify_state_transition(state, op_id, succ_state);
+        // We have not seen this state before.
+        // Evaluate and create a new node.
+
+        // Careful: succ_node.get_g() is not available here yet,
+        // hence the stupid computation of succ_g.
+        // TODO: Make this less fragile.
+        int succ_g = node.get_g() + get_adjusted_cost(op);
+
+        MSGSEvaluationContext succ_eval_context(
+            succ_state, succ_g, true, &statistics, &current_msgs, bound);
+        statistics.inc_evaluated_states();
+
+        if (open_list->is_dead_end(succ_eval_context)) {
+            succ_node.mark_as_dead_end();
+            statistics.inc_dead_ends();
+            return false;
+        }
+
+        if(succ_eval_context.is_evaluator_value_infinite(eval.get())){
+            // cout << "Prune Succ State: " << succ_state.get_id() << endl;
+            return false;
+        }
+
+        succ_node.open(node, op, get_adjusted_cost(op));
+
+        open_list->insert(succ_eval_context, succ_state.get_id());
+        if (search_progress.check_progress(succ_eval_context)) {
+            statistics.print_checkpoint_line(succ_node.get_g());
+            reward_progress();
+        }
+        return true;
+    } else if (succ_node.get_g() > node.get_g() + get_adjusted_cost(op)) {
+        pruning_method->notify_state_transition(state, op_id, succ_state);
+        // We found a new cheapest path to an open or closed state.
+        if (reopen_closed_nodes) {
+            if (succ_node.is_closed()) {
+                /*
+                    TODO: It would be nice if we had a way to test
+                    that reopening is expected behaviour, i.e., exit
+                    with an error when this is something where
+                    reopening should not occur (e.g. A* with a
+                    consistent heuristic).
+                */
+                statistics.inc_reopened();
+            }
+            succ_node.reopen(node, op, get_adjusted_cost(op));
 
             MSGSEvaluationContext succ_eval_context(
-                succ_state, succ_g, true, &statistics, &current_msgs, bound);
-            statistics.inc_evaluated_states();
-
-            if (open_list->is_dead_end(succ_eval_context)) {
-                succ_node.mark_as_dead_end();
-                statistics.inc_dead_ends();
-                continue;
-            }
+                succ_state, succ_node.get_g(), true, &statistics, &current_msgs, bound);
 
             if(succ_eval_context.is_evaluator_value_infinite(eval.get())){
                 // cout << "Prune Succ State: " << succ_state.get_id() << endl;
-                continue;
+                return false;
             }
 
-            succ_node.open(*node, op, get_adjusted_cost(op));
+            /*
+                Note: our old code used to retrieve the h value from
+                the search node here. Our new code recomputes it as
+                necessary, thus avoiding the incredible ugliness of
+                the old "set_evaluator_value" approach, which also
+                did not generalize properly to settings with more
+                than one evaluator.
 
-            succ_state_generated = true;
+                Reopening should not happen all that frequently, so
+                the performance impact of this is hopefully not that
+                large. In the medium term, we want the evaluators to
+                remember evaluator values for states themselves if
+                desired by the user, so that such recomputations
+                will just involve a look-up by the Evaluator object
+                rather than a recomputation of the evaluator value
+                from scratch.
+            */
             open_list->insert(succ_eval_context, succ_state.get_id());
-            if (search_progress.check_progress(succ_eval_context)) {
-                statistics.print_checkpoint_line(succ_node.get_g());
-                reward_progress();
-            }
-        } else if (succ_node.get_g() > node->get_g() + get_adjusted_cost(op)) {
-            // We found a new cheapest path to an open or closed state.
-            if (reopen_closed_nodes) {
-                if (succ_node.is_closed()) {
-                    /*
-                      TODO: It would be nice if we had a way to test
-                      that reopening is expected behaviour, i.e., exit
-                      with an error when this is something where
-                      reopening should not occur (e.g. A* with a
-                      consistent heuristic).
-                    */
-                    statistics.inc_reopened();
-                }
-                succ_node.reopen(*node, op, get_adjusted_cost(op));
-
-                MSGSEvaluationContext succ_eval_context(
-                    succ_state, succ_node.get_g(), true, &statistics, &current_msgs, bound);
-
-                if(succ_eval_context.is_evaluator_value_infinite(eval.get())){
-                    // cout << "Prune Succ State: " << succ_state.get_id() << endl;
-                    continue;
-                }
-
-                /*
-                  Note: our old code used to retrieve the h value from
-                  the search node here. Our new code recomputes it as
-                  necessary, thus avoiding the incredible ugliness of
-                  the old "set_evaluator_value" approach, which also
-                  did not generalize properly to settings with more
-                  than one evaluator.
-
-                  Reopening should not happen all that frequently, so
-                  the performance impact of this is hopefully not that
-                  large. In the medium term, we want the evaluators to
-                  remember evaluator values for states themselves if
-                  desired by the user, so that such recomputations
-                  will just involve a look-up by the Evaluator object
-                  rather than a recomputation of the evaluator value
-                  from scratch.
-                */
-                succ_state_generated = true;
-                open_list->insert(succ_eval_context, succ_state.get_id());
-            } else {
-                // If we do not reopen closed nodes, we just update the parent pointers.
-                // Note that this could cause an incompatibility between
-                // the g-value and the actual path that is traced back.
-                succ_node.update_parent(*node, op, get_adjusted_cost(op));
-            }
+        } else {
+            // If we do not reopen closed nodes, we just update the parent pointers.
+            // Note that this could cause an incompatibility between
+            // the g-value and the actual path that is traced back.
+            succ_node.update_parent(node, op, get_adjusted_cost(op));
+            return false;
         }
     }
-    return succ_state_generated;
+    return false;
 }
+
 
 SearchStatus IterativeExtensionSearch::step() {
     tl::optional<SearchNode> node;
@@ -228,8 +224,8 @@ SearchStatus IterativeExtensionSearch::step() {
         if (open_list->empty()) {
             // if (log.is_at_least_normal())
             //     log << "Completely explored state space -- no solution!" << endl;
-            if (! next_relaxed_task()){
-                std::cout << "no more relaxed tasks" << std::endl;
+            if (! next_radius()){
+                std::cout << "no larger radii or nothing left to explore" << std::endl;
                 return SearchStatus::FAILED;
             }
         }
@@ -291,49 +287,40 @@ void IterativeExtensionSearch::update_f_value_statistics(EvaluationContext &eval
     }
 }
 
-bool IterativeExtensionSearch::next_relaxed_task() {
-    while(!pending_initial_states.empty()){
-//        if (pending_initial_states.size() % 10 == 0)
-//            std::cout << "#pending init states: " << pending_initial_states.size() << std::endl;
-        StateID id = pending_initial_states.back();
-        pending_initial_states.pop_back();
-        State s = state_registry.lookup_state(id);
-        SearchNode inode = search_space.get_node(s);
-        inode.open_initial();
-        if (expand(s)){
-            return true;
+bool IterativeExtensionSearch::next_radius() {
+
+    while(true){
+
+        statistics.print_detailed_statistics();
+        current_msgs.print();
+
+        cout << "##############################################################################" << endl;
+        cout << "##############################################################################" << endl;
+        if (! radius_tracker.has_next_radius()){
+            return false;
+        }
+
+        current_radius = radius_tracker.next_radius();
+        pruning_method->set_radius(current_radius);
+        cout << "radius:" << current_radius << endl;
+        cout << "frontier size: " << radius_tracker.get_frontier_size(current_radius) << endl;
+
+        bool something_to_explored = false;
+        for(FrontierElem elem : radius_tracker.get_frontier_states(current_radius)){
+            State parent = state_registry.lookup_state(elem.parent);
+            SearchNode parent_node = search_space.get_node(parent);
+
+            something_to_explored |= decide_to_openlist(parent_node, parent, elem.op);
+        }
+
+        if (something_to_explored){
+            break;
         }
     }
 
-    statistics.print_detailed_statistics();
-
-    cout << "##############################################################################" << endl;
-    cout << "##############################################################################" << endl;
-    if (! radius_tracker.has_next_radius()){
-        return false;
-    }
-
-    current_radius = radius_tracker.next_radius();
-    pruning_method->set_radius(current_radius);
-    cout << "######################## radius:" << current_radius << " ####################################" << endl;
-
-    return init_with_frontier_states();
+    return true;
 }
 
-bool IterativeExtensionSearch::init_with_frontier_states()
-{
-    std::cout << "ITERATIVE EXPANSION OF STATE SPACE: continue with frontier states" << std::endl;
-//    std::cout << "frontier: #states: " << pending_initial_states.size() << std::endl;
-    
-    pending_initial_states.insert(
-            pending_initial_states.end(),
-            std::make_move_iterator(radius_tracker.get_frontier_states(current_radius).begin()),
-            std::make_move_iterator(radius_tracker.get_frontier_states(current_radius).end())
-    );
-
-    std::cout << "Next Iteration init #states: " << pending_initial_states.size() << std::endl;
-    return next_relaxed_task();
-}
 
 void add_options_to_parser(OptionParser &parser) {
     // SearchEngine::add_pruning_option(parser);

@@ -2,6 +2,7 @@
 #define FAST_DOWNWARD_TASK_RELAXATION_TRACKER_H
 
 #include "../../open_list.h"
+#include "frontier_elem.h"
 
 #include <string>
 #include <iostream>
@@ -20,7 +21,7 @@ private:
 
     float current_radius = -1;
 
-    unordered_map<float,unordered_set<StateID>> frontier;
+    unordered_map<float,unordered_set<FrontierElem, HashFrontierElem>> frontier;
 
 public:
     RadiusTracker(float min_radius, float max_radius, float step_size);
@@ -28,22 +29,10 @@ public:
     bool has_next_radius();
     float next_radius();
 
-    void add_frontier_state(float distance, StateID id) {
-        if(distance > max_radius){
-            return;
-        }
+    void add_frontier_state(float distance, StateID parent, OperatorID op);
 
-        float min_included_radius = min_radius;
-        while(min_included_radius <= max_radius && distance > min_included_radius){
-            min_included_radius += step_size;
-        }
-
-        frontier.at(min_included_radius).insert(id);
-    }
-
-    unordered_set<StateID> get_frontier_states(float radius){
-        return frontier[radius];
-    }
+    unordered_set<FrontierElem, HashFrontierElem> get_frontier_states(float radius);
+    uint get_frontier_size(float radius);
     
 };
 

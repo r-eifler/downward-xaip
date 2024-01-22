@@ -135,7 +135,7 @@ SearchStatus GoalSubsetAStar::step() {
     pruning_method->prune_operators(s, applicable_ops);
 
     // This evaluates the expanded state (again) to get preferred ops
-    MSGSEvaluationContext eval_context(s, node->get_g(), false, &statistics, &current_msgs, bound, true);
+    // MSGSEvaluationContext eval_context(s, node->get_g(), false, &statistics, &current_msgs, bound, true);
 
     // int pre_estimate = eval_context.get_evaluator_value_or_infinity(eval.get());
 
@@ -152,14 +152,13 @@ SearchStatus GoalSubsetAStar::step() {
 
         SearchNode succ_node = search_space.get_node(succ_state);
 
-        pruning_method->notify_state_transition(s, op_id, succ_state);
-
         // Previously encountered dead end. Don't re-evaluate.
         if (succ_node.is_dead_end()){
             continue;
         }
 
         if (succ_node.is_new()) {
+            pruning_method->notify_state_transition(s, op_id, succ_state);
             // We have not seen this state before.
             // Evaluate and create a new node.
 
@@ -193,6 +192,7 @@ SearchStatus GoalSubsetAStar::step() {
                 reward_progress();
             }
         } else if (succ_node.get_g() > node->get_g() + get_adjusted_cost(op)) {
+             pruning_method->notify_state_transition(s, op_id, succ_state);
             // cout << "---> new cheapest path to " << succ_state.get_id() << endl;
             // We found a new cheapest path to an open or closed state.
             if (reopen_closed_nodes) {

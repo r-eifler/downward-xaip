@@ -42,9 +42,9 @@ class IterativeExtensionSearch : public SearchEngine {
 protected:
     virtual void initialize() override;
     virtual SearchStatus step() override;
-    bool expand(const State &state);
-    bool init_with_frontier_states();
-    bool next_relaxed_task();
+    void expand(const State &state);
+    bool next_radius();
+    bool decide_to_openlist(const SearchNode &node, const State &state, OperatorID op);
 
 public:
     explicit IterativeExtensionSearch(const options::Options &opts);

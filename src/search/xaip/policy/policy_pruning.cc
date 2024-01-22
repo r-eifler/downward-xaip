@@ -58,10 +58,13 @@ std::vector<pair<float,OperatorID>> PolicyPruningMethod::postpone(const State &s
     }
 
     vector<float> distances = distance_function->get_distances(state, op_ids);
+    // cout << "#ops: " << op_ids.size() << endl;
+    // cout << "#dis: " << distances.size() << endl;
 
     vector<OperatorID> remaining_op_ids;
 
     for(uint i = 0; i < distances.size(); i++){
+        // cout  << distances[i] << " ";
         if (distances[i] <= radius){
             remaining_op_ids.push_back(op_ids[i]);
         }
@@ -70,9 +73,11 @@ std::vector<pair<float,OperatorID>> PolicyPruningMethod::postpone(const State &s
         }
         
     }
+    // cout << endl;
 
     // cout << "only use policy ops" << endl;
     op_ids.swap(remaining_op_ids);
+    // cout << "#ops re: " << remaining_op_ids.size() << endl;
     // cout << "-------- prune end ----------" << endl;
     return postponed_op_ids;
 }
