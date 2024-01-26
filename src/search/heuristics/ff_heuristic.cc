@@ -69,7 +69,7 @@ int FFHeuristic::compute_heuristic(const State &ancestor_state) {
     int h_add = compute_add_and_ff(state);
     if (h_add == DEAD_END){
         if (no_deadends)
-            return get_no_deadend_estimate();
+            return std::numeric_limits<int>::max() - 10;
         return h_add;
     }
     // Collecting the relaxed plan also sets the preferred operators.

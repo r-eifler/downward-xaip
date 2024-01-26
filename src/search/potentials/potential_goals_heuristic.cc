@@ -22,7 +22,7 @@ int PotentialGoalsHeuristic::compute_heuristic(const State &ancestor_state) {
     for (auto &function : functions) {
         int e = max(value, function->get_value(state));
         if (e == std::numeric_limits<int>::max())
-            continue;
+            return std::numeric_limits<int>::max() - 10;
         value += e;
     }
     return value;

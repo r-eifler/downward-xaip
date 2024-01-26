@@ -96,11 +96,11 @@ int HSPMaxHeuristic::compute_heuristic(const State &ancestor_state) {
         int goal_cost = goal->cost;
         if (goal_cost == -1){
             if(no_deadends){
-                continue;
+                return std::numeric_limits<int>::max() - 10;
             }
             return DEAD_END;
         }
-        total_cost = max(total_cost, goal_cost);
+        total_cost += goal_cost;
     }
     return total_cost;
 }
