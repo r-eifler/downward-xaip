@@ -67,7 +67,9 @@ string GoalSubsets::to_json(vector<vector<string>> facts_names){
         // print fact names
         res += "\t[";
         for(uint i = 0; i < fact_names.size(); i++){
-            res += "\"" + fact_names[i] + "\"";
+            string name = fact_names[i];
+            name.replace(name.begin(),name.begin()+5,"");
+            res += "\"" + name + "\"";
             if (i < fact_names.size() - 1){
                 res += ", ";
             }
@@ -115,7 +117,7 @@ void GoalSubsets::to_file(vector<string> goal_facts_names, string filename){
 
     vector<vector<string>> mugs_facts_names = this->generate_string(goal_facts_names);
 
-    outfile << "{\"GoalSubsets\": [\n";
+    outfile << "{\"MUGS\": [\n";
     outfile << to_json(mugs_facts_names);
     outfile << "\n]}";
 

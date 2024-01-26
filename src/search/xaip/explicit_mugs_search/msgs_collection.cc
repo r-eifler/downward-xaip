@@ -303,6 +303,10 @@ void MSGSCollection::print() const {
         mugs.print(soft_goal_fact_names);
     }
     cout << "*********************************"  << endl;
+
+
+    // JSON OUPUT
+    mugs.to_file(soft_goal_fact_names);
 }
 
 
