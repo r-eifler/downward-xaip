@@ -8,6 +8,7 @@
 #include "../../task_proxy.h"
 #include "../goal_subsets/goal_subsets.h"
 #include "../explicit_mugs_search/msgs_collection.h"
+#include "frontier_elem.h"
 
 class RelaxedTask {
 
@@ -18,7 +19,7 @@ private:
     std::vector<ApplicableActionDefinition> applicable_actions;
     std::vector<RelaxedTask*> lower_cover;
     std::vector<RelaxedTask*> upper_cover;
-    std::unordered_set<StateID> frontier;
+    std::unordered_set<FrontierElem, HashFrontierElem> frontier;
     MSGSCollection msgs_collection;
     bool solvable = false;
     int expanded_states = 0;
@@ -38,8 +39,8 @@ public:
     std::vector<RelaxedTask*> get_upper_cover(){return upper_cover;}
     void add_to_upper_cover(RelaxedTask* task){upper_cover.push_back(task);}
 
-    std::unordered_set<StateID> get_frontier(){return frontier;}
-    void add_frontier_state(StateID id){frontier.insert(id);}
+    std::unordered_set<FrontierElem, HashFrontierElem> get_frontier(){return frontier;}
+    void add_to_frontier(FrontierElem elem){frontier.insert(elem);}
 
     void set_num_expanded_states(int num) {this->expanded_states = num;}
     int get_num_expanded_states() {return this->expanded_states;}

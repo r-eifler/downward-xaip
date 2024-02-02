@@ -36,12 +36,23 @@ bool RelaxedTask::applicable(const OperatorProxy &op){
             if(index == ap.param_id){
                 uint x;
                 sscanf(p+5, "%u", &x);
-                cout << op.get_name() << endl;
-                cout << "Time: " << x << endl;
+                // cout << op.get_name() << endl;
+                // cout << "Time: " << x << endl;
+                // cout << "lower: " << ap.lower_bound << "   upper: " << ap.upper_bound << endl;
                 if (x < ap.lower_bound || x > ap.upper_bound){
-                    cout << "---> not in bound " << endl;
+                    // cout << "-----------------------------------" << endl;
+                    // cout << op.get_name() << endl;
+                    // cout << "Time: " << x << endl;
+                    // cout << "lower: " << ap.lower_bound << "   upper: " << ap.upper_bound << endl;
+                    // cout << "---> not in bound " << endl;
                     return false;
                 }
+                // else{
+                //     cout << "-----------------------------------" << endl;
+                //     cout << op.get_name() << endl;
+                //     cout << "Time: " << x << endl;
+                //     cout << "lower: " << ap.lower_bound << "   upper: " << ap.upper_bound << endl;
+                // }
             }
             index++;
             p = strtok(NULL, " ");

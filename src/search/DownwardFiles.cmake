@@ -495,6 +495,7 @@ fast_downward_plugin(
         xaip/relaxations/relaxation_iterated_search
         xaip/relaxations/modified_init_task
         xaip/relaxations/relaxation_extension_search
+        xaip/relaxations/frontier_elem
         potentials/individual_goal_potential_heuristics
         potentials/potential_goals_heuristic
         xaip/utils/initial_state_heuristic

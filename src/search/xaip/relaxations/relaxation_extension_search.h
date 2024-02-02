@@ -25,9 +25,6 @@ class RelaxationExtensionSearch : public SearchEngine {
     std::unique_ptr<StateOpenList> open_list;
     std::shared_ptr<Evaluator> f_evaluator;
 
-    std::vector<Evaluator *> path_dependent_evaluators;
-    std::vector<std::shared_ptr<Evaluator>> preferred_operator_evaluators;
-    std::shared_ptr<Evaluator> lazy_evaluator;
     std::shared_ptr<Evaluator> eval;
 
     std::shared_ptr<PruningMethod> pruning_method;
@@ -47,18 +44,13 @@ class RelaxationExtensionSearch : public SearchEngine {
 protected:
     virtual void initialize() override;
     virtual SearchStatus step() override;
-    bool expand(const State &state);
-    bool init_with_frontier_states();
+    void expand(const State &state);
     bool next_relaxed_task();
+    bool decide_to_put_into_openlist(const SearchNode &node, const State &state, OperatorID op);
 
 public:
     explicit RelaxationExtensionSearch(const options::Options &opts);
     virtual ~RelaxationExtensionSearch() = default;
-
-    void set_pruning_method( std::shared_ptr<PruningMethod> pruning_method){
-        std::cout << "********** set pruning method ***************" << std::endl;
-        this->pruning_method = pruning_method;
-    }
 
     virtual void print_statistics() const override;
 

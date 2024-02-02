@@ -567,8 +567,8 @@ class SASRelaxedTask:
             for p in a.params:
                 print(p, file=stream)
             print(a.param_id, file=stream)
-            print(a.upper_bound, file=stream)
             print(a.lower_bound, file=stream)
+            print(a.upper_bound, file=stream)
 
         print(len(self.lower_cover), file=stream)
         for i in self.lower_cover:
