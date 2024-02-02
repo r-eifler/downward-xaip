@@ -35,7 +35,7 @@ class SASTask:
         self.soft_goal.add_goal_fact(pair)
 
     def addRelaxedTask(self, t):
-        self.relaxed_tasks.append(SASRelaxedTask(t.id, t.name, t.init, t.limit_type, t.limits, t.lower_cover, t.upper_cover))
+        self.relaxed_tasks.append(SASRelaxedTask(t.id, t.name, t.init, t.applicable, t.lower_cover, t.upper_cover))
 
 
     def validate(self):
@@ -532,12 +532,11 @@ class SASAxiom:
 
 
 class SASRelaxedTask:
-    def __init__(self, id, name, init, limit_type, limits, lower_cover, upper_cover):
+    def __init__(self, id, name, init, applicable, lower_cover, upper_cover):
         self.id = id
         self.name = name
         self.init = init
-        self.limits = limits
-        self.limit_type = limit_type
+        self.applicable = applicable
         self.lower_cover = lower_cover
         self.upper_cover = upper_cover
 
@@ -556,19 +555,28 @@ class SASRelaxedTask:
         print("begin_relaxed_task", file=stream)
         print(self.id, file=stream)
         print(self.name, file=stream)
+
         print(len(self.init), file=stream)
         for i, j in self.init:
             print(i, j, file=stream)
-        print(self.limit_type, file=stream)
-        print(len(self.limits), file=stream)
-        for i, j in self.limits:
-            print(i, j, file=stream)
+
+        print(len(self.applicable), file=stream)
+        for a in self.applicable:
+            print(a.name, file=stream)
+            print(len(a.params), file=stream)
+            for p in a.params:
+                print(p, file=stream)
+            print(a.param_id, file=stream)
+            print(a.upper_bound, file=stream)
+            print(a.lower_bound, file=stream)
+
         print(len(self.lower_cover), file=stream)
         for i in self.lower_cover:
             print(i, file=stream)
         print(len(self.upper_cover), file=stream)
         for i in self.upper_cover:
             print(i, file=stream)
+
         print("end_relaxed_task", file=stream)
 
     def get_encoding_size(self):

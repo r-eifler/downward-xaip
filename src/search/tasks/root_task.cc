@@ -25,7 +25,7 @@ shared_ptr<AbstractTask> g_root_task = nullptr;
 struct ExplicitVariable {
     int domain_size;
     string name;
-    vector<string> fact_names;
+    vector<std::string> fact_names;
     int axiom_layer;
     int axiom_default_value;
 
@@ -184,6 +184,19 @@ vector<int> read_numbers(istream &in) {
         numbers.push_back(p);
     }
     return numbers;
+}
+
+vector<std::string> read_strings(istream &in) {
+    int count;
+    in >> count;
+    vector<std::string> strings;
+    strings.reserve(count);
+    for (int i = 0; i < count; ++i) {
+        string p;
+        in >> p;
+        strings.push_back(p);
+    }
+    return strings;
 }
 
 ExplicitVariable::ExplicitVariable(istream &in) {
@@ -356,14 +369,31 @@ RelaxedTaskDefinition read_relaxed_task(istream &in) {
     std::string name;
     in >> name;
     vector<FactPair> init = read_facts(in);
-    std::string limit_type;
-    in >> limit_type;
-    vector<FactPair> limits = read_facts(in);
+
+    int count;
+    in >> count;
+    vector<ApplicableActionDefinition> appls;
+    appls.reserve(count);
+    for (int i = 0; i < count; ++i) {
+        std::string name;
+        in >> name;
+        vector<std::string> params = read_strings(in);
+        int param_id;
+        in >> param_id;
+        int upper_bound;
+        in >> upper_bound;
+        int lower_bound;
+        in >> lower_bound;
+        appls.push_back(ApplicableActionDefinition(name,params,param_id,upper_bound,lower_bound));
+    }
+
     vector<int> lower_cover = read_numbers(in);
     vector<int> upper_cover = read_numbers(in);
     check_magic(in, "end_relaxed_task");
 
-    return RelaxedTaskDefinition(id, name, init, limit_type, limits,lower_cover, upper_cover);
+    RelaxedTaskDefinition def =  RelaxedTaskDefinition(id, name, init, lower_cover, upper_cover);
+    def.applicable_actions = appls;
+    return def;
 }
 
 vector<RelaxedTaskDefinition> read_relaxed_tasks(istream &in) {

@@ -109,10 +109,13 @@ bool RelaxationExtensionSearch::expand(const State &state){
         statistics.inc_generated();
 
         //for external relaxation check whether the state satisfies the limits
-        if (! relaxedTask->sat_limits(succ_state)){
-            relaxedTask->add_frontier_state(succ_state.get_id());
-            continue;
-        }
+        
+        relaxedTask->applicable(op);
+        // if (! relaxedTask->sat_limits(succ_state)){
+        //     relaxedTask->add_frontier_state(succ_state.get_id());
+        //     continue;
+        // }
+
 
         SearchNode succ_node = search_space.get_node(succ_state);
 
@@ -235,39 +238,6 @@ SearchStatus RelaxationExtensionSearch::step() {
         */
         MSGSEvaluationContext eval_context(s, node->get_g(), false, &statistics, &current_msgs, bound);
 
-        if (lazy_evaluator) {
-            /*
-              With lazy evaluators (and only with these) we can have dead nodes
-              in the open list.
-
-              For example, consider a state s that is reached twice before it is expanded.
-              The first time we insert it into the open list, we compute a finite
-              heuristic value. The second time we insert it, the cached value is reused.
-
-              During first expansion, the heuristic value is recomputed and might become
-              infinite, for example because the reevaluation uses a stronger heuristic or
-              because the heuristic is path-dependent and we have accumulated more
-              information in the meantime. Then upon second expansion we have a dead-end
-              node which we must ignore.
-            */
-            if (node->is_dead_end())
-                continue;
-
-            if (lazy_evaluator->is_estimate_cached(s)) {
-                int old_h = lazy_evaluator->get_cached_estimate(s);
-                int new_h = eval_context.get_evaluator_value_or_infinity(lazy_evaluator.get());
-                if (open_list->is_dead_end(eval_context)) {
-                    node->mark_as_dead_end();
-                    statistics.inc_dead_ends();
-                    continue;
-                }
-                if (new_h != old_h) {
-                    open_list->insert(eval_context, id);
-                    continue;
-                }
-            }
-        }
-
         node->close();
         assert(!node->is_dead_end());
         update_f_value_statistics(eval_context);
@@ -326,8 +296,12 @@ bool RelaxationExtensionSearch::next_relaxed_task() {
         StateID id = pending_initial_states.back();
         pending_initial_states.pop_back();
         State s = state_registry.lookup_state(id);
+        current_msgs.track(s);
         SearchNode inode = search_space.get_node(s);
         inode.open_initial();
+        for(uint i = 0; i < s.size(); i++){
+            cout << i << " = " << s[i].get_name() << endl; 
+        }
         if (expand(s)){
             return true;
         }
@@ -386,20 +360,20 @@ bool RelaxationExtensionSearch::init_with_frontier_states()
             // check whether state is sat by any other covering task, then you can skip it
             for (int j = 0; j < (int) lower_cover.size(); j++){
                 if (i != j){
-                    if (lower_cover[j]->sat_limits(s)){
-                        skip = true;
-                        break;
-                    }
+                    // if (lower_cover[j]->sat_limits(s)){
+                    //     skip = true;
+                    //     break;
+                    // }
                 }
             }
             if (skip){
                 num_skipped++;
                 continue;
             }
-            if (relaxedTask->sat_limits(s)){
-                init_frontier.insert(id);
-                num_init_states++;
-            }
+            // if (relaxedTask->sat_limits(s)){
+            //     init_frontier.insert(id);
+            //     num_init_states++;
+            // }
             else{
                 relaxedTask->add_frontier_state(id);
                 num_frontier_states++;

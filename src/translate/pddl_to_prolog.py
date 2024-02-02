@@ -157,7 +157,8 @@ def translate_facts(prog, task, xpp):
             prog.add_fact(fact)
     if xpp:
         print('\n-------------------- additional_init_facts -----------------------------')
-        additional_init_facts = xpp.get_additional_init_facts()
+        additional_init_facts = list(xpp.get_additional_init_facts())
+        additional_init_facts.sort(key=lambda e: str(e))
         print('num additional init facts: ' + str(len(additional_init_facts)))
         for af in additional_init_facts:
             print(af)

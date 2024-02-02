@@ -15,8 +15,7 @@ private:
     int id;
     std::string name;
     std::vector<FactPair> init;
-    std::string limit_type;
-    std::vector<FactPair> limits;
+    std::vector<ApplicableActionDefinition> applicable_actions;
     std::vector<RelaxedTask*> lower_cover;
     std::vector<RelaxedTask*> upper_cover;
     std::unordered_set<StateID> frontier;
@@ -25,7 +24,8 @@ private:
     int expanded_states = 0;
 
 public:
-    RelaxedTask(std::shared_ptr<AbstractTask> task, int id, std::string name, std::vector<FactPair> init, std::string limit_type, std::vector<FactPair> limits);
+    RelaxedTask(std::shared_ptr<AbstractTask> task, int id, std::string name, 
+    std::vector<FactPair> init, std::vector<ApplicableActionDefinition> appla);
 
     int get_id(){return id;}
     std::string get_name(){return name;}
@@ -52,7 +52,7 @@ public:
     void set_solvable(bool s){solvable = s;}
     bool get_solvable(){return solvable;}
 
-    bool sat_limits(const State &state);
+    bool applicable(const OperatorProxy &op);
     void propagate_solvable(MSGSCollection goal_subsets);
     void propagate_solvable();
 

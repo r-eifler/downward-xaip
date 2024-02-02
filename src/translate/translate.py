@@ -746,11 +746,11 @@ def main():
         xpp.run()
 
         #take a look
-        # print("-------------- Properties compiled ----------------------")
-        # for i, v in enumerate(sas_task.variables.value_names):
-        #     print(str(i) + ': ' + str(len(v)))
-        #     print(v)
-        #
+        print("-------------- Properties compiled ----------------------")
+        for i, v in enumerate(sas_task.variables.value_names):
+            print(str(i) + ': ' + str(len(v)))
+            print(v)
+        
         # print("Operators:")
         # for o in sas_task.operators:
         #     print(o.name)
