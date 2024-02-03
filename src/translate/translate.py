@@ -521,18 +521,22 @@ def unsolvable_sas_task(msg):
 
 def pddl_to_sas(task, xpp=None):
     with timers.timing("Instantiating", block=True):
-        (relaxed_reachable, atoms, actions, goal_list, axioms,
+        (relaxed_reachable, atoms, actions, axioms,
          reachable_action_params) = instantiate.explore(task, xpp)
 
     # still want to explore the MUGS
     # if not relaxed_reachable:
     #     return unsolvable_sas_task("No relaxed solution")
-    
-    if goal_list is None:
-        return unsolvable_sas_task("Trivially false goal")
 
-    for item in goal_list:
-        assert isinstance(item, pddl.Literal)
+     # HACK! Goals should be treated differently. (copied from symbolic OSP planner)
+    if isinstance(task.goal, pddl.Conjunction):
+        goal_list = task.goal.parts
+    else:
+        goal_list = [task.goal]
+
+    if not isinstance(task.goal, pddl.Truth):
+        for item in goal_list:
+            assert isinstance(item, pddl.Literal)
         
     # extend atoms with atoms used in the relaxations
     add_reachable_facts = xpp.get_needed_facts()  if xpp else []
@@ -582,9 +586,13 @@ def pddl_to_sas(task, xpp=None):
           added_implied_precondition_counter)
     
     # determine which variables should not be simplified
-    skip_simplification = xpp.get_needed_values(sas_task)  if xpp else []
-    print("Skip simplification (filter_unreachable_propositions) for: ")
-    print(skip_simplification)
+    skip_simplification = []
+    if xpp:
+        skip_simplification = xpp.get_needed_values(sas_task)
+        for g in sas_task.goal.pairs:
+            skip_simplification[g[0]] = [g[1]]
+        print("Skip simplification (filter_unreachable_propositions) for: ")
+        print(skip_simplification)
 
     if options.filter_unreachable_facts:
         with timers.timing("Detecting unreachable propositions", block=True):

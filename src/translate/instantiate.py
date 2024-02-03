@@ -95,10 +95,8 @@ def instantiate(task, model):
         elif atom.predicate == "@goal-reachable":
             relaxed_reachable = True
 
-    instantiated_goal = instantiate_goal(task.goal, init_facts, fluent_facts)
-
     return (relaxed_reachable, fluent_facts,
-            instantiated_actions, instantiated_goal,
+            instantiated_actions,
             sorted(instantiated_axioms), reachable_action_parameters)
 
 
