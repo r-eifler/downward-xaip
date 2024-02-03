@@ -242,14 +242,13 @@ SearchStatus RelaxationExtensionSearch::step() {
     }
 
     const State &s = node->get_state();
-    if (check_goal_and_set_plan(s)){
-        relaxedTask->set_solvable(true);
+    if (check_goal(s)){
+        relaxedTask->set_solvable(true);;
+
         if (! next_relaxed_task()) {
             return SearchStatus::SOLVED;
         }
         else{
-            // clear call stack to start with a new set of initial states
-            open_list->clear();
             return SearchStatus::IN_PROGRESS;
         }
     }
@@ -307,6 +306,11 @@ bool RelaxationExtensionSearch::next_relaxed_task() {
             return false;
         }
 
+        // clear call stack to start with a new set of initial states
+        cout << "clear openlist and search space" << endl;
+        open_list->clear();
+        search_space.clear();
+
         relaxedTask = taskRelaxationTracker->next_relaxed_task();
         cout << "Current task: " << relaxedTask->get_name() << endl;
 
@@ -327,13 +331,15 @@ bool RelaxationExtensionSearch::next_relaxed_task() {
         bool something_to_explored = false;
         vector<RelaxedTask*> lower_cover = relaxedTask->get_lower_cover();
         for (int i = 0; i < (int) lower_cover.size(); i++){
-            RelaxedTask* t = lower_cover[i];;
+            RelaxedTask* t = lower_cover[i];
+            cout << "Task: " << t->get_name() << endl;
             for(FrontierElem f_elem :  t->get_frontier()){
                 OperatorProxy op = task_proxy.get_operators()[f_elem.op];
                 if (relaxedTask->applicable(op)){
                     State parent = state_registry.lookup_state(f_elem.parent);
                     SearchNode parent_node = search_space.get_node(parent);
                     something_to_explored |= decide_to_put_into_openlist(parent_node, parent, f_elem.op);
+                    // cout << "Something to explore: " << something_to_explored << endl;
                     num_init_states++;
                 }
                 else{

@@ -116,6 +116,10 @@ bool SearchEngine::check_goal_and_set_plan(const State &state) {
     return false;
 }
 
+bool SearchEngine::check_goal(const State &state) {
+    return task_properties::is_goal_state(task_proxy, state);
+}
+
 void SearchEngine::set_osp_plan(const State &state) {
     Plan plan;
     search_space.trace_path(state, plan);

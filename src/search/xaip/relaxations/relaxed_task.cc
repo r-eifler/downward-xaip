@@ -47,12 +47,12 @@ bool RelaxedTask::applicable(const OperatorProxy &op){
                     // cout << "---> not in bound " << endl;
                     return false;
                 }
-                // else{
-                //     cout << "-----------------------------------" << endl;
-                //     cout << op.get_name() << endl;
-                //     cout << "Time: " << x << endl;
-                //     cout << "lower: " << ap.lower_bound << "   upper: " << ap.upper_bound << endl;
-                // }
+                else{
+                    // cout << "-----------------------------------" << endl;
+                    // cout << op.get_name() << endl;
+                    // cout << "Time: " << x << endl;
+                    // cout << "lower: " << ap.lower_bound << "   upper: " << ap.upper_bound << endl;
+                }
             }
             index++;
             p = strtok(NULL, " ");

@@ -125,6 +125,10 @@ SearchNode SearchSpace::get_node(const State &state) {
     return SearchNode(state, search_node_infos[state]);
 }
 
+void SearchSpace::clear() {
+    search_node_infos.notify_service_destroyed(&state_registry);
+}
+
 void SearchSpace::trace_path(const State &goal_state,
                              vector<OperatorID> &path) const {
     State current_state = goal_state;
