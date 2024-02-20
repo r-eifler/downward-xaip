@@ -763,7 +763,7 @@ def main():
         # for o in sas_task.operators:
         #     print(o.name)
         #     print(o.pre_post)
-        #     print(o.cost)
+        # #     print(o.cost)
 
         # print("Init:")
         # print(sas_task.init.values)

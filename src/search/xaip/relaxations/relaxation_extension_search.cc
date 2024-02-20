@@ -344,11 +344,12 @@ bool RelaxationExtensionSearch::next_relaxed_task() {
                 }
                 else{
                     relaxedTask->add_to_frontier(f_elem);
-                }
+                } 
             }
+            t->clear();
         }
 
-        std::cout << "stay in frontier #states: " << relaxedTask->get_frontier().size() << std::endl;
+        std::cout << "stay in frontier #states: " << relaxedTask->get_frontier_size() << std::endl;
         std::cout << "Next Iteration init #states: " << num_init_states << std::endl;
 
 

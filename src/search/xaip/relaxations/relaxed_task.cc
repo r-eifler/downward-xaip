@@ -11,6 +11,14 @@ RelaxedTask::RelaxedTask(std::shared_ptr<AbstractTask> task, int id, string name
     cout << "Init relaxation: " << name << endl;
 }
 
+void RelaxedTask::clear(){
+    if(num_accessed_frontier >= upper_cover.size()){
+        cout << "------------- CLEAR ------------------" << endl;
+        this->frontier.clear();
+        this->msgs_collection.clear();
+    }
+}
+
 bool RelaxedTask::applicable(const OperatorProxy &op){
     for (ApplicableActionDefinition ap : this->applicable_actions){
         string name = op.get_name();

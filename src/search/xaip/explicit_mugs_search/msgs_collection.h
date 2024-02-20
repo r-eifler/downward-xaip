@@ -68,6 +68,10 @@ public:
         return initialized;
     }
 
+    void clear() {
+        this->subsets.clear();
+    }
+
     void print() const;
     std::vector<std::vector<std::string>> generate_msgs_string();
     std::vector<std::vector<std::string>> generate_mugs_string();

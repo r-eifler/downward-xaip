@@ -23,7 +23,7 @@ private:
     MSGSCollection msgs_collection;
     bool solvable = false;
     int expanded_states = 0;
-
+    uint num_accessed_frontier = 0;
 public:
     RelaxedTask(std::shared_ptr<AbstractTask> task, int id, std::string name, 
     std::vector<FactPair> init, std::vector<ApplicableActionDefinition> appla);
@@ -39,7 +39,11 @@ public:
     std::vector<RelaxedTask*> get_upper_cover(){return upper_cover;}
     void add_to_upper_cover(RelaxedTask* task){upper_cover.push_back(task);}
 
-    std::unordered_set<FrontierElem, HashFrontierElem> get_frontier(){return frontier;}
+    std::unordered_set<FrontierElem, HashFrontierElem> get_frontier(){
+        num_accessed_frontier++; 
+        return frontier;
+    }
+    uint get_frontier_size(){return frontier.size();}
     void add_to_frontier(FrontierElem elem){frontier.insert(elem);}
 
     void set_num_expanded_states(int num) {this->expanded_states = num;}
@@ -56,6 +60,7 @@ public:
     bool applicable(const OperatorProxy &op);
     void propagate_solvable(MSGSCollection goal_subsets);
     void propagate_solvable();
+    void clear();
 
     void print();
 
