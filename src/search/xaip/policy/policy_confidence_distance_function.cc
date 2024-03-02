@@ -31,16 +31,21 @@ std::vector<float> PolicyConfidenceDistanceFunction::get_distances(const State &
         utils::exit_with(utils::ExitCode::REMOTE_POLICY_ERROR);
     }
 
+    if(applicable_operators.size() != op_ids.size()){
+        std::cerr << "get_operators_prob retuens differend number of applicable operators" << std::endl;
+        utils::exit_with(utils::ExitCode::REMOTE_POLICY_ERROR);
+    }
+
     float max = 0.0;
-    // cout << "--------------------------------" << endl;
+    // cout << "==================================" << endl;
     for(size_t i = 0; i < operator_probabilities.size(); i++){
         // cout << operator_probabilities[i] << " ";
         if(operator_probabilities[i] > max){
             max = operator_probabilities[i];
         }
-        // cout << "Curr Max: " << max << endl;
     }
-    // cout << endl;
+    // cout << endl << "--> max: " << max << endl;
+    // cout << "--------------------------------" << endl;
     sum_max_probabilities += max;
    
     int index = int(10 * max);
@@ -49,9 +54,17 @@ std::vector<float> PolicyConfidenceDistanceFunction::get_distances(const State &
 
     vector<float> distances;
     for(uint i = 0; i < op_ids.size(); i++){
-        distances.push_back(max - operator_probabilities[i]);
+        for(uint j = 0; j < applicable_operators.size(); j++){
+            if (op_ids[i] == applicable_operators[j]){
+                distances.push_back(max - operator_probabilities[j]);
+                // cout << max - operator_probabilities[j] << " ";
+                break;
+            }
+        }
     }
-
+    // cout << endl;
+    // cout << "--------------------------------" << endl;
+    assert(distances.size() == op_ids.size());
     return distances;
 }
 

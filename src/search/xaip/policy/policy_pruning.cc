@@ -28,7 +28,6 @@ void PolicyPruningMethod::notify_state_transition(const State & parent_state, Op
 }
 
 void PolicyPruningMethod::prune(const State &state, std::vector<OperatorID> & op_ids) {
-
     if(op_ids.size() == 0){
         return;
     }
@@ -43,7 +42,6 @@ void PolicyPruningMethod::prune(const State &state, std::vector<OperatorID> & op
         }
         
     }
-
     // cout << "only use policy ops" << endl;
     op_ids.swap(remaining_op_ids);
     // cout << "-------- prune end ----------" << endl;
@@ -51,13 +49,15 @@ void PolicyPruningMethod::prune(const State &state, std::vector<OperatorID> & op
 
 
 std::vector<pair<float,OperatorID>> PolicyPruningMethod::postpone(const State &state, std::vector<OperatorID> & op_ids){
-        std::vector<pair<float,OperatorID>> postponed_op_ids;
+    std::vector<pair<float,OperatorID>> postponed_op_ids;
 
     if(op_ids.size() == 0){
         return postponed_op_ids;
     }
 
     vector<float> distances = distance_function->get_distances(state, op_ids);
+    // cout << "***************************************" << endl;
+    // cout << "radius: " << radius << endl;
     // cout << "#ops: " << op_ids.size() << endl;
     // cout << "#dis: " << distances.size() << endl;
 
@@ -71,13 +71,15 @@ std::vector<pair<float,OperatorID>> PolicyPruningMethod::postpone(const State &s
         else{
             postponed_op_ids.push_back(make_pair(distances[i], op_ids[i]));
         }
-        
     }
     // cout << endl;
 
     // cout << "only use policy ops" << endl;
+    
+    // cout << "#ops remaining: " << remaining_op_ids.size() << endl;
+    // cout << "#ops postponed: " << postponed_op_ids.size() << endl;
     op_ids.swap(remaining_op_ids);
-    // cout << "#ops re: " << remaining_op_ids.size() << endl;
+    // cout << "#ops op_ids: " << op_ids.size() << endl;
     // cout << "-------- prune end ----------" << endl;
     return postponed_op_ids;
 }
