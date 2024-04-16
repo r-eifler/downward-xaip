@@ -118,7 +118,7 @@ need to be defined via an additional input file described below.
 
 ### Branch and Bound Search
 
-    ./fast-downward.py <domain file> <problem file> --heuristic 'ngsh=ngs(<heuristic>)' --search gsastar(evals=[blind], eval=ngsh, bound=?, all_soft_goals=<true/false>)
+    ./fast-downward.py <domain file> <problem file> --heuristic 'ngsh=ngs(<heuristic>)' --search 'gsastar(evals=[blind], eval=ngsh, bound=?, all_soft_goals=<true/false>)'
 
 Parameters:
 * `bound`: the overall **strict** (`< bound`) cost bound of the OSP task
