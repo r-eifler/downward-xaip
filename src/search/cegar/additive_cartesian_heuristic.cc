@@ -53,7 +53,7 @@ int AdditiveCartesianHeuristic::compute_heuristic(const State &ancestor_state) {
         int value = function.get_value(state);
         assert(value >= 0);
         if (value == INF)
-            continue;
+            return INF - 10;
         sum_h += value;
     }
     assert(sum_h >= 0);

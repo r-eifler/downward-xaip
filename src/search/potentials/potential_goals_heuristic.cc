@@ -20,9 +20,10 @@ int PotentialGoalsHeuristic::compute_heuristic(const State &ancestor_state) {
     State state = convert_ancestor_state(ancestor_state);
     int value = 0;
     for (auto &function : functions) {
-        int e = max(value, function->get_value(state));
-        if (e == std::numeric_limits<int>::max())
-            continue;
+        int e = max(0, function->get_value(state));
+        if (e == std::numeric_limits<int>::max()){
+            return std::numeric_limits<int>::max() - 10;
+        }
         value += e;
     }
     return value;
@@ -35,7 +36,12 @@ std::vector<int> PotentialGoalsHeuristic::get_heuristic_values(const State &ance
     State state = convert_ancestor_state(ancestor_state);
     for (auto &function : functions) {
         int value = max(0,function->get_value(state));
-        result.push_back(value);
+        if (value >= 100000000){
+            result.push_back(-1);
+        }
+        else{
+            result.push_back(value);
+        }
         // cout << "h= " << value << endl;
     }
     

@@ -1,3 +1,237 @@
+# Goal Conflict Computation
+
+This FD copy implements the algorithms to compute minimal insolvable goal subset 
+(MUGS) 
+
+1. Goal Lattice Search
+2. Branch and Bound Search
+
+as introduced in:
+
+    @inproceedings{eifler:etal:aaai20,
+        author       = {Rebecca Eifler and
+                        Michael Cashmore and
+                        J{\"{o}}rg Hoffmann and
+                        Daniele Magazzeni and
+                        Marcel Steinmetz},
+        title        = {A New Approach to Plan-Space Explanation: Analyzing Plan-Property
+                        Dependencies in Oversubscription Planning},
+        booktitle    = {The Thirty-Fourth {AAAI} Conference on Artificial Intelligence, {AAAI}
+                        2020, The Thirty-Second Innovative Applications of Artificial Intelligence
+                        Conference, {IAAI} 2020, The Tenth {AAAI} Symposium on Educational
+                        Advances in Artificial Intelligence, {EAAI} 2020, New York, NY, USA,
+                        February 7-12, 2020},
+        pages        = {9818--9826},
+        publisher    = {{AAAI} Press},
+        year         = {2020},
+    }
+
+    @inproceedings{eifler:etal:ijcai20,
+        author       = {Rebecca Eifler and
+                        Marcel Steinmetz and
+                        {\'{A}}lvaro Torralba and
+                        J{\"{o}}rg Hoffmann},
+        title        = {Plan-Space Explanation via Plan-Property Dependencies: Faster Algorithms
+                        {\&} More Powerful Properties},
+        booktitle    = {Proceedings of the Twenty-Ninth International Joint Conference on
+                        Artificial Intelligence, {IJCAI} 2020},
+        pages        = {4091--4097},
+        year         = {2020}
+    }
+
+## Dependencies
+
+Please make sure to also clone the submodule under `src/translate/xaip` containing 
+the translator extension.
+
+### General 
+
+For the basic variant (without LP solver and no support for temporal preferences)
+in addition to the dependencies listed below for FD itself, the following
+packages are required:
+
+    apt-get install libeigen3-dev pkgconf libgrpc++-dev libboost-all-dev libgrpc++1 autoconf flex 
+
+Build FD normally with:
+
+    ./build.py
+
+
+### LP Solver
+
+For using [Potential Heuristics](https://ojs.aaai.org/index.php/ICAPS/article/view/13714)
+an LP solver is required, either [SOPLEX](https://soplex.zib.de/) or 
+[CPLEX](https://www.ibm.com/products/ilog-cplex-optimization-studio),
+and the solver interface [OSI](https://github.com/coin-or/Osi) and the following library
+
+    apt-get install bison 
+
+For the installation of the LP solver and OSI please follow the corresponding installation
+instructions.
+
+FD expects the to find the libraries via the following environment variables:
+
+    export DOWNWARD_COIN_ROOT=<path to osi installation/libray folder>
+    export DOWNWARD_SOPLEX_ROOT=<path to soplex libraries>
+    export DOWNWARD_CPLEX_ROOT=<path to cplex libraries>
+    export DOWNWARD_CONCERT_ROOT=<path to cplex concert libraries>
+
+Path should point to folders containing the `inlcude` and `lib` folders.
+
+### Temporal Preferences
+
+To support the finite LTL compilation two additional dependencies are required:
+
+1. Command line tools of [Spot](https://spot.lre.epita.fr/index.html).
+For installation instruction see [here](https://spot.lre.epita.fr/install.html).
+
+1. [LTLfKit](https://bitbucket.org/acamacho/ltlfkit/src/master/) for the compilation 
+from LTLf to automata.
+
+The [FD translator extension](https://github.com/r-eifler/xaip-FD-translate) 
+expects to find the LTLfKit under the environment 
+variable:
+
+    export LTL2HAO_PATH=<path to the top level folder of the ltlfkit>
+
+
+
+## MUGS Computation
+
+To compute the MUGS the following algorithms are supported.
+
+### Goal Lattice Search
+
+    ./fast-downward.py <domain file> <problem file> --heuristic 'hff=ff(cache_estimates=false, transform=adapt_costs(one), verbosity=silent)' --search '<search>(lazy_greedy([hff], preferred=[hff], bound=<n>, reopen_closed=true, verbosity=silent), heu=[hff], all_soft_goals=<true/false>)'
+
+Parameters:
+
+* `<search>` either `wgss` for starting with all soft goals and systematically 
+removing goals or `sgss` for starting with the empty set and systematically  
+adding goals (`sgss` works typically better)
+
+* `bound`: the overall **strict** (`< bound`) cost bound of the OSP task
+
+* `all_soft_goals`: indicates whether all goals defined in the problem file 
+should be treated as soft goals. If set to `false`, then soft and hard goals 
+need to be defined via an additional input file described below.
+
+### Branch and Bound Search
+
+    ./fast-downward.py <domain file> <problem file> --heuristic 'ngsh=ngs(<heuristic>)' --search 'gsastar(evals=[blind], eval=ngsh, bound=?, all_soft_goals=<true/false>)'
+
+Parameters:
+* `bound`: the overall **strict** (`< bound`) cost bound of the OSP task
+
+* `all_soft_goals`: indicates whether all goals defined in the problem file 
+should be treated as soft goals. If set to `false`, then soft and hard goals 
+need to be defined via an additional input file described below.
+
+For pruning the following heuristics can be used for `<heuristic>`:
+
+Blind heuristic, no pruning.
+
+    blind
+
+Cartesian Abstraction Heuristics (*best overall performance*):
+
+    cegar(subtasks=[goals()])
+
+Different configurations for number of abstract states, transition or generation 
+time are possible, the subtask option however is limited to `goals`.
+
+h_max Heuristic:
+
+    hmax(no_deadends=true)
+
+Potential Heuristics (LP needs to be installed!)
+
+    individual_goal_potentials()
+
+
+### Temporal Preferences
+
+Temporal preferences are defined via an additional json input file.
+It is passed via
+
+    ./fast-downward.py <domain file> <problem file> --translate-options --explanation-settings <preference file> --search-options ...
+
+Temporal preferences can be either defined using LTL or as Action Set preference.
+The supported grammar is:
+
+    {
+        "plan_properties": [temporal_goal]
+        "hard_goals": [goal_name]
+        "soft_goals": [goal_name]
+    }
+
+
+    temporal_goal :=
+    {
+        "name": <unique_name>,
+        "type": AS|LTL,
+        "formula": <formula>,
+        "actionSets": [action_set]
+    }
+
+    action_set :=
+    {
+        "name": <unique_name>,
+        "actions": [action]
+    }
+
+    action := 
+    {
+        "name": <name>, 
+        "params": [object|type]
+    }
+
+Examples are:
+
+    {
+        "name": "never_move_to_locationl2",
+        "type": "AS",
+        "formula": "! move_to_l2",
+        "actionSets":[
+            {
+                "name": "move_to_l2",
+                "actions":[
+                    {"name": "move", "params": ["rover", "location", "l2", "level", "level", "level", "level", "level", "level"]}
+                ]
+            }
+        ]
+    }
+
+    {
+        "name": "do_uploaded_soil_sample0_before_uploaded_x_ray_image1",
+        "type": "LTL",
+        "formula": "U ! uploaded(x_ray_image1) uploaded(soil_sample0)"
+    }
+
+This also allows specifying hard and soft goals.
+In this case the goals in the PDDL problem file are ignored. 
+"Normal" goal facts (facts that have to be satisfied in the last state of the 
+plan) can in this case be defined via
+
+    {
+        "name": <unique_name>,
+        "type": "G",
+        "formula": "at(p2,l0)",
+    }
+
+where `formula` contains the goal fact.
+
+Predicates are defined with bracket enclosing the parameters, e.g. `at(p2,l0)`
+rather than `(at p2 l0)` as in PDDL.
+
+Formulas are defined in prefix notation, e.g. `&& a b`.
+Action Set preferences only support disjunctive normal form.
+LTL preferences support any formula including the logic operators `! && || -> <->` 
+and the temporal operators `F G U Q X R`.
+
+
+# Original FD README
+
 <img src="misc/images/fast-downward.svg" width="800" alt="Fast Downward">
 
 Fast Downward is a domain-independent classical planning system.
