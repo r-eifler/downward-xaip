@@ -11,7 +11,9 @@ using namespace goalsubset;
 
 MSGSCollection::MSGSCollection() {}
 
-MSGSCollection::MSGSCollection(bool anytime): anytime(anytime) {
+MSGSCollection::MSGSCollection(bool anytime, int max_print_mugs): 
+    anytime(anytime),
+    max_print_mugs(max_print_mugs) {
 
 }
 
@@ -290,25 +292,32 @@ void MSGSCollection::print() const {
 
     cout << "*********************************"  << endl;
     cout << "#MSGS: " << this->size() << endl;
+    // cout << "*********************************"  << endl;
+    // if(this->size() > max_print_mugs){
+    //     cout << "Too many msgs to print!" << endl;
+    // }
+    // else{
+    //     this->print_subsets();
+    // }
     cout << "*********************************"  << endl;
-    if(this->size() > 150){
+    if(this->size() > max_print_mugs){
         cout << "Too many msgs to print!" << endl;
     }
     else{
-        this->print_subsets();
+        GoalSubsets::print(soft_goal_fact_names);
     }
     cout << "*********************************"  << endl;
     cout << "*********************************"  << endl;
     cout << "#MUGS: " << mugs.size() << endl;
+    // cout << "*********************************"  << endl;
+    // if(mugs.size() > max_print_mugs){
+    //     cout << "Too many mugs to print!" << endl;
+    // }
+    // else{
+    //     mugs.print_subsets();
+    // }
     cout << "*********************************"  << endl;
-    if(mugs.size() > 150){
-        cout << "Too many mugs to print!" << endl;
-    }
-    else{
-        mugs.print_subsets();
-    }
-    cout << "*********************************"  << endl;
-    if(mugs.size() > 150){
+    if(mugs.size() > max_print_mugs){
         cout << "Too many mugs to print!" << endl;
     }
     else{

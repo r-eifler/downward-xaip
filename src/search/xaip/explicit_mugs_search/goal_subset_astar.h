@@ -22,6 +22,7 @@ namespace goal_subset_astar {
 class GoalSubsetAStar : public SearchEngine {
     const bool reopen_closed_nodes;
     const bool anytime;
+    const int max_print_mugs;
 
     std::unique_ptr<StateOpenList> open_list;
     std::shared_ptr<Evaluator> f_evaluator;

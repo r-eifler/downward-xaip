@@ -22,17 +22,16 @@
 #include <set>
 
 using namespace std;
-using namespace policy_pruning_method;
 
 namespace goal_subset_astar {
 GoalSubsetAStar::GoalSubsetAStar(const Options &opts)
     : SearchEngine(opts),
       reopen_closed_nodes(opts.get<bool>("reopen_closed")),
       anytime(opts.get<bool>("anytime")),
+      max_print_mugs(opts.get<int>("max_print_mugs")),
       open_list(opts.get<shared_ptr<OpenListFactory>>("open")->
                 create_state_open_list()),
-      eval(opts.get<shared_ptr<Evaluator>>("eval", nullptr)),
-    pruning_method(opts.get<shared_ptr<PolicyPruningMethod>>("pruning")) {
+      eval(opts.get<shared_ptr<Evaluator>>("eval", nullptr)) {
 }
 
 void GoalSubsetAStar::initialize() {
@@ -42,14 +41,12 @@ void GoalSubsetAStar::initialize() {
         << endl;
     assert(open_list);
 
-    current_msgs = MSGSCollection(anytime);
+    current_msgs = MSGSCollection(anytime, max_print_mugs);
     if(! current_msgs.is_initialized()){
         current_msgs.initialize(task);
     }
 
     State initial_state = state_registry.get_initial_state();
-
-    pruning_method->notify_initial_state(initial_state);
 
     current_msgs.track(initial_state);
 
@@ -62,6 +59,7 @@ void GoalSubsetAStar::initialize() {
     if (open_list->is_dead_end(eval_context)) {
         log << "Initial state is a dead end." << endl;
     } else {
+        cout << "initial state no deadend" << endl;
         if (search_progress.check_progress(eval_context))
             statistics.print_checkpoint_line(0);
         start_f_value_statistics(eval_context);
@@ -79,7 +77,6 @@ void GoalSubsetAStar::print_statistics() const {
     statistics.print_detailed_statistics();
     search_space.print_statistics();
     current_msgs.print();
-    pruning_method->print_statistics();
 }
 
 SearchStatus GoalSubsetAStar::step() {
@@ -132,10 +129,9 @@ SearchStatus GoalSubsetAStar::step() {
 
     vector<OperatorID> applicable_ops;
     successor_generator.generate_applicable_ops(s, applicable_ops);
-    pruning_method->prune_operators(s, applicable_ops);
 
     // This evaluates the expanded state (again) to get preferred ops
-    // MSGSEvaluationContext eval_context(s, node->get_g(), false, &statistics, &current_msgs, bound, true);
+    MSGSEvaluationContext eval_context(s, node->get_g(), false, &statistics, &current_msgs, bound, true);
 
     // int pre_estimate = eval_context.get_evaluator_value_or_infinity(eval.get());
 
@@ -158,7 +154,6 @@ SearchStatus GoalSubsetAStar::step() {
         }
 
         if (succ_node.is_new()) {
-            pruning_method->notify_state_transition(s, op_id, succ_state);
             // We have not seen this state before.
             // Evaluate and create a new node.
 
@@ -192,7 +187,6 @@ SearchStatus GoalSubsetAStar::step() {
                 reward_progress();
             }
         } else if (succ_node.get_g() > node->get_g() + get_adjusted_cost(op)) {
-             pruning_method->notify_state_transition(s, op_id, succ_state);
             // cout << "---> new cheapest path to " << succ_state.get_id() << endl;
             // We found a new cheapest path to an open or closed state.
             if (reopen_closed_nodes) {
@@ -281,7 +275,7 @@ MSGSCollection  GoalSubsetAStar::get_msgs(){
 }
 
 void add_options_to_parser(OptionParser &parser) {
-    // SearchEngine::add_pruning_option(parser);
+    SearchEngine::add_pruning_option(parser);
     SearchEngine::add_options_to_parser(parser);
 }
 
@@ -289,7 +283,6 @@ static shared_ptr<SearchEngine> _parse(OptionParser &parser) {
     parser.document_synopsis(
         "Greedy branch and bound",
         "We break ties using the evaluator. Closed nodes are re-opened.");
-    parser.add_option<bool>("anytime", "print every new MSGS that is found during search", "false");
 
     parser.add_option<shared_ptr<Evaluator>>("eval", "evaluator for pruning");
     parser.add_list_option<shared_ptr<Evaluator>>("evals", "evaluators");
@@ -298,7 +291,8 @@ static shared_ptr<SearchEngine> _parse(OptionParser &parser) {
     parser.add_option<int>("boost",
     "boost value for preferred operator open lists", "0");
 
-    parser.add_option<shared_ptr<PolicyPruningMethod>>("pruning", "TODO");
+    parser.add_option<bool>("anytime", "print every new MSGS that is found during search", "false");
+    parser.add_option<int>("max_print_mugs", "maximal number of MUGS that is printed", "1000");
 
     add_options_to_parser(parser);
     Options opts = parser.parse();

@@ -1,5 +1,5 @@
-#ifndef SEARCH_ENGINES_RELAXATION_EXTENSION_EAGER_SEARCH_H
-#define SEARCH_ENGINES_RELAXATION_EXTENSION_SEARCH_H
+#ifndef SEARCH_ENGINES_RELAXATION_EXTENSION_EAGER_CONFLICT_H
+#define SEARCH_ENGINES_RELAXATION_EXTENSION_CONFLICT_SEARCH_H
 
 #include "../../open_list.h"
 #include "../../search_engine.h"
@@ -18,14 +18,18 @@ class OptionParser;
 class Options;
 }
 
-namespace iterative_extension_search {
-class IterativeExtensionSearch : public SearchEngine {
+namespace iterative_extension_conflict {
+class IterativeExtensionConflict : public SearchEngine {
     const bool reopen_closed_nodes;
 
     std::unique_ptr<StateOpenList> open_list;
     std::shared_ptr<Evaluator> f_evaluator;
 
+    std::shared_ptr<Evaluator> eval;
+
     std::shared_ptr<policy_pruning_method::PolicyPruningMethod> pruning_method;
+
+    MSGSCollection current_msgs;
 
     RadiusTracker radius_tracker;
     float current_radius;
@@ -43,8 +47,8 @@ protected:
     bool decide_to_openlist(const SearchNode &node, const State &state, OperatorID op);
 
 public:
-    explicit IterativeExtensionSearch(const options::Options &opts);
-    virtual ~IterativeExtensionSearch() = default;
+    explicit IterativeExtensionConflict(const options::Options &opts);
+    virtual ~IterativeExtensionConflict() = default;
 
     virtual void print_statistics() const override;
 

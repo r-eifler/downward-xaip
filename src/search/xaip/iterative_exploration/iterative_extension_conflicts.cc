@@ -1,4 +1,4 @@
-#include "iterative_extension_search.h"
+#include "iterative_extension_conflicts.h"
 
 #include "../explicit_mugs_search/msgs_evaluation_context.h"
 #include "../../evaluator.h"
@@ -28,12 +28,13 @@ using namespace std;
 using namespace goalsubset;
 using namespace policy_pruning_method;
 
-namespace iterative_extension_search {
-IterativeExtensionSearch::IterativeExtensionSearch(const Options &opts)
+namespace iterative_extension_conflict {
+IterativeExtensionConflict::IterativeExtensionConflict(const Options &opts)
     : SearchEngine(opts),
       reopen_closed_nodes(opts.get<bool>("reopen_closed")),
       open_list(opts.get<shared_ptr<OpenListFactory>>("open")->
                 create_state_open_list()),
+        eval(opts.get<shared_ptr<Evaluator>>("eval", nullptr)),
         pruning_method(opts.get<shared_ptr<PolicyPruningMethod>>("pruning")),
         radius_tracker(RadiusTracker(
             opts.get<double>("min_radius"),
@@ -43,17 +44,23 @@ IterativeExtensionSearch::IterativeExtensionSearch(const Options &opts)
     
 }
 
-void IterativeExtensionSearch::initialize() {
+void IterativeExtensionConflict::initialize() {
     log << "Conducting best first search"
         << (reopen_closed_nodes ? " with" : " without")
         << " reopening closed nodes, (real) bound = " << bound
         << endl;
     assert(open_list);
 
+    if(! current_msgs.is_initialized()){
+        current_msgs.initialize(task);
+    }
+
     State initial_state = state_registry.get_initial_state();
 
     pruning_method->notify_initial_state(initial_state);
 
+    current_msgs.track(initial_state);
+    
     current_radius = radius_tracker.next_radius();
     cout << "##############################################################################" << endl;
     cout << "##############################################################################" << endl;
@@ -63,7 +70,7 @@ void IterativeExtensionSearch::initialize() {
       Note: we consider the initial state as reached by a preferred
       operator.
     */
-    EvaluationContext eval_context(initial_state, 0, true, &statistics, bound);
+    MSGSEvaluationContext eval_context(initial_state, 0, true, &statistics, &current_msgs, bound);
 
     statistics.inc_evaluated_states();
 
@@ -83,14 +90,14 @@ void IterativeExtensionSearch::initialize() {
 
 }
 
-void IterativeExtensionSearch::print_statistics() const {
+void IterativeExtensionConflict::print_statistics() const {
     statistics.print_detailed_statistics();
     search_space.print_statistics();
     // pruning_method->print_statistics();
     // taskRelaxationTracker->results_to_file();
 }
 
-void IterativeExtensionSearch::expand(const State &state){
+void IterativeExtensionConflict::expand(const State &state){
 
     tl::optional<SearchNode> node;
     node.emplace(search_space.get_node(state));
@@ -110,7 +117,7 @@ void IterativeExtensionSearch::expand(const State &state){
 
 }
 
-bool IterativeExtensionSearch::decide_to_openlist(const SearchNode &node, const State &state, OperatorID op_id){
+bool IterativeExtensionConflict::decide_to_openlist(const SearchNode &node, const State &state, OperatorID op_id){
     OperatorProxy op = task_proxy.get_operators()[op_id];
     if ((node.get_real_g() + op.get_cost()) >= bound)
         return false;
@@ -134,13 +141,18 @@ bool IterativeExtensionSearch::decide_to_openlist(const SearchNode &node, const 
         // TODO: Make this less fragile.
         int succ_g = node.get_g() + get_adjusted_cost(op);
 
-        EvaluationContext succ_eval_context(
-            succ_state, succ_g, true, &statistics, bound);
+        MSGSEvaluationContext succ_eval_context(
+            succ_state, succ_g, true, &statistics, &current_msgs, bound);
         statistics.inc_evaluated_states();
 
         if (open_list->is_dead_end(succ_eval_context)) {
             succ_node.mark_as_dead_end();
             statistics.inc_dead_ends();
+            return false;
+        }
+
+        if(succ_eval_context.is_evaluator_value_infinite(eval.get())){
+            // cout << "Prune Succ State: " << succ_state.get_id() << endl;
             return false;
         }
 
@@ -168,8 +180,13 @@ bool IterativeExtensionSearch::decide_to_openlist(const SearchNode &node, const 
             }
             succ_node.reopen(node, op, get_adjusted_cost(op));
 
-            EvaluationContext succ_eval_context(
-                succ_state, succ_node.get_g(), true, &statistics, bound);
+            MSGSEvaluationContext succ_eval_context(
+                succ_state, succ_node.get_g(), true, &statistics, &current_msgs, bound);
+
+            if(succ_eval_context.is_evaluator_value_infinite(eval.get())){
+                // cout << "Prune Succ State: " << succ_state.get_id() << endl;
+                return false;
+            }
 
             /*
                 Note: our old code used to retrieve the h value from
@@ -201,7 +218,7 @@ bool IterativeExtensionSearch::decide_to_openlist(const SearchNode &node, const 
 }
 
 
-SearchStatus IterativeExtensionSearch::step() {
+SearchStatus IterativeExtensionConflict::step() {
     tl::optional<SearchNode> node;
     while (true) {
         if (open_list->empty()) {
@@ -219,11 +236,13 @@ SearchStatus IterativeExtensionSearch::step() {
         if (node->is_closed())
             continue;
 
+        current_msgs.track(s);
+
         /*
           We can pass calculate_preferred=false here since preferred
           operators are computed when the state is expanded.
         */
-        EvaluationContext eval_context(s, node->get_g(), false, &statistics, bound);
+        MSGSEvaluationContext eval_context(s, node->get_g(), false, &statistics, &current_msgs, bound);
 
         node->close();
         assert(!node->is_dead_end());
@@ -242,17 +261,17 @@ SearchStatus IterativeExtensionSearch::step() {
     return IN_PROGRESS;
 }
 
-void IterativeExtensionSearch::reward_progress() {
+void IterativeExtensionConflict::reward_progress() {
     // Boost the "preferred operator" open lists somewhat whenever
     // one of the heuristics finds a state with a new best h value.
     open_list->boost_preferred();
 }
 
-void IterativeExtensionSearch::dump_search_space() const {
+void IterativeExtensionConflict::dump_search_space() const {
     search_space.dump(task_proxy);
 }
 
-void IterativeExtensionSearch::start_f_value_statistics(EvaluationContext &eval_context) {
+void IterativeExtensionConflict::start_f_value_statistics(EvaluationContext &eval_context) {
     if (f_evaluator) {
         int f_value = eval_context.get_evaluator_value(f_evaluator.get());
         statistics.report_f_value_progress(f_value);
@@ -261,18 +280,19 @@ void IterativeExtensionSearch::start_f_value_statistics(EvaluationContext &eval_
 
 /* TODO: HACK! This is very inefficient for simply looking up an h value.
    Also, if h values are not saved it would recompute h for each and every state. */
-void IterativeExtensionSearch::update_f_value_statistics(EvaluationContext &eval_context) {
+void IterativeExtensionConflict::update_f_value_statistics(EvaluationContext &eval_context) {
     if (f_evaluator) {
         int f_value = eval_context.get_evaluator_value(f_evaluator.get());
         statistics.report_f_value_progress(f_value);
     }
 }
 
-bool IterativeExtensionSearch::next_radius() {
+bool IterativeExtensionConflict::next_radius() {
 
     while(true){
 
         statistics.print_detailed_statistics();
+        current_msgs.print();
 
         cout << "##############################################################################" << endl;
         cout << "##############################################################################" << endl;
@@ -316,27 +336,28 @@ static shared_ptr<SearchEngine> _parse(OptionParser &parser) {
     parser.add_option<double>("max_radius", "TODO", "1");
     parser.add_option<double>("step_size", "TODO", "1");
 
+    parser.add_option<shared_ptr<Evaluator>>("eval", "evaluator for pruning");
     parser.add_list_option<shared_ptr<Evaluator>>("evals", "evaluators");
     parser.add_list_option<shared_ptr<Evaluator>>("preferred",
         "use preferred operators of these evaluators", "[]");
     parser.add_option<int>("boost",
         "boost value for preferred operator open lists", "0");
 
-    parser.add_option<shared_ptr<PolicyPruningMethod>>("pruning", "policy pruning method");
+    parser.add_option<shared_ptr<PolicyPruningMethod>>("pruning", "TODO");
 
-    IterativeExtensionSearch::add_options_to_parser(parser);
+    IterativeExtensionConflict::add_options_to_parser(parser);
     Options opts = parser.parse();
     opts.verify_list_non_empty<shared_ptr<Evaluator>>("evals");
 
-    shared_ptr<IterativeExtensionSearch> engine;
+    shared_ptr<IterativeExtensionConflict> engine;
     if (!parser.dry_run()) {
         opts.set("open", search_common::create_greedy_open_list_factory(opts));
         opts.set("reopen_closed", true);
-        engine = make_shared<IterativeExtensionSearch>(opts);
+        engine = make_shared<IterativeExtensionConflict>(opts);
     }
 
     return engine;
 }
 
-static Plugin<SearchEngine> _plugin("policy_iterative_extension_plan", _parse);
+static Plugin<SearchEngine> _plugin("policy_iterative_extension", _parse);
 }

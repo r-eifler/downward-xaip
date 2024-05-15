@@ -501,6 +501,7 @@ fast_downward_plugin(
         xaip/policy/distance_function
         xaip/policy/policy_pruning
         xaip/iterative_exploration/iterative_extension_search
+        xaip/iterative_exploration/iterative_extension_conflicts
         xaip/iterative_exploration/radius_tracker
         xaip/iterative_exploration/frontier_elem
         xaip/policy/policy_confidence_distance_function
