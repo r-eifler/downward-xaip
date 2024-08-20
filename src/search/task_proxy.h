@@ -678,7 +678,6 @@ class State : public PartialAssignment {
       a 4-byte gap at the end of the object. But it would probably be nice to
       have fewer attributes regardless.
     */
-    const AbstractTask *task;
     const StateRegistry *registry;
     StateID id;
     const PackedStateBin *buffer;
