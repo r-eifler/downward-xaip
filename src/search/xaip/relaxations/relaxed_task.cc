@@ -3,33 +3,70 @@
 using namespace std;
 
 RelaxedTask::RelaxedTask(std::shared_ptr<AbstractTask> task, int id, string name, 
-    std::vector<FactPair> init, std::string limit_type, std::vector<FactPair> limits):
-    id(id), name(name), init(init), limit_type(limit_type), limits(limits){
+    std::vector<FactPair> init, std::vector<ApplicableActionDefinition> appla):
+    id(id), name(name), init(init), applicable_actions(appla){
 
     msgs_collection.initialize(task);
 
     cout << "Init relaxation: " << name << endl;
 }
 
-bool RelaxedTask::sat_limits(const State &state){
-    if (limit_type == "OR"){
-        for (FactPair fp : limits){
-            if (state[fp.var].get_value() == fp.value){
-                return true;
-            }
-        }
-        return false;
+void RelaxedTask::clear(){
+    if(num_accessed_frontier >= upper_cover.size()){
+        cout << "------------- CLEAR ------------------" << endl;
+        this->frontier.clear();
+        this->msgs_collection.clear();
     }
+}
 
-    if (limit_type == "AND"){
-        for (FactPair fp : limits){
-            if (state[fp.var].get_value() != fp.value){
-                return false;
+bool RelaxedTask::applicable(const OperatorProxy &op){
+    for (ApplicableActionDefinition ap : this->applicable_actions){
+        string name = op.get_name();
+        char* char_array = new char[name.length() + 1]; 
+        strcpy(char_array, name.c_str()); 
+        char * p;
+        p = strtok(char_array, " "); 
+        if(p != ap.name){
+            continue;
+        }
+        uint index = 0;
+        p = strtok(NULL, " ");
+        while (p != NULL) {
+            // cout << "Next " << p << endl;
+            // if(index < ap.params.size()){
+            //     cout << "Param: " + ap.params[index] << endl;
+            // }
+            if(index < ap.params.size() && ap.params[index] != "*"){
+                if(ap.params[index] != p){
+                    return true;
+                }
             }
+            if(index == ap.param_id){
+                uint x;
+                sscanf(p+5, "%u", &x);
+                // cout << op.get_name() << endl;
+                // cout << "Time: " << x << endl;
+                // cout << "lower: " << ap.lower_bound << "   upper: " << ap.upper_bound << endl;
+                if (x < ap.lower_bound || x > ap.upper_bound){
+                    // cout << "-----------------------------------" << endl;
+                    // cout << op.get_name() << endl;
+                    // cout << "Time: " << x << endl;
+                    // cout << "lower: " << ap.lower_bound << "   upper: " << ap.upper_bound << endl;
+                    // cout << "---> not in bound " << endl;
+                    return false;
+                }
+                else{
+                    // cout << "-----------------------------------" << endl;
+                    // cout << op.get_name() << endl;
+                    // cout << "Time: " << x << endl;
+                    // cout << "lower: " << ap.lower_bound << "   upper: " << ap.upper_bound << endl;
+                }
+            }
+            index++;
+            p = strtok(NULL, " ");
         }
         return true;
     }
-
     return true;
 }
 

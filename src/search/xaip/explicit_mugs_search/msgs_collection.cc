@@ -206,6 +206,12 @@ int MSGSCollection::prune(const State &state, vector<int> costs, int remaining_c
         GoalSubset reachable_hard_goals = get_reachable_hard_goals(reachable_goals);
         GoalSubset reachable_soft_goals = get_reachable_soft_goals(reachable_goals);
 
+        // cout << "reachable hard goals: " << endl;
+        // reachable_hard_goals.print();
+
+        // cout << "reachable soft goals: " << endl;
+        // reachable_soft_goals.print();
+
         bool superset_alreday_readched = this->contains_superset(reachable_soft_goals);
 
         //TODO does it make sense to check whether a superset of soft goals is reachable?

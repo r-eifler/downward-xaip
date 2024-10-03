@@ -58,6 +58,7 @@ protected:
 
     void set_plan(const Plan &plan);
     bool check_goal_and_set_plan(const State &state);
+    bool check_goal(const State &state);
     void set_osp_plan(const State &state);
     int get_adjusted_cost(const OperatorProxy &op) const;
 public:

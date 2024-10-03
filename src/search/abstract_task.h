@@ -43,21 +43,35 @@ struct FactPair {
     static const FactPair no_fact;
 };
 
+struct ApplicableActionDefinition {
+    std::string name;
+    std::vector<std::string> params;
+    uint param_id;
+    uint lower_bound;
+    uint upper_bound;
+
+    ApplicableActionDefinition(){}
+
+    ApplicableActionDefinition(std::string name, std::vector<std::string> params, int param_id, int lower_bound, int upper_bound)
+            : name(name), params(params), param_id(param_id), lower_bound(lower_bound), upper_bound(upper_bound) {
+    }
+};
+
 struct RelaxedTaskDefinition {
     int id;
     std::string name;
     std::vector<FactPair> init;
     std::string limit_type;
-    std::vector<FactPair> limits;
+    std::vector<ApplicableActionDefinition> applicable_actions;
     std::vector<int> lower_cover;
     std::vector<int> upper_cover;
 
     RelaxedTaskDefinition(){}
 
-    RelaxedTaskDefinition(int id, std::string name, std::vector<FactPair> init, std::string limit_type,
-                 std::vector<FactPair> limits, std::vector<int> lower_cover, std::vector<int> upper_cover)
-            : id(id), name(name), init(init), limit_type(limit_type), limits(limits), lower_cover(lower_cover) ,
-            upper_cover(upper_cover){
+    RelaxedTaskDefinition(int id, std::string name, std::vector<FactPair> init,
+                std::vector<int> lower_cover, std::vector<int> upper_cover)
+            : id(id), name(name), init(init), lower_cover(lower_cover) ,
+            upper_cover(upper_cover){          
     }
 };
 
