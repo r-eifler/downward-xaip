@@ -8,6 +8,7 @@
 #include <iostream>
 #include <sstream>
 #include <string>
+#include <stdint.h>
 
 namespace conflict_driven_learning {
 namespace mugs {
