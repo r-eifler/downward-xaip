@@ -36,7 +36,7 @@ bool ReachableGoalSubsetsTracking::prune(const State &state, int){
 }
 
 void ReachableGoalSubsetsTracking::print_statistics() const {
-    current_msgs.print();
+    current_msgs.print("conflict");
 }
 
 MSGSCollection ReachableGoalSubsetsTracking::get_msgs() const {

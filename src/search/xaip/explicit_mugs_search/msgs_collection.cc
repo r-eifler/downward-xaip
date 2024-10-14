@@ -4,6 +4,7 @@
 
 #include <fstream>
 #include <bitset>
+#include "../goal_subsets/output_handler.h"
 
 using namespace std;
 using namespace goalsubset;
@@ -263,7 +264,7 @@ GoalSubsets MSGSCollection::get_mugs() const{
     return this->complement().minimal_hitting_sets();
 }
 
-void MSGSCollection::print() const {
+void MSGSCollection::print(string filename) const {
 
     utils::Timer hit_timer;
     GoalSubsets mugs = this->complement().minimal_hitting_sets();
@@ -311,6 +312,16 @@ void MSGSCollection::print() const {
         mugs.print(soft_goal_fact_names);
     }
     cout << "*********************************"  << endl;
+
+
+    /// TO FILE
+    OutputHandler outputHandler = OutputHandler(filename, false);
+    outputHandler.add_collection(
+        "one", 
+        mugs.generate_string(soft_goal_fact_names), 
+        this->generate_string(soft_goal_fact_names)
+    );
+    outputHandler.output();
 }
 
 

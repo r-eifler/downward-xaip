@@ -77,7 +77,7 @@ EvaluationResult ReachableGoalSubsetMaxHeuristic::compute_result(EvaluationConte
 void ReachableGoalSubsetMaxHeuristic::print_statistics() const {
     cout << "num pruned states: " << num_pruned_states << endl;
     cout << "hmax computation time: " << overall_timer << endl;
-    current_msgs.print();
+    current_msgs.print("conflict");
 }
 
 static shared_ptr<Heuristic> _parse(OptionParser &parser) {

@@ -72,7 +72,7 @@ public:
         this->subsets.clear();
     }
 
-    void print() const;
+    void print(std::string filename) const;
     std::vector<std::vector<std::string>> generate_msgs_string();
     std::vector<std::vector<std::string>> generate_mugs_string();
 };

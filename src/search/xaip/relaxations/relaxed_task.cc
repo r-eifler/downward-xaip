@@ -123,11 +123,15 @@ void RelaxedTask::print() {
     cout << "-----------------------------------------------------" << endl;
     cout << "RESULTS: " << this->name << endl;
     cout << "Relaxed Task Expanded States: " << this->expanded_states << endl;
-    msgs_collection.print();
+    msgs_collection.print("conflict");
     cout << "-----------------------------------------------------" << endl;
 }
 
 
 std::vector<std::vector<std::string>> RelaxedTask::get_mugs_string(){
     return msgs_collection.generate_mugs_string();
+}
+
+std::vector<std::vector<std::string>> RelaxedTask::get_msgs_string(){
+    return msgs_collection.generate_msgs_string();
 }

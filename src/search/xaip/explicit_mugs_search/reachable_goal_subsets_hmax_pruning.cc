@@ -58,7 +58,7 @@ bool ReachableGoalSubsetsHMaxPruning::prune(const State &state, int remaining_co
 }
 
 void ReachableGoalSubsetsHMaxPruning::print_statistics() const {
-    current_msgs.print();
+    current_msgs.print("conflict");
 }
 
 

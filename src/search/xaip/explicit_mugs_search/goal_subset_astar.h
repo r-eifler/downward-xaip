@@ -31,6 +31,7 @@ class GoalSubsetAStar : public SearchEngine {
 
     std::shared_ptr<PruningMethod> pruning_method;
 
+    std::string filename;
     MSGSCollection current_msgs;
 
     void start_f_value_statistics(MSGSEvaluationContext &eval_context);

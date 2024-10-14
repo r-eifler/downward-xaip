@@ -14,6 +14,7 @@ class OutputHandler {
     std::string file_name;
 
     std::vector<std::vector<std::vector<std::string>>> mugs_list;
+    std::vector<std::vector<std::vector<std::string>>> msgs_list;
     std::vector<std::string> iteration_names;
 
 
@@ -23,7 +24,11 @@ class OutputHandler {
 
 public:
     explicit OutputHandler(std::string file_name = "results.json", bool relaxations = true);
-    void add_collection(std::string  name, std::vector<std::vector<std::string>> mugs);
+    void add_collection(
+        std::string  name, 
+        std::vector<std::vector<std::string>> mugs,
+        std::vector<std::vector<std::string>> msgs
+        );
     void output();
 };
 

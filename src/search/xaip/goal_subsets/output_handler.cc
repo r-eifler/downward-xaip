@@ -13,9 +13,13 @@ OutputHandler::OutputHandler( string file_name, bool has_relaxations) {
     this->has_relaxations = has_relaxations;
 }
 
-void OutputHandler::add_collection(std::string  name, std::vector<std::vector<std::string>> mugs){
+void OutputHandler::add_collection(
+        std::string  name, 
+        std::vector<std::vector<std::string>> mugs, 
+        std::vector<std::vector<std::string>> msgs){
     this->iteration_names.push_back(name);
     this->mugs_list.push_back(mugs);
+    this->msgs_list.push_back(msgs);
 }
 
 
@@ -43,7 +47,7 @@ void OutputHandler:: output_one(ofstream& outfile, std::vector<std::vector<std::
 }
 
 void OutputHandler::output_relaxations(){
-    cout << "---------------- Print MUGS to FILE ----------------" << endl;
+    cout << "---------------- Print MUGS/MSGS to FILE ----------------" << endl;
     ofstream outfile;
     outfile.open(this->file_name);
     outfile << "{\"relaxations\": [\n";
@@ -64,15 +68,19 @@ void OutputHandler::output_relaxations(){
 }
 
 void OutputHandler::output_one(){
-    cout << "---------------- Print OutputHandler to FILE ----------------" << endl;
+    cout << "---------------- Print MUGS/MSGS to FILE ----------------" << endl;
     ofstream outfile;
-    outfile.open("mugs.json");
+    outfile.open(this->file_name);
 
     string name = this->iteration_names[0];
 
-    outfile << "{\"MUGS\": [\n";
+    outfile << "{\n\"MUGS\": [\n";
     output_one(outfile, mugs_list[0]);
-    outfile << "\n]}";
+    outfile << "\n],\n";
+
+    outfile << "\"MSGS\": [\n";
+    output_one(outfile, msgs_list[0]);
+    outfile << "\n]\n}";
 
     outfile.close();
 }

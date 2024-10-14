@@ -29,7 +29,8 @@ GoalSubsetAStar::GoalSubsetAStar(const Options &opts)
       reopen_closed_nodes(opts.get<bool>("reopen_closed")),
       open_list(opts.get<shared_ptr<OpenListFactory>>("open")->
                 create_state_open_list()),
-      eval(opts.get<shared_ptr<Evaluator>>("eval", nullptr)) {
+      eval(opts.get<shared_ptr<Evaluator>>("eval", nullptr)),
+      filename((opts.get<string>("f", "conflicts.json"))) {
 }
 
 void GoalSubsetAStar::initialize() {
@@ -73,7 +74,7 @@ void GoalSubsetAStar::initialize() {
 void GoalSubsetAStar::print_statistics() const {
     statistics.print_detailed_statistics();
     search_space.print_statistics();
-    current_msgs.print();
+    current_msgs.print(this->filename);
 }
 
 SearchStatus GoalSubsetAStar::step() {
@@ -287,6 +288,9 @@ static shared_ptr<SearchEngine> _parse(OptionParser &parser) {
     "use preferred operators of these evaluators", "[]");
     parser.add_option<int>("boost",
     "boost value for preferred operator open lists", "0");
+    parser.add_option<string>(
+    "f",
+    "output file conflicts", "conflicts.json");
 
     add_options_to_parser(parser);
     Options opts = parser.parse();

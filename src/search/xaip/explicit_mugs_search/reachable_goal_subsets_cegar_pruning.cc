@@ -56,7 +56,7 @@ bool ReachableGoalSubsetsCegarPruning::prune(const State &state, int remaining_c
 }
 
 void ReachableGoalSubsetsCegarPruning::print_statistics() const {
-    current_msgs.print();
+    current_msgs.print("conflict");
 }
 
 
