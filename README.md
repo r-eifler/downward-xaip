@@ -155,14 +155,9 @@ Temporal preferences are defined via an additional json input file.
 It is passed via
 
     ./fast-downward.py <domain file> <problem file> --translate-options --explanation-settings <preference file> --search-options ...
-#### Dependencies
 
-The support of temporal properties defined in LTLf relies on the library [LTLfKit](https://bitbucket.org/acamacho/ltlfkit).
-For installation instructions we refer to [INSTALL](https://bitbucket.org/acamacho/ltlfkit/src/master/INSTALL.md.
-
-To allow the planner to find the library the environment variable `LTL2HAO_PATH` must point (with an absolute path) 
-to the folder containing the library, e.g. `LTL2HAO_PATH=/..../ltlfkit`.
-
+**Attention**: The support of temporal properties required additional dependecies. 
+Check the subsection *Temporal Prefereces* in Section [Dependencies](#dependencies).
 
 #### Input Specification
 
