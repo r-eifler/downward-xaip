@@ -1,0 +1,91 @@
+Bootstrap: docker
+From: ubuntu:noble
+Stage: build
+
+%setup   
+    cp -r ../../../XPP/framework/downward-xaip/ ${APPTAINER_ROOTFS}
+    rm -rf ${APPTAINER_ROOTFS}/downward-xaip/builds
+
+    cp -r /home/rebecca/XPP/iter_tool/docker-iter-planning-tool/ltlfkit/ ${APPTAINER_ROOTFS}
+
+    cp -r /home/rebecca/XPP/framework/osi_installed ${APPTAINER_ROOTFS}
+
+    # cp -r /home/rebecca/phd_thesis/cluster/apptainer/soplex-release-603/ ${APPTAINER_ROOTFS}
+    cp -r /opt/ibm/ILOG/CPLEX_Studio2211/ ${APPTAINER_ROOTFS}
+
+    # cp -r /home/rebecca/XPP/iter_tool/Spot/spot-2.6.3/ ${APPTAINER_ROOTFS}
+
+
+%post
+    # dependencies
+    apt -y update
+    apt -y upgrade
+    apt -y install g++
+    apt -y install make
+    apt -y install cmake
+    apt -y install libeigen3-dev
+    apt -y install pkgconf
+    apt -y install libgrpc++-dev
+    apt -y install libboost-all-dev
+    # apt -y install libgrpc++1 
+    apt -y install autoconf
+    apt -y install flex
+    apt -y install bison 
+
+    # apt -y install wget  m4 xz-utils libgmp-dev unzip zlib1g-dev libboost-program-options-dev libboost-serialization-dev libboost-regex-dev libboost-iostreams-dev libtbb-dev libreadline-dev pkg-config liblapack-dev libgsl-dev flex bison libcliquer-dev gfortran file dpkg-dev libopenblas-dev rpm
+
+    # python dependencies
+    apt-get remove -y python3.12
+    apt-get install -y software-properties-common
+    add-apt-repository ppa:deadsnakes/ppa -y
+    apt-get update -y
+    apt-get install -y python3.11
+    python3 --version
+    apt-get install -y python3-pip
+        # pip3 install numpy
+    # pip3 install scipy
+    # pip3 install mip
+
+    # Soplex solver
+    # mkdir /soplex-6.0.3x
+    # mkdir build_soplex
+    # cd build_soplex
+    # cmake -DCMAKE_INSTALL_PREFIX=/soplex-6.0.3x /soplex-release-603
+    # make
+    # # optional: install SoPlex executable, library, and headers
+    # make install
+
+    # automaton generator for LTLf
+    cd /ltlfkit/LTLf2FOL/ltlf2fol
+    make 
+    make run
+    cd /ltlfkit/ext/MONA
+    autoreconf -f -i
+    ./configure --prefix=`pwd`
+    make
+    bash -c 'echo -e ++++++++++++++++++++++++++ `pwd`'
+    make install-strip
+
+    # SPOT
+    apt -y install wget gnupg
+    wget -q -O - https://www.lrde.epita.fr/repo/debian.gpg | apt-key add -
+    echo 'deb http://www.lrde.epita.fr/repo/debian/ stable/' >> /etc/apt/sources.list
+    apt update
+    apt -y install spot libspot-dev
+
+    
+    export DOWNWARD_COIN_ROOT="/osi_installed/"
+    # export DOWNWARD_SOPLEX_ROOT="/soplex-6.0.3x"
+    export DOWNWARD_CPLEX_ROOT=/CPLEX_Studio2211/cplex
+    export DOWNWARD_CONCERT_ROOT=/CPLEX_Studio2211/concert
+    cd /downward-xaip
+    ./build.py
+
+%runscript
+    export LTL2HAO_PATH="/ltlfkit/"
+    # export SPOT_BIN_PATH="/spot-2.6.3/bin/"
+    export DOWNWARD_COIN_ROOT="/osi_installed/"
+    # export DOWNWARD_SOPLEX_ROOT="/soplex-6.0.3x"
+    export DOWNWARD_CPLEX_ROOT=/CPLEX_Studio2211/cplex
+    export DOWNWARD_CONCERT_ROOT=/CPLEX_Studio2211/concert
+    python3 /downward-xaip/fast-downward.py "$@"
